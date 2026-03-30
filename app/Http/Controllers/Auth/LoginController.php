@@ -4,42 +4,21 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Models\User;
+use Brian2694\Toastr\Facades\Toastr;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Auth;
-use DB;
-use App\Models\User;
-use Carbon\Carbon;
-use Session;
-use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected $redirectTo = RouteServiceProvider::HOME;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except([
@@ -59,19 +38,19 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'email'    => 'required|string',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
+
         try {
             $username = $request->email;
             $password = $request->password;
+            $todayDate = Carbon::now()->format('Y-m-d H:i:s');
 
-            $dt         = Carbon::now();
-            $todayDate  = $dt->toDayDateTimeString();
-            
-            if (Auth::attempt(['email' => $username,'password' => $password,'status' =>'Active'])) {
-                /** get session */
-                $user = Auth::User();
+            if (Auth::attempt(['email' => $username, 'password' => $password, 'status' => 'Active'])) {
+                $request->session()->regenerate();
+
+                $user = Auth::user();
                 Session::put('name', $user->name);
                 Session::put('email', $user->email);
                 Session::put('user_id', $user->user_id);
@@ -83,46 +62,44 @@ class LoginController extends Controller
                 Session::put('position', $user->position);
                 Session::put('department', $user->department);
 
-                $updateLastLogin = ['last_login' => $todayDate,];
-                User::where('email',$username)->update($updateLastLogin);
-                
-                Toastr::success('Login successfully :)','Success');
-                return redirect()->intended('home');
-            } else {
-                Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');
-                return redirect('login');
+                User::where('email', $username)->update(['last_login' => $todayDate]);
+
+                Toastr::success('Login successfully :)', 'Success');
+
+                $defaultRedirect = $user->isAdmin() ? url('/admin') : route('em/dashboard');
+
+                return redirect()->intended($defaultRedirect);
             }
-        }catch(\Exception $e) {
-            \Log::info($e);
-            DB::rollback();
-            Toastr::error('Add new employee fail :)','Error');
-            return redirect()->back();
+
+            Toastr::error('Fail, wrong email or password :)', 'Error');
+            return redirect()->route('login');
+        } catch (\Throwable $exception) {
+            report($exception);
+            Toastr::error('Login failed :)', 'Error');
+            return redirect()->back()->withInput($request->only('email'));
         }
     }
 
     /** logout and forget session */
     public function logout(Request $request)
     {
-        $dt         = Carbon::now();
-        $todayDate  = $dt->toDayDateTimeString();
+        $todayDate = Carbon::now()->format('Y-m-d H:i:s');
 
-        $activityLog = ['name'=> Session::get('name'),'email'=> Session::get('email'),'description' => 'Has log out','date_time'=> $todayDate,];
-        DB::table('activity_logs')->insert($activityLog);
-        // forget login session
-        $request->session()->forget('name');
-        $request->session()->forget('email');
-        $request->session()->forget('user_id');
-        $request->session()->forget('join_date');
-        $request->session()->forget('phone_number');
-        $request->session()->forget('status');
-        $request->session()->forget('role_name');
-        $request->session()->forget('avatar');
-        $request->session()->forget('position');
-        $request->session()->forget('department');
-        $request->session()->flush();
+        if (DB::getSchemaBuilder()->hasTable('activity_logs')) {
+            DB::table('activity_logs')->insert([
+                'name' => Session::get('name'),
+                'email' => Session::get('email'),
+                'description' => 'Has log out',
+                'date_time' => $todayDate,
+            ]);
+        }
+
         Auth::logout();
-        Toastr::success('Logout successfully :)','Success');
-        return redirect('login');
-    }
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
+        Toastr::success('Logout successfully :)', 'Success');
+
+        return redirect()->route('login');
+    }
 }

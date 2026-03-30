@@ -1,138 +1,129 @@
-
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
+            @php($isAdmin = Auth::user()->isAdmin())
             <ul>
-                <li class="menu-title">
-                    <span>Main</span>
-                </li>
-                <li class="{{set_active(['home','em/dashboard'])}} submenu">
-                    <a href="#" class="{{ set_active(['home','em/dashboard']) ? 'noti-dot' : '' }}">
-                        <i class="la la-dashboard"></i>
-                        <span> Dashboard</span> <span class="menu-arrow"></span>
-                    </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['home'])}}" href="{{ route('home') }}">Admin Dashboard</a></li>
-                        <li><a class="{{set_active(['em/dashboard'])}}" href="{{ route('em/dashboard') }}">Employee Dashboard</a></li>
-                    </ul>
-                </li>
-                @if (Auth::user()->role_name=='Admin')
-                    <li class="menu-title"> <span>Authentication</span> </li>
-                    <li class="{{set_active(['search/user/list','userManagement','activity/log','activity/login/logout'])}} submenu">
-                        <a href="#" class="{{ set_active(['search/user/list','userManagement','activity/log','activity/login/logout']) ? 'noti-dot' : '' }}">
-                            <i class="la la-user-secret"></i> <span> User Controller</span> <span class="menu-arrow"></span>
+                <li class="menu-title"><span>Main</span></li>
+                @if ($isAdmin)
+                    <li class="{{ request()->is('admin*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin') }}">
+                            <i class="la la-dashboard"></i>
+                            <span>Admin Console</span>
                         </a>
-                        <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                            <li><a class="{{set_active(['search/user/list','userManagement'])}}" href="{{ route('userManagement') }}">All User</a></li>
-                        </ul>
+                    </li>
+                    <li class="{{ request()->is('admin/users*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/users') }}">
+                            <i class="la la-user-secret"></i>
+                            <span>User Control</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/employees*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/employees') }}">
+                            <i class="la la-users"></i>
+                            <span>Employees</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/staff-salaries*','admin/payslips*','admin/payroll-*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/staff-salaries') }}">
+                            <i class="la la-money"></i>
+                            <span>Payroll</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/reports-hub*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/reports-hub') }}">
+                            <i class="la la-pie-chart"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/performance-*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/performance-hub') }}">
+                            <i class="la la-line-chart"></i>
+                            <span>Performance</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/company-settings*','admin/email-settings*','admin/roles-permissions*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/company-settings') }}">
+                            <i class="la la-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('admin/admin-migration-tracker*') ? 'active' : '' }}">
+                        <a href="{{ url('/admin/admin-migration-tracker') }}">
+                            <i class="la la-flag-checkered"></i>
+                            <span>Migration Tracker</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('em/dashboard') }}">
+                            <i class="la la-id-badge"></i>
+                            <span>Employee View</span>
+                        </a>
+                    </li>
+                @else
+                    <li>
+                        <a class="{{ set_active(['em/dashboard']) }}" href="{{ route('em/dashboard') }}">
+                            <i class="la la-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-title"><span>Self Service</span></li>
+                    <li class="{{ request()->is('profile_user','employee/profile/*') ? 'active' : '' }}">
+                        <a href="{{ route('profile_user') }}">
+                            <i class="la la-id-card"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['form/leavesemployee/new']) }}">
+                        <a href="{{ route('form/leavesemployee/new') }}">
+                            <i class="la la-calendar"></i>
+                            <span>My Leave</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['attendance/employee/page']) }}">
+                        <a href="{{ route('attendance/employee/page') }}">
+                            <i class="la la-clock-o"></i>
+                            <span>My Attendance</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['form/timesheet/page']) }}">
+                        <a href="{{ route('form/timesheet/page') }}">
+                            <i class="la la-file-text"></i>
+                            <span>My Timesheets</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['form/overtime/page']) }}">
+                        <a href="{{ route('form/overtime/page') }}">
+                            <i class="la la-hourglass-half"></i>
+                            <span>My Overtime</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['form/holidays/new']) }}">
+                        <a href="{{ route('form/holidays/new') }}">
+                            <i class="la la-gift"></i>
+                            <span>Holidays</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['my/payslips']) }}">
+                        <a href="{{ route('my/payslips') }}">
+                            <i class="la la-money"></i>
+                            <span>My Payslips</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['performance/tracker','performance/annual/review']) }}">
+                        <a href="{{ route('performance/tracker') }}">
+                            <i class="la la-line-chart"></i>
+                            <span>My Performance</span>
+                        </a>
+                    </li>
+                    <li class="{{ set_active(['performance/annual/review']) }}">
+                        <a href="{{ route('performance/annual/review') }}">
+                            <i class="la la-check-square-o"></i>
+                            <span>Annual Appraisal</span>
+                        </a>
                     </li>
                 @endif
-                <li class="menu-title"> <span>Employees</span> </li>
-                <li class="{{set_active(['all/employee/list','all/employee/list','all/employee/card','form/holidays/new','form/leaves/new',
-                    'form/leavesemployee/new','form/leavesettings/page','attendance/page',
-                    'attendance/employee/page','form/departments/page','form/designations/page',
-                    'form/timesheet/page','form/shiftscheduling/page','form/overtime/page'])}} submenu">
-                    <a href="#" class="{{ set_active(['all/employee/list','all/employee/card','form/holidays/new','form/leaves/new',
-                    'form/leavesemployee/new','form/leavesettings/page','attendance/page',
-                    'attendance/employee/page','form/departments/page','form/designations/page',
-                    'form/timesheet/page','form/shiftscheduling/page','form/overtime/page']) ? 'noti-dot' : '' }}">
-                        <i class="la la-user"></i> <span> Employees</span> <span class="menu-arrow"></span>
-                    </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['all/employee/list','all/employee/card'])}} {{ request()->is('all/employee/view/edit/*','employee/profile/*') ? 'active' : '' }}" href="{{ route('all/employee/card') }}">All Employees</a></li>
-                        <li><a class="{{set_active(['form/holidays/new'])}}" href="{{ route('form/holidays/new') }}">Holidays</a></li>
-                        <li><a class="{{set_active(['form/leaves/new'])}}" href="{{ route('form/leaves/new') }}">Leaves (Admin) 
-                            <span class="badge badge-pill bg-primary float-right">1</span></a>
-                        </li>
-                        <li><a class="{{set_active(['form/leavesemployee/new'])}}" href="{{route('form/leavesemployee/new')}}">Leaves (Employee)</a></li>
-                        <li><a class="{{set_active(['form/leavesettings/page'])}}" href="{{ route('form/leavesettings/page') }}">Leave Settings</a></li>
-                        <li><a class="{{set_active(['attendance/page'])}}" href="{{ route('attendance/page') }}">Attendance (Admin)</a></li>
-                        <li><a class="{{set_active(['attendance/employee/page'])}}" href="{{ route('attendance/employee/page') }}">Attendance (Employee)</a></li>
-                        <li><a class="{{set_active(['form/departments/page'])}}" href="{{ route('form/departments/page') }}">Departments</a></li>
-                        <li><a class="{{set_active(['form/designations/page'])}}" href="{{ route('form/designations/page') }}">Designations</a></li>
-                        <li><a class="{{set_active(['form/timesheet/page'])}}" href="{{ route('form/timesheet/page') }}">Timesheet</a></li>
-                        <li><a class="{{set_active(['form/shiftscheduling/page'])}}" href="{{ route('form/shiftscheduling/page') }}">Shift & Schedule</a></li>
-                        <li><a class="{{set_active(['form/overtime/page'])}}" href="{{ route('form/overtime/page') }}">Overtime</a></li>
-                    </ul>
-                </li>
-                <li class="menu-title"> <span>HR</span> </li>
-                <li class="{{set_active(['create/estimate/page','form/estimates/page','payments','expenses/page'])}} submenu">
-                    <a href="#" class="{{ set_active(['create/estimate/page','form/estimates/page','payments','expenses/page']) ? 'noti-dot' : '' }}">
-                        <i class="la la-files-o"></i>
-                        <span> Sales </span> 
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['create/estimate/page','form/estimates/page'])}} {{ request()->is('edit/estimate/*') ? 'active' : '' }}{{ request()->is('estimate/view/*') ? 'active' : '' }}" href="{{ route('form/estimates/page') }}">Estimates</a></li>
-                        <li><a class="{{set_active(['payments'])}}" href="{{ route('payments') }}">Payments</a></li>
-                        <li><a class="{{set_active(['expenses/page'])}}" href="{{ route('expenses/page') }}">Expenses</a></li>
-                    </ul>
-                </li>
-                <li class="{{set_active(['form/salary/page','form/payroll/items'])}} submenu">
-                    <a href="#" class="{{ set_active(['form/salary/page','form/payroll/items']) ? 'noti-dot' : '' }}"><i class="la la-money"></i>
-                    <span> Payroll </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['form/salary/page'])}}" href="{{ route('form/salary/page') }}"> Employee Salary </a></li>
-                        <li><a href="{{ route('form/salary/page') }}"> Payslip </a></li>
-                        <li><a class="{{set_active(['form/payroll/items'])}}" href="{{ route('form/payroll/items') }}"> Payroll Items </a></li>
-                    </ul>
-                </li>
-                <li class="{{set_active(['form/expense/reports/page','form/invoice/reports/page','form/leave/reports/page','form/daily/reports/page','form/payments/reports/page','form/employee/reports/page'])}} submenu">
-                    <a href="#" class="{{ set_active(['form/expense/reports/page','form/invoice/reports/page','form/leave/reports/page','form/daily/reports/page','form/payments/reports/page','form/employee/reports/page']) ? 'noti-dot' : '' }}"><i class="la la-pie-chart"></i>
-                    <span> Reports </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['form/expense/reports/page'])}}" href="{{ route('form/expense/reports/page') }}"> Expense Report </a></li>
-                        <li><a class="{{set_active(['form/invoice/reports/page'])}}" href="{{ route('form/invoice/reports/page') }}"> Invoice Report </a></li>
-                        <li><a class="{{set_active(['form/payments/reports/page'])}}" href="{{ route('form/payments/reports/page') }}"> Payments Report </a></li>
-                        <li><a class="{{set_active(['form/employee/reports/page'])}}" href="{{ route('form/employee/reports/page') }}"> Employee Report </a></li>
-                        <li><a class="{{set_active([''])}}" href="payslip-reports.html"> Payslip Report </a></li>
-                        <li><a class="{{set_active([''])}}" href="attendance-reports.html"> Attendance Report </a></li>
-                        <li><a class="{{set_active(['form/leave/reports/page'])}}" href="{{ route('form/leave/reports/page') }}"> Leave Report </a></li>
-                        <li><a class="{{set_active(['form/daily/reports/page'])}}" href="{{ route('form/daily/reports/page') }}"> Daily Report </a></li>
-                    </ul>
-                </li>
-                <li class="menu-title"> <span>Performance</span> </li>
-                <li class="{{set_active(['form/performance/indicator/page','form/performance/page','form/performance/appraisal/page'])}} submenu">
-                    <a href="#" class="{{ set_active(['form/performance/indicator/page','form/performance/page','form/performance/appraisal/page']) ? 'noti-dot' : '' }}"><i class="la la-graduation-cap"></i>
-                    <span> Performance </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['form/performance/indicator/page'])}}" href="{{ route('form/performance/indicator/page') }}"> Performance Indicator </a></li>
-                        <li><a class="{{set_active(['form/performance/page'])}}" href="{{ route('form/performance/page') }}"> Performance Review </a></li>
-                        <li><a class="{{set_active(['form/performance/appraisal/page'])}}" href="{{ route('form/performance/appraisal/page') }}"> Performance Appraisal </a></li>
-                    </ul>
-                </li>
-                <li class="{{set_active(['form/training/list/page','form/trainers/list/page'])}} submenu"> 
-                    <a href="#" class="{{ set_active(['form/training/list/page','form/trainers/list/page']) ? 'noti-dot' : '' }}"><i class="la la-edit"></i>
-                    <span> Training </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['form/training/list/page'])}}" href="{{ route('form/training/list/page') }}"> Training List </a></li>
-                        <li><a class="{{set_active(['form/trainers/list/page'])}}" href="{{ route('form/trainers/list/page') }}"> Trainers</a></li>
-                        <li><a class="{{set_active(['form/training/type/list/page'])}}" href="{{ route('form/training/type/list/page') }}"> Training Type </a></li>
-                    </ul>
-                </li>
-                <li class="menu-title"> <span>Administration</span> </li>
-                <li> <a href="assets.html"><i class="la la-object-ungroup">
-                    </i> <span>Assets</span></a>
-                </li>
-                <li class="{{set_active(['user/dashboard/index','jobs/dashboard/index','user/dashboard/all','user/dashboard/applied/jobs','user/dashboard/interviewing','user/dashboard/offered/jobs','user/dashboard/visited/jobs','user/dashboard/archived/jobs','user/dashboard/save','jobs','job/applicants','job/details','page/manage/resumes','page/shortlist/candidates','page/interview/questions','page/offer/approvals','page/experience/level','page/candidates','page/schedule/timing','page/aptitude/result'])}} submenu">
-                    <a href="#" class="{{ set_active(['user/dashboard/index','jobs/dashboard/index','user/dashboard/all','user/dashboard/save','jobs','job/applicants','job/details']) ? 'noti-dot' : '' }}"><i class="la la-briefcase"></i>
-                        <span> Jobs </span> <span class="menu-arrow"></span>
-                    </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }} {{ (request()->is('job/applicants/*')) ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{set_active(['user/dashboard/index','user/dashboard/all','user/dashboard/applied/jobs','user/dashboard/interviewing','user/dashboard/offered/jobs','user/dashboard/visited/jobs','user/dashboard/archived/jobs','user/dashboard/save'])}}" href="{{ route('user/dashboard/index') }}"> User Dasboard </a></li>
-                        <li><a class="{{set_active(['jobs/dashboard/index'])}}" href="{{ route('jobs/dashboard/index') }}"> Jobs Dasboard </a></li>
-                        <li><a class="{{set_active(['jobs','job/applicants','job/details'])}} {{ (request()->is('job/applicants/*','job/details/*')) ? 'active' : '' }}" href="{{ route('jobs') }} "> Manage Jobs </a></li>
-                        <li><a class="{{set_active(['page/manage/resumes'])}}" href="{{ route('page/manage/resumes') }}"> Manage Resumes </a></li>
-                        <li><a class="{{set_active(['page/shortlist/candidates'])}}" href="{{ route('page/shortlist/candidates') }}"> Shortlist Candidates </a></li>
-                        <li><a class="{{set_active(['page/interview/questions'])}}" href="{{ route('page/interview/questions') }}"> Interview Questions </a></li>
-                        <li><a class="{{set_active(['page/offer/approvals'])}}" href="{{ route('page/offer/approvals') }}"> Offer Approvals </a></li>
-                        <li><a class="{{set_active(['page/experience/level'])}}" href="{{ route('page/experience/level') }}"> Experience Level </a></li>
-                        <li><a class="{{set_active(['page/candidates'])}}" href="{{ route('page/candidates') }}"> Candidates List </a></li>
-                        <li><a class="{{set_active(['page/schedule/timing'])}}" href="{{ route('page/schedule/timing') }}"> Schedule timing </a></li>
-                        <li><a class="{{set_active(['page/aptitude/result'])}}" href="{{ route('page/aptitude/result') }}"> Aptitude Results </a></li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
