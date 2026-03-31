@@ -56,6 +56,7 @@ class SmokeTest extends TestCase
         $this->get('/form/holidays/new')->assertRedirect('/admin/holidays');
         $this->get('/form/leaves/new')->assertRedirect('/admin/leaves-admins');
         $this->get('/form/leavesettings/page')->assertRedirect('/admin/leave-settings');
+        $this->get('/admin/leave-balance-report')->assertOk();
         $this->get('/attendance/page')->assertRedirect('/admin/attendance-records');
         $this->get('/form/shiftscheduling/page')->assertRedirect('/admin/shift-scheduling');
         $this->get('/form/shiftlist/page')->assertRedirect('/admin/shift-scheduling');

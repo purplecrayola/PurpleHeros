@@ -1,11 +1,7 @@
-
 @extends('layouts.master')
 @section('content')
-    <!-- Page Wrapper -->
     <div class="page-wrapper">
-        <!-- Page Content -->
         <div class="content container-fluid">
-            <!-- Page Header -->
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -20,46 +16,44 @@
                     </div>
                 </div>
             </div>
-            <!-- Leave Statistics -->
+
             <div class="row">
                 <div class="col-md-3">
                     <div class="stats-info">
-                        <h6>Today Presents</h6>
-                        <h4>12 / 60</h4>
+                        <h6>Total Leave Days</h6>
+                        <h4>{{ $stats['total'] }}</h4>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-info">
-                        <h6>Planned Leaves</h6>
-                        <h4>8 <span>Today</span></h4>
+                        <h6>Annual Leave</h6>
+                        <h4>{{ $stats['annual'] }} <span>Total</span></h4>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-info">
-                        <h6>Unplanned Leaves</h6>
-                        <h4>0 <span>Today</span></h4>
+                        <h6>Sick Leave</h6>
+                        <h4>{{ $stats['sick'] }} <span>Total</span></h4>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-info">
-                        <h6>Pending Requests</h6>
-                        <h4>12</h4>
+                        <h6>Maternity Leave</h6>
+                        <h4>{{ $stats['maternity'] }}</h4>
                     </div>
                 </div>
             </div>
-            <!-- /Leave Statistics -->
 
-            <!-- Search Filter -->
             <div class="row filter-row">
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
                     <div class="form-group form-focus">
-                        <input type="text" class="form-control floating">
+                        <input type="text" class="form-control floating" disabled>
                         <label class="focus-label">Employee Name</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
                     <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
+                        <select class="select floating" disabled>
                             <option> -- Select -- </option>
                             <option>Casual Leave</option>
                             <option>Medical Leave</option>
@@ -68,9 +62,9 @@
                         <label class="focus-label">Leave Type</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"> 
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
                     <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
+                        <select class="select floating" disabled>
                             <option> -- Select -- </option>
                             <option> Pending </option>
                             <option> Approved </option>
@@ -79,31 +73,29 @@
                         <label class="focus-label">Leave Status</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
                     <div class="form-group form-focus">
                         <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
+                            <input class="form-control floating datetimepicker" type="text" disabled>
                         </div>
                         <label class="focus-label">From</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
                     <div class="form-group form-focus">
                         <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
+                            <input class="form-control floating datetimepicker" type="text" disabled>
                         </div>
                         <label class="focus-label">To</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <a href="#" class="btn btn-success btn-block"> Search </a>  
-                </div>     
+                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                    <button class="btn btn-success btn-block" type="button" disabled>Search</button>
+                </div>
             </div>
-            <!-- /Search Filter -->
 
-			<!-- /Page Header -->
-            {{-- message --}}
             {!! Toastr::message() !!}
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -120,59 +112,49 @@
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
-
                             <tbody>
-                                @if(!empty($leaves))
-                                    @foreach ($leaves as $items )  
-                                        <tr>
-                                            <td>
-                                                <h2 class="table-avatar">
-                                                    <a href="{{ url('employee/profile/'.$items->user_id) }}" class="avatar"><img alt="" src="{{ URL::to('/assets/images/'. $items->avatar) }}" alt="{{ $items->name }}"></a>
-                                                    <a href="#">{{ $items->name }}<span>{{ $items->position }}</span></a>
-                                                </h2>
-                                            </td>
-                                            <td hidden class="id">{{ $items->id }}</td>
-                                            <td class="leave_type">{{$items->leave_type}}</td>
-                                            <td hidden class="from_date">{{ $items->from_date }}</td>
-                                            <td>{{date('d F, Y',strtotime($items->from_date)) }}</td>
-                                            <td hidden class="to_date">{{$items->to_date}}</td>
-                                            <td>{{date('d F, Y',strtotime($items->to_date)) }}</td>
-                                            <td class="day">{{$items->day}} Day</td>
-                                            <td class="leave_reason">{{$items->leave_reason}}</td>
-                                            <td class="text-center">
-                                                <div class="dropdown action-label">
-                                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-                                                        <i class="fa fa-dot-circle-o text-purple"></i> New
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a>
-                                                        <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a>
-                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#approve_leave"><i class="fa fa-dot-circle-o text-success"></i> Approved</a>
-                                                        <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a>
-                                                    </div>
+                                @forelse ($leaves as $items)
+                                    <tr data-id="{{ $items->id }}" data-from-date="{{ $items->from_date }}" data-to-date="{{ $items->to_date }}" data-leave-type="{{ $items->leave_type }}" data-leave-reason="{{ $items->leave_reason }}" data-day-label="{{ $items->day }} Day{{ (int) $items->day > 1 ? 's' : '' }}">
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="{{ url('employee/profile/'.$items->user_id) }}" class="avatar"><img alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($items->avatar, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $items->name }}"></a>
+                                                <a href="{{ url('employee/profile/'.$items->user_id) }}">{{ $items->name }}<span>{{ $items->position }}</span></a>
+                                            </h2>
+                                        </td>
+                                        <td class="leave_type">{{ $items->leave_type }}</td>
+                                        <td>{{ date('d F, Y', strtotime($items->from_date)) }}</td>
+                                        <td>{{ date('d F, Y', strtotime($items->to_date)) }}</td>
+                                        <td class="day">{{ $items->day }} Day{{ (int) $items->day > 1 ? 's' : '' }}</td>
+                                        <td class="leave_reason">{{ $items->leave_reason }}</td>
+                                        <td class="text-center">
+                                            <div class="action-label">
+                                                <a class="btn btn-white btn-sm btn-rounded" href="javascript:void(0);">
+                                                    <i class="fa fa-dot-circle-o text-purple"></i> New
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item leaveUpdate" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                                 </div>
-                                            </td>
-                                            <td class="text-right">
-                                                <div class="dropdown dropdown-action">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item leaveUpdate" data-toggle="modal" data-id="'.$items->id.'" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                        <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted">No leave requests yet.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Page Content -->
-       
-        <!-- Add Leave Modal -->
+
         <div id="add_leave" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -189,9 +171,9 @@
                                 <label>Leave Type <span class="text-danger">*</span></label>
                                 <select class="select" id="leaveType" name="leave_type">
                                     <option selected disabled>Select Leave Type</option>
-                                    <option value="Casual Leave 12 Days">Casual Leave 12 Days</option>
-                                    <option value="Medical Leave">Medical Leave</option>
-                                    <option value="Loss of Pay">Loss of Pay</option>
+                                    @foreach ($leaveTypeOptions as $typeValue => $typeLabel)
+                                        <option value="{{ $typeValue }}">{{ $typeLabel }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->user_id }}">
@@ -219,9 +201,7 @@
                 </div>
             </div>
         </div>
-        <!-- /Add Leave Modal -->
-				
-        <!-- Edit Leave Modal -->
+
         <div id="edit_leave" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -239,9 +219,9 @@
                                 <label>Leave Type <span class="text-danger">*</span></label>
                                 <select class="select" id="e_leave_type" name="leave_type">
                                     <option selected disabled>Select Leave Type</option>
-                                    <option value="Casual Leave 12 Days">Casual Leave 12 Days</option>
-                                    <option value="Medical Leave">Medical Leave</option>
-                                    <option value="Loss of Pay">Loss of Pay</option>
+                                    @foreach ($leaveTypeOptions as $typeValue => $typeLabel)
+                                        <option value="{{ $typeValue }}">{{ $typeLabel }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
@@ -262,7 +242,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Leave Reason <span class="text-danger">*</span></label>
-                                <textarea rows="4" class="form-control" id="e_leave_reason" name="leave_reason" value=""></textarea>
+                                <textarea rows="4" class="form-control" id="e_leave_reason" name="leave_reason"></textarea>
                             </div>
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn">Save</button>
@@ -272,24 +252,22 @@
                 </div>
             </div>
         </div>
-        <!-- /Edit Leave Modal -->
 
-        <!-- Approve Leave Modal -->
         <div class="modal custom-modal fade" id="approve_leave" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-header">
                             <h3>Leave Approve</h3>
-                            <p>Are you sure want to approve for this leave?</p>
+                            <p>This status workflow is not wired yet in the interim build.</p>
                         </div>
                         <div class="modal-btn delete-action">
                             <div class="row">
                                 <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Approve</a>
+                                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary continue-btn">Close</a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Decline</a>
+                                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -297,9 +275,7 @@
                 </div>
             </div>
         </div>
-        <!-- /Approve Leave Modal -->
-        
-        <!-- Delete Leave Modal -->
+
         <div class="modal custom-modal fade" id="delete_approve" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -326,33 +302,27 @@
                 </div>
             </div>
         </div>
-        <!-- /Delete Leave Modal -->
     </div>
-    <!-- /Page Wrapper -->
+
     @section('script')
     <script>
-        document.getElementById("year").innerHTML = new Date().getFullYear();
+        document.getElementById('year').innerHTML = new Date().getFullYear();
     </script>
-    {{-- update js --}}
     <script>
-        $(document).on('click','.leaveUpdate',function()
-        {
-            var _this = $(this).parents('tr');
-            $('#e_id').val(_this.find('.id').text());
-            $('#e_number_of_days').val(_this.find('.day').text());
-            $('#e_from_date').val(_this.find('.from_date').text());  
-            $('#e_to_date').val(_this.find('.to_date').text());  
-            $('#e_leave_reason').val(_this.find('.leave_reason').text());
-            $('#e_leave_type').val(_this.find('.leave_type').text()).change();
-
+        $(document).on('click', '.leaveUpdate', function() {
+            var row = $(this).closest('tr');
+            $('#e_id').val(row.data('id'));
+            $('#e_number_of_days').val(row.data('day-label'));
+            $('#e_from_date').val(row.data('from-date'));
+            $('#e_to_date').val(row.data('to-date'));
+            $('#e_leave_reason').val(row.data('leave-reason'));
+            $('#e_leave_type').val(row.data('leave-type')).change();
         });
     </script>
-    {{-- delete model --}}
     <script>
-        $(document).on('click','.leaveDelete',function()
-        {
-            var _this = $(this).parents('tr');
-            $('.e_id').val(_this.find('.id').text());
+        $(document).on('click', '.leaveDelete', function() {
+            var row = $(this).closest('tr');
+            $('.e_id').val(row.data('id'));
         });
     </script>
     @endsection

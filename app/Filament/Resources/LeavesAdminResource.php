@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LeavesAdminResource\Pages;
+use App\Models\LeavePolicyBand;
 use App\Models\LeavesAdmin;
 use App\Models\User;
 use Carbon\Carbon;
@@ -42,9 +43,19 @@ class LeavesAdminResource extends Resource
                     ->options(fn (): array => User::query()->orderBy('name')->pluck('name', 'user_id')->all())
                     ->searchable()
                     ->required(),
-                TextInput::make('leave_type')
-                    ->required()
-                    ->maxLength(255),
+                Select::make('leave_type')
+                    ->label('Leave Type')
+                    ->options(function (?LeavesAdmin $record): array {
+                        $options = LeavePolicyBand::activeOptions();
+                        $current = trim((string) ($record?->leave_type ?? ''));
+                        if ($current !== '' && ! array_key_exists($current, $options)) {
+                            $options = [$current => $current . ' (legacy)'] + $options;
+                        }
+
+                        return $options;
+                    })
+                    ->searchable()
+                    ->required(),
                 DatePicker::make('from_date')
                     ->required()
                     ->native(false)
