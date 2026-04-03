@@ -53,15 +53,15 @@ class SmokeTest extends TestCase
         $this->get('/userManagement')->assertRedirect('/admin/users');
         $this->get('/change/password')->assertOk()->assertSee('Change Password');
         $this->get('/all/employee/card')->assertRedirect('/admin/employees');
-        $this->get('/form/holidays/new')->assertRedirect('/admin/holidays');
+        $this->get('/form/holidays/new')->assertOk()->assertSee('Holidays');
         $this->get('/form/leaves/new')->assertRedirect('/admin/leaves-admins');
         $this->get('/form/leavesettings/page')->assertRedirect('/admin/leave-settings');
         $this->get('/admin/leave-balance-report')->assertOk();
         $this->get('/attendance/page')->assertRedirect('/admin/attendance-records');
         $this->get('/form/shiftscheduling/page')->assertRedirect('/admin/shift-scheduling');
         $this->get('/form/shiftlist/page')->assertRedirect('/admin/shift-scheduling');
-        $this->get('/form/timesheet/page')->assertRedirect('/admin/timesheet-entries');
-        $this->get('/form/overtime/page')->assertRedirect('/admin/overtime-entries');
+        $this->get('/form/timesheet/page')->assertOk();
+        $this->get('/form/overtime/page')->assertOk();
         $this->get('/form/salary/page')->assertRedirect('/admin/staff-salaries');
         $this->get('/company/settings/page')->assertRedirect('/admin/company-settings');
         $this->get('/localization/page')->assertRedirect('/admin/company-settings');
@@ -110,13 +110,15 @@ class SmokeTest extends TestCase
         $this->get('/home')->assertForbidden();
         $this->get('/attendance/employee/page')->assertOk();
         $this->get('/form/leavesemployee/new')->assertOk();
+        $this->get('/form/timesheet/page')->assertOk();
+        $this->get('/form/overtime/page')->assertOk();
         $this->get('/employee/profile/' . $employee->user_id)->assertOk();
         $this->get('/change/password')->assertOk()->assertSee('Change Password');
 
         $this->get('/all/employee/card')->assertRedirect('/admin/employees');
         $this->get('/form/salary/page')->assertRedirect('/admin/staff-salaries');
         $this->get('/form/employee/reports/page')->assertRedirect('/admin/reports-hub');
-        $this->get('/form/holidays/new')->assertRedirect('/admin/holidays');
+        $this->get('/form/holidays/new')->assertOk()->assertSee('Holidays');
 
         $this->get('/admin/employees')->assertForbidden();
         $this->get('/admin/staff-salaries')->assertForbidden();

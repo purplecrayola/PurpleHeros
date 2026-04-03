@@ -64,7 +64,7 @@
 
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('/assets/images/'. $appraisal->avatar) }}" alt="{{ $appraisal->avatar }}"></a>
+                                            <a href="profile.html" class="avatar"><img alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($appraisal->avatar ?? null, 'assets/img/profiles/avatar-01.jpg', 'assets/images') }}" alt="{{ $appraisal->avatar }}"></a>
                                             <a href="profile.html">{{ $appraisal->name }} </a>
                                         </h2>
                                     </td>

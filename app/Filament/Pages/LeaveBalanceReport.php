@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\ArrayReportExport;
 use App\Models\LeavePolicyBand;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -9,6 +10,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Filament\Pages\Page;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LeaveBalanceReport extends Page
@@ -171,10 +173,17 @@ class LeaveBalanceReport extends Page
             ])->download($filename);
         }
 
+        if ($format === 'xlsx') {
+            return Excel::download(
+                new ArrayReportExport([$headers, ...$rows]),
+                $filename
+            );
+        }
+
         if ($format !== 'csv') {
             Notification::make()
                 ->title('Unsupported format')
-                ->body('Please export as CSV or PDF.')
+                ->body('Please export as CSV, XLSX, or PDF.')
                 ->danger()
                 ->send();
             return null;

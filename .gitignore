@@ -1,1 +1,6 @@
 .env
+
+# Local OS/editor/test artifacts
+**/.DS_Store
+.phpunit.result.cache
+.playwright-cli/

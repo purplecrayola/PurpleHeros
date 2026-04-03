@@ -43,6 +43,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($training as $key=>$training )
+                                @php
+                                    $trainingAvatar = \App\Support\MediaStorageManager::publicUrl($training->avatar ?? null, 'assets/img/profiles/avatar-01.jpg', 'assets/images');
+                                @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td hidden class="e_id">{{ $training->id }}</td>
@@ -53,7 +56,7 @@
                                     <td>
                                         <h2 class="table-avatar">
                                             <a href="{{ url('employee/profile/'.$training->user_id) }}" class="avatar">
-                                                <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                <img alt="" src="{{ $trainingAvatar }}">
                                             </a>
                                             <a href="{{ url('employee/profile/'.$training->user_id) }}">{{ $training->trainer }}</a>
                                         </h2>
@@ -65,12 +68,12 @@
                                         <ul class="team-members">
                                             <li>
                                                 <a href="#" title="Bernardo Galaviz" data-toggle="tooltip">
-                                                    <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                    <img alt="" src="{{ $trainingAvatar }}">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#" title="Richard Miles" data-toggle="tooltip">
-                                                    <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                    <img alt="" src="{{ $trainingAvatar }}">
                                                 </a>
                                             </li>
                                             <li class="dropdown avatar-dropdown">
@@ -78,31 +81,31 @@
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <div class="avatar-group">
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                         <a class="avatar avatar-xs" href="#">
-                                                            <img alt="" src="{{ URL::to('/assets/images/'. $training->avatar) }}">
+                                                            <img alt="" src="{{ $trainingAvatar }}">
                                                         </a>
                                                     </div>
                                                     <div class="avatar-pagination">

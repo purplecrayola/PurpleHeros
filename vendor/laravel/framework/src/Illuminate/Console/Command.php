@@ -45,16 +45,16 @@ class Command extends SymfonyCommand
     /**
      * The console command description.
      *
-     * @var string|null
+     * @var string
      */
-    protected $description;
+    protected $description = '';
 
     /**
      * The console command help text.
      *
      * @var string
      */
-    protected $help;
+    protected $help = '';
 
     /**
      * Indicates whether the command should be shown in the Artisan command list.
@@ -103,13 +103,13 @@ class Command extends SymfonyCommand
         // Once we have constructed the command, we'll set the description and other
         // related properties of the command. If a signature wasn't used to build
         // the command we'll set the arguments and the options on this command.
-        if (! isset($this->description)) {
-            $this->setDescription((string) static::getDefaultDescription());
-        } else {
-            $this->setDescription((string) $this->description);
+        if (! empty($this->description)) {
+            $this->setDescription($this->description);
         }
 
-        $this->setHelp((string) $this->help);
+        if (! empty($this->help)) {
+            $this->setHelp($this->help);
+        }
 
         $this->setHidden($this->isHidden());
 
@@ -242,11 +242,13 @@ class Command extends SymfonyCommand
      */
     protected function resolveCommand($command)
     {
-        if (! class_exists($command)) {
-            return $this->getApplication()->find($command);
-        }
+        if (is_string($command)) {
+            if (! class_exists($command)) {
+                return $this->getApplication()->find($command);
+            }
 
-        $command = $this->laravel->make($command);
+            $command = $this->laravel->make($command);
+        }
 
         if ($command instanceof SymfonyCommand) {
             $command->setApplication($this->getApplication());
@@ -264,6 +266,8 @@ class Command extends SymfonyCommand
      *
      * @param  \Throwable|string|null  $exception
      * @return void
+     *
+     * @throws \Illuminate\Console\ManuallyFailedException|\Throwable
      */
     public function fail(Throwable|string|null $exception = null)
     {

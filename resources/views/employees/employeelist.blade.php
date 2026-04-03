@@ -2,20 +2,16 @@
 @section('content')
     @section('style')
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" >
-    <!-- checkbox style -->
     <link rel="stylesheet" href="{{ URL::to('assets/css/checkbox-style.css') }}">
     @endsection
-    <!-- Page Wrapper -->
     <div class="page-wrapper">
-        <!-- Page Content -->
         <div class="content container-fluid">
-            <!-- Page Header -->
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Employee</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
@@ -28,37 +24,34 @@
                     </div>
                 </div>
             </div>
-			<!-- /Page Header -->
 
-            <!-- Search Filter -->
             <form action="{{ route('all/employee/list/search') }}" method="POST">
                 @csrf
                 <div class="row filter-row">
-                    <div class="col-sm-6 col-md-3">  
+                    <div class="col-sm-6 col-md-3">
                         <div class="form-group form-focus">
                             <input type="text" class="form-control floating" name="employee_id">
                             <label class="focus-label">Employee ID</label>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">  
+                    <div class="col-sm-6 col-md-3">
                         <div class="form-group form-focus">
-                            <input type="text" class="form-control floating">
+                            <input type="text" class="form-control floating" name="name">
                             <label class="focus-label">Employee Name</label>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3"> 
+                    <div class="col-sm-6 col-md-3">
                         <div class="form-group form-focus">
-                            <input type="text" class="form-control floating">
+                            <input type="text" class="form-control floating" name="position">
                             <label class="focus-label">Position</label>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">  
-                        <button type="sumit" class="btn btn-success btn-block"> Search </button>  
+                    <div class="col-sm-6 col-md-3">
+                        <button type="submit" class="btn btn-success btn-block"> Search </button>
                     </div>
                 </div>
             </form>
-            <!-- Search Filter -->
-            {{-- message --}}
+
             {!! Toastr::message() !!}
 
             <div class="row">
@@ -81,7 +74,7 @@
                                 <tr>
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="{{ url('employee/profile/'.$items->user_id) }}" class="avatar"><img alt="" src="{{ URL::to('/assets/images/'. $items->avatar) }}"></a>
+                                            <a href="{{ url('employee/profile/'.$items->user_id) }}" class="avatar"><img alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($items->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}"></a>
                                             <a href="{{ url('employee/profile/'.$items->user_id) }}">{{ $items->name }}<span>{{ $items->position }}</span></a>
                                         </h2>
                                     </td>
@@ -95,7 +88,10 @@
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="{{ url('all/employee/view/edit/'.$items->user_id) }}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                <a class="dropdown-item" href="{{url('all/employee/delete/'.$items->user_id)}}"onclick="return confirm('Are you sure to want to delete it?')"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                <form action="{{ route('all/employee/delete', $items->user_id) }}" method="POST" onsubmit="return confirm('Are you sure to want to delete it?');">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </td>
@@ -107,9 +103,7 @@
                 </div>
             </div>
         </div>
-        <!-- /Page Content -->
-      
-        <!-- Add Employee Modal -->
+
         <div id="add_employee" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
@@ -134,7 +128,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
@@ -158,7 +151,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">  
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="employee_id" name="employee_id" placeholder="Auto id employee" readonly>
@@ -169,8 +162,9 @@
                                         <label class="col-form-label">Line Manager</label>
                                         <select class="select" id="company" name="company">
                                             <option value="">-- Select --</option>
-                                            <option value="Soeng Souy">Soeng Souy</option>
-                                            <option value="StarGame Kh">StarGame Kh</option>
+                                            @foreach ($userList as $key=>$user )
+                                                <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -189,10 +183,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                            $key = 0;
-                                            $key1 = 0;
-                                        ?>
+                                        <?php $key = 0; $key1 = 0; ?>
                                         @foreach ($permission_lists as $lists )
                                         <tr>
                                             <td>{{ $lists->permission_name }}</td>
@@ -235,31 +226,23 @@
                 </div>
             </div>
         </div>
-        <!-- /Add Employee Modal -->
     </div>
-    <!-- /Page Wrapper -->
     @section('script')
     <script>
-        $("input:checkbox").on('click', function()
-        {
-            var $box = $(this);
-            if ($box.is(":checked"))
-            {
-                var group = "input:checkbox[class='" + $box.attr("class") + "']";
-                $(group).prop("checked", false);
-                $box.prop("checked", true);
-            } else {
-                $box.prop("checked", false);
-            }
+        $('#name').on('change', function() {
+            $('#employee_id').val($(this).find(':selected').data('employee_id') || '');
+            $('#email').val($(this).find(':selected').data('email') || '');
         });
-    </script>
-    
-    <script>
-        // select auto id and email
-        $('#name').on('change',function()
-        {
-            $('#employee_id').val($(this).find(':selected').data('employee_id'));
-            $('#email').val($(this).find(':selected').data('email'));
+
+        $('input:checkbox').on('click', function() {
+            var $box = $(this);
+            if ($box.is(':checked')) {
+                var group = "input:checkbox[class='" + $box.attr('class') + "']";
+                $(group).prop('checked', false);
+                $box.prop('checked', true);
+            } else {
+                $box.prop('checked', false);
+            }
         });
     </script>
     @endsection

@@ -65,7 +65,7 @@
                                     <td>{{ $performance->department }}</td>
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('/assets/images/'. $performance->avatar) }}" alt="{{ $performance->avatar }}"></a>
+                                            <a href="profile.html" class="avatar"><img alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($performance->avatar ?? null, 'assets/img/profiles/avatar-01.jpg', 'assets/images') }}" alt="{{ $performance->avatar }}"></a>
                                             <a href="profile.html">{{ $performance->name }} </a>
                                         </h2>
                                     </td>

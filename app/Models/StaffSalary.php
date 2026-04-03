@@ -12,6 +12,14 @@ class StaffSalary extends Model
         'name',
         'user_id',
         'salary',
+        'tax_station',
+        'worked_days',
+        'total_working_days',
+        'unpaid_days',
+        'salary_advance',
+        'kpi_other_deductions',
+        'annual_rent',
+        'non_taxable_reimbursement',
         'basic',
         'da',
         'hra',
@@ -24,5 +32,16 @@ class StaffSalary extends Model
         'leave',
         'prof_tax',
         'labour_welfare',
+    ];
+
+    protected $casts = [
+        'salary' => 'float',
+        'worked_days' => 'integer',
+        'total_working_days' => 'integer',
+        'unpaid_days' => 'float',
+        'salary_advance' => 'float',
+        'kpi_other_deductions' => 'float',
+        'annual_rent' => 'float',
+        'non_taxable_reimbursement' => 'float',
     ];
 }

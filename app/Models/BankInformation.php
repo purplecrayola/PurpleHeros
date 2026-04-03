@@ -14,5 +14,13 @@ class BankInformation extends Model
         'bank_account_no',
         'ifsc_code',
         'pan_no',
+        'primary_bank_name',
+        'primary_bank_account_no',
+        'primary_ifsc_code',
+        'primary_pan_no',
+        'secondary_bank_name',
+        'secondary_bank_account_no',
+        'secondary_ifsc_code',
+        'secondary_pan_no',
     ];
 }

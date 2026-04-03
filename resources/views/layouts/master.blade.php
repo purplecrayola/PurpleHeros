@@ -38,6 +38,12 @@
             --pc-header-text: {{ $brandSettings->color('header_text_color', '#FFFFFF') }};
             --pc-sidebar-text: {{ $brandSettings->color('sidebar_text_color', '#F5F7FF') }};
             --pc-sidebar-muted: {{ $brandSettings->color('sidebar_muted_text_color', '#A9B8CC') }};
+            --pc-workflow-current: {{ $brandSettings->color('workflow_current_color', '#8A00FF') }};
+            --pc-workflow-current-rgb: {{ $brandSettings->colorRgb('workflow_current_color', '#8A00FF') }};
+            --pc-workflow-completed: {{ $brandSettings->color('workflow_completed_color', '#0F9D58') }};
+            --pc-workflow-completed-rgb: {{ $brandSettings->colorRgb('workflow_completed_color', '#0F9D58') }};
+            --pc-workflow-pending: {{ $brandSettings->color('workflow_pending_color', '#DCDDDF') }};
+            --pc-workflow-pending-rgb: {{ $brandSettings->colorRgb('workflow_pending_color', '#DCDDDF') }};
             --pc-login-image: url('{{ $brandSettings->assetUrl('login_image_path', 'assets/img/brand/login-background.jpg') }}');
             --ax-primary: {{ $brandSettings->color('brand_primary_color', '#8000F9') }};
             --ax-dark: {{ $brandSettings->color('brand_dark_color', '#021530') }};

@@ -45,7 +45,7 @@
                                     <td>
                                         <h2 class="table-avatar">
                                             <a href="{{ url('employee/profile/'.$trainer->user_id) }}" class="avatar">
-                                                <img alt="" src="{{ URL::to('/assets/images/'. $trainer->avatar) }}">
+                                                <img alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($trainer->avatar ?? null, 'assets/img/profiles/avatar-01.jpg', 'assets/images') }}">
                                             </a>
                                             <a href="{{ url('employee/profile/'.$trainer->user_id) }}">{{ $trainer->full_name }}</a>
                                         </h2>

@@ -2,6 +2,7 @@
     <x-filament::section heading="Leave Balance by Employee">
         <div class="mb-4 flex flex-wrap items-center gap-2">
             <x-filament::button size="sm" color="gray" wire:click="exportBalance('csv')">Export CSV</x-filament::button>
+            <x-filament::button size="sm" color="gray" wire:click="exportBalance('xlsx')">Export XLSX</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportBalance('pdf')">Export PDF</x-filament::button>
         </div>
 

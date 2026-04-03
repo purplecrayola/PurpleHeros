@@ -6,6 +6,7 @@ use DB;
 use App\Models\Expense;
 use App\Models\Estimates;
 use App\Models\EstimatesAdd;
+use App\Support\MediaStorageManager;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 
@@ -217,8 +218,12 @@ class SalesController extends Controller
         DB::beginTransaction();
         try {
 
-            $attachments = time().'.'.$request->attachments->extension();  
-            $request->attachments->move(public_path('assets/images'), $attachments);
+            $storedAttachment = MediaStorageManager::storeUploadedFile(
+                $request->file('attachments'),
+                'assets/images',
+                'expense-attachment'
+            );
+            $attachments = $storedAttachment['path'];
 
             $expense = new Expense;
             $expense->item_name  = $request->item_name;
@@ -251,9 +256,13 @@ class SalesController extends Controller
             $attachment  = $request->file('attachments');
             if($attachment != '')
             {
-                unlink('assets/images/'.$attachments);
-                $attachments = time().'.'.$attachment->getClientOriginalExtension();  
-                $attachment->move(public_path('assets/images'), $attachments);
+                MediaStorageManager::deletePath($attachments);
+                $storedAttachment = MediaStorageManager::storeUploadedFile(
+                    $attachment,
+                    'assets/images',
+                    'expense-attachment'
+                );
+                $attachments = $storedAttachment['path'];
             } else {
                 $attachments;
             }
@@ -290,7 +299,7 @@ class SalesController extends Controller
         try{
 
             Expense::destroy($request->id);
-            unlink('assets/images/'.$request->attachments);
+            MediaStorageManager::deletePath($request->attachments);
             DB::commit();
             Toastr::success('Expense deleted successfully :)','Success');
             return redirect()->back();

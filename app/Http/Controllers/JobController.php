@@ -8,6 +8,7 @@ use App\Models\AddJob;
 use App\Models\ApplyForJob;
 use App\Models\Category;
 use App\Models\Question;
+use App\Support\MediaStorageManager;
 use Carbon\Carbon;
 use Response;
 use Brian2694\Toastr\Facades\Toastr;
@@ -180,7 +181,23 @@ class JobController extends Controller
     /** download */
     public function downloadCV($id) {
         $cv_uploads = DB::table('apply_for_jobs')->where('id',$id)->first();
-        $pathToFile = public_path("assets/images/{$cv_uploads->cv_upload}");
+        $cvPath = (string) ($cv_uploads->cv_upload ?? '');
+        if ($cvPath === '') {
+            abort(404);
+        }
+
+        if (str_starts_with($cvPath, 'http://') || str_starts_with($cvPath, 'https://')) {
+            return redirect()->away($cvPath);
+        }
+
+        $normalized = ltrim($cvPath, '/');
+        if (! str_starts_with($normalized, 'assets/')) {
+            $normalized = 'assets/images/' . $normalized;
+        }
+
+        $pathToFile = public_path($normalized);
+        abort_unless(is_file($pathToFile), 404);
+
         return \Response::download($pathToFile);
     }
 
@@ -206,9 +223,11 @@ class JobController extends Controller
         DB::beginTransaction();
         try {
 
-            /** upload file */
-            $cv_uploads = time().'.'.$request->cv_upload->extension();  
-            $request->cv_upload->move(public_path('assets/images'), $cv_uploads);
+            $storedCv = MediaStorageManager::storeUploadedFile(
+                $request->file('cv_upload'),
+                'assets/images',
+                'job-cv'
+            );
             
             $apply_job = new ApplyForJob;
             $apply_job->job_title = $request->job_title;
@@ -216,7 +235,7 @@ class JobController extends Controller
             $apply_job->phone     = $request->phone;
             $apply_job->email     = $request->email;
             $apply_job->message   = $request->message;
-            $apply_job->cv_upload = $cv_uploads;
+            $apply_job->cv_upload = $storedCv['path'];
             $apply_job->save();
 
             DB::commit();
@@ -335,9 +354,11 @@ class JobController extends Controller
         DB::beginTransaction();
         try {
 
-            /** upload file */
-            $image_to_questions = time().'.'.$request->image_to_question->extension();  
-            $request->image_to_question->move(public_path('assets/images/question'), $image_to_questions);
+            $storedImage = MediaStorageManager::storeUploadedFile(
+                $request->file('image_to_question'),
+                'assets/images/question',
+                'interview-question'
+            );
 
             $save = new Question;
             $save->category   = $request->category;
@@ -351,7 +372,7 @@ class JobController extends Controller
             $save->code_snippets      = $request->code_snippets;
             $save->answer_explanation = $request->answer_explanation;
             $save->video_link         = $request->video_link;
-            $save->image_to_question  = $image_to_questions;
+            $save->image_to_question  = $storedImage['path'];
             $save->save();
             
             DB::commit();

@@ -111,6 +111,12 @@
                             <span>My Payslips</span>
                         </a>
                     </li>
+                    <li class="{{ set_active(['learning/catalog','learning/course']) }}">
+                        <a href="{{ route('learning/catalog') }}">
+                            <i class="la la-book"></i>
+                            <span>Learning Catalog</span>
+                        </a>
+                    </li>
                     <li class="{{ set_active(['performance/tracker','performance/annual/review']) }}">
                         <a href="{{ route('performance/tracker') }}">
                             <i class="la la-line-chart"></i>

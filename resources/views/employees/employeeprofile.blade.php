@@ -1,6 +1,249 @@
 @extends('layouts.master')
 @section('content')
-    <div class="page-wrapper">
+    @php($companySettings = \App\Models\CompanySettings::current())
+    @php($brandPrimary = $companySettings->brand_primary_color ?? '#8A00FF')
+    @php($brandDark = $companySettings->brand_dark_color ?? '#00163F')
+    @php($brandNeutral = $companySettings->brand_neutral_color ?? '#DCDDDF')
+    <style>
+        .employee-profile-modern {
+            background:
+                radial-gradient(circle at 12% 12%, rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.08), transparent 32%),
+                linear-gradient(180deg, rgba(247, 249, 255, 0.92), rgba(241, 244, 252, 0.98));
+        }
+        .employee-profile-modern .content.container-fluid {
+            padding-top: 28px;
+            padding-bottom: 28px;
+        }
+        .profile-completion-card {
+            border: 1px solid color-mix(in srgb, {{ $brandPrimary }} 25%, white);
+            box-shadow: 0 14px 30px rgba(0, 22, 63, 0.08);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.97), rgba(245, 247, 255, 0.96));
+            border-radius: 20px;
+        }
+        .profile-tab-shell {
+            border: 1px solid color-mix(in srgb, {{ $brandDark }} 12%, white);
+            box-shadow: 0 8px 20px rgba(0, 22, 63, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.75);
+        }
+        .profile-tab-shell .nav-link {
+            border-radius: 999px;
+            margin: 10px 6px;
+            padding: 10px 18px;
+            font-weight: 600;
+            color: rgba(0, 22, 63, 0.68);
+        }
+        .profile-tab-shell .nav-link.active {
+            color: {{ $brandPrimary }} !important;
+            border-bottom: none;
+            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.12);
+            font-weight: 600;
+        }
+        .profile-box {
+            border: 1px solid color-mix(in srgb, {{ $brandNeutral }} 60%, white);
+            border-radius: 18px;
+            box-shadow: 0 12px 24px rgba(0, 22, 63, 0.06);
+            background: rgba(255, 255, 255, 0.94);
+        }
+        .employee-profile-modern .page-header .page-title {
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            font-weight: 700;
+        }
+        .employee-profile-modern .profile-view {
+            border-radius: 20px;
+            background: linear-gradient(120deg, rgba(255,255,255,0.96), rgba(244,247,255,0.94));
+            border: 1px solid rgba(0, 22, 63, 0.08);
+            box-shadow: 0 16px 34px rgba(0, 22, 63, 0.08);
+            padding: 24px 24px 18px;
+            position: relative;
+        }
+        .employee-profile-modern .profile-img-wrap {
+            width: 130px;
+            height: 130px;
+            position: static;
+            border-radius: 26px;
+            background: linear-gradient(145deg, rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.2), rgba(0, 22, 63, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 14px 26px rgba(15, 23, 42, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .employee-profile-modern #profile_info .profile-img-wrap.edit-img {
+            position: relative;
+            margin: 0 auto 14px;
+        }
+        .employee-profile-modern .profile-avatar-upload {
+            max-width: 280px;
+            margin: 0 auto 16px;
+            text-align: center;
+        }
+        .employee-profile-modern .profile-avatar-upload input[type="file"] {
+            font-size: 13px;
+        }
+        .employee-profile-modern .profile-img-wrap .profile-img {
+            width: 112px;
+            height: 112px;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+        .employee-profile-modern .profile-img-wrap .profile-img img,
+        .employee-profile-modern #profile_info .profile-img-wrap.edit-img img.inline-block {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+        .employee-profile-modern #profile_info .profile-img-wrap.edit-img {
+            overflow: hidden;
+        }
+        .employee-profile-modern .profile-info-left .user-name {
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #0f172a;
+        }
+        .employee-profile-modern .profile-info-left h6 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: rgba(15, 23, 42, 0.78) !important;
+            font-weight: 600;
+        }
+        .employee-profile-modern .profile-info-left small {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: rgba(15, 23, 42, 0.66) !important;
+            font-weight: 500;
+        }
+        .employee-profile-modern .profile-info-left .staff-id {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.1);
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 4px 12px;
+            margin: 2px 0 8px;
+        }
+        .employee-profile-modern .profile-info-left .doj {
+            font-size: 0.86rem;
+            color: rgba(15, 23, 42, 0.62) !important;
+        }
+        .employee-profile-modern .profile-view .staff-msg .btn-custom {
+            background: linear-gradient(135deg, {{ $brandPrimary }}, {{ $brandDark }});
+            border: none;
+            color: #fff;
+            box-shadow: 0 10px 22px rgba(138, 0, 255, 0.25);
+            border-radius: 14px;
+            min-height: 44px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .employee-profile-modern .profile-basic > .row > .col-md-7 {
+            border-left: 1px dashed rgba(15, 23, 42, 0.18);
+            padding-left: 28px;
+        }
+        .employee-profile-modern .profile-view .personal-info {
+            margin-top: 4px;
+        }
+        .employee-profile-modern .profile-view .personal-info li {
+            display: grid;
+            grid-template-columns: 108px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 6px 0;
+        }
+        .employee-profile-modern .profile-view .personal-info li .title,
+        .employee-profile-modern .profile-view .personal-info li .text {
+            float: none !important;
+            width: auto !important;
+            margin-right: 0 !important;
+            overflow: visible !important;
+            min-width: 0;
+        }
+        .employee-profile-modern .profile-view .personal-info .title {
+            font-weight: 600;
+            color: rgba(15, 23, 42, 0.78);
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .employee-profile-modern .profile-view .personal-info .text {
+            color: rgba(15, 23, 42, 0.74);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .employee-profile-modern .profile-view .personal-info .text a {
+            color: inherit;
+        }
+        .employee-profile-modern .profile-view .personal-info .text a:hover {
+            color: {{ $brandPrimary }};
+        }
+        .employee-profile-modern .pro-edit {
+            top: 18px;
+            right: 16px;
+        }
+        .employee-profile-modern .badge.bg-primary {
+            background: {{ $brandPrimary }} !important;
+            color: #fff !important;
+        }
+        .employee-profile-modern .progress {
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(0, 22, 63, 0.08);
+        }
+        .employee-profile-modern .progress-bar {
+            background: linear-gradient(90deg, {{ $brandPrimary }}, {{ $brandDark }}) !important;
+        }
+        .employee-profile-modern .card.mb-0 {
+            border-radius: 22px;
+            border: 1px solid rgba(0, 22, 63, 0.07);
+            box-shadow: 0 16px 32px rgba(0, 22, 63, 0.08);
+        }
+        .employee-profile-modern .pro-edit .edit-icon,
+        .employee-profile-modern .edit-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.1);
+            color: {{ $brandPrimary }};
+        }
+        .employee-profile-modern .pro-edit .edit-icon:hover,
+        .employee-profile-modern .edit-icon:hover {
+            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.2);
+        }
+        @media (max-width: 991px) {
+            .employee-profile-modern .page-header .page-title {
+                font-size: 1.8rem;
+            }
+            .profile-tab-shell .nav-link {
+                padding: 8px 14px;
+                margin: 8px 4px;
+            }
+            .employee-profile-modern .profile-info-left .user-name {
+                font-size: 1.6rem;
+            }
+            .employee-profile-modern .profile-basic > .row > .col-md-7 {
+                border-left: 0;
+                border-top: 1px dashed rgba(15, 23, 42, 0.18);
+                padding-left: 15px;
+                margin-top: 16px;
+                padding-top: 14px;
+            }
+            .employee-profile-modern .profile-view .personal-info li {
+                grid-template-columns: 90px 1fr;
+            }
+        }
+    </style>
+    <div class="page-wrapper employee-profile-modern">
         <!-- Page Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
@@ -17,6 +260,17 @@
             </div>
             {{-- message --}}
             {!! Toastr::message() !!}
+            <div class="card mb-3 profile-completion-card">
+                <div class="card-body py-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">Profile Completion</h5>
+                        <span class="badge bg-primary">{{ (int) ($profileCompletion ?? 0) }}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ (int) ($profileCompletion ?? 0) }}%;" aria-valuenow="{{ (int) ($profileCompletion ?? 0) }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
             <!-- /Page Header -->
             <div class="card mb-0">
                 <div class="card-body">
@@ -25,7 +279,7 @@
                             <div class="profile-view">
                                 <div class="profile-img-wrap">
                                     <div class="profile-img">
-                                        <a href="#"><img class="user-profile" alt="" src="{{ URL::to('/assets/images/'. $users->avatar) }}" alt="{{ $users->name }}"></a>
+                                        <a href="#"><img class="user-profile" alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}"></a>
                                     </div>
                                 </div>
                                 <div class="profile-basic">
@@ -37,7 +291,7 @@
                                                 <small class="text-muted">{{ $users->position }}</small>
                                                 <div class="staff-id">Employee ID : {{ $users->user_id }}</div>
                                                 <div class="small doj text-muted">Date of Join : {{ $users->join_date }}</div>
-                                                <div class="staff-msg"><a class="btn btn-custom" href="chat.html">Send Message</a></div>
+                                                <div class="staff-msg"><a class="btn btn-custom" href="mailto:{{ $users->email }}">Send Message</a></div>
                                             </div>
                                         </div>
                                         <div class="col-md-7">
@@ -97,7 +351,7 @@
                                                     <div class="text">
                                                         <div class="avatar-box">
                                                             <div class="avatar avatar-xs">
-                                                                <img src="{{ URL::to('/assets/images/'. $users->avatar) }}" alt="{{ $users->name }}">
+                                                                <img src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}">
                                                             </div>
                                                         </div>
                                                         <a>{{ $users->name }}</a>
@@ -114,11 +368,12 @@
                 </div>
             </div>
 					
-            <div class="card tab-box">
+            <div class="card tab-box profile-tab-shell">
                 <div class="row user-tabs">
                     <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
                         <ul class="nav nav-tabs nav-tabs-bottom">
                             <li class="nav-item"><a href="#emp_profile" data-toggle="tab" class="nav-link active">Profile</a></li>
+                            <li class="nav-item"><a href="#emp_onboarding" data-toggle="tab" class="nav-link">Onboarding & References</a></li>
                             <li class="nav-item"><a href="#emp_projects" data-toggle="tab" class="nav-link">Projects</a></li>
                             <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link">Bank & Statutory <small class="text-danger">(Admin Only)</small></a></li>
                         </ul>
@@ -285,7 +540,7 @@
                                             <div class="text">159843014641</div>
                                         </li>
                                         <li>
-                                            <div class="title">IFSC Code</div>
+                                            <div class="title">Bank Code (NIP)</div>
                                             <div class="text">ICI24504</div>
                                         </li>
                                         <li>
@@ -312,21 +567,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Leo</td>
-                                                    <td>Brother</td>
-                                                    <td>Feb 16th, 2019</td>
-                                                    <td>9876543210</td>
-                                                    <td class="text-right">
-                                                        <div class="dropdown dropdown-action">
-                                                            <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                                <a href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                @forelse(($familyMembers ?? collect()) as $member)
+                                                    <tr>
+                                                        <td>{{ $member->name ?: 'N/A' }}</td>
+                                                        <td>
+                                                            {{ $member->relationship ?: 'N/A' }}
+                                                            @if($member->is_next_of_kin)
+                                                                <small class="text-success">(Next of kin)</small>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $member->date_of_birth ? \Carbon\Carbon::parse($member->date_of_birth)->format('M j, Y') : 'N/A' }}</td>
+                                                        <td>{{ $member->phone ?: 'N/A' }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="5" class="text-muted">No family information recorded.</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -338,33 +596,33 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Education Informations <a href="#" class="edit-icon" data-toggle="modal" data-target="#education_info"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Education Informations <a href="#emp_onboarding" class="edit-icon" data-toggle="tab"><i class="fa fa-pencil"></i></a></h3>
                                     <div class="experience-box">
                                         <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (UG)</a>
-                                                        <div>Bsc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
+                                            @forelse(($educations ?? collect()) as $education)
+                                                <li>
+                                                    <div class="experience-user">
+                                                        <div class="before-circle"></div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">International College of Arts and Science (PG)</a>
-                                                        <div>Msc Computer Science</div>
-                                                        <span class="time">2000 - 2003</span>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content">
+                                                            <a href="#/" class="name">{{ $education->institution ?: 'Institution' }}</a>
+                                                            <div>{{ trim(($education->degree ?: '') . ' ' . ($education->field_of_study ? '(' . $education->field_of_study . ')' : '')) ?: 'N/A' }}</div>
+                                                            <span class="time">
+                                                                {{ $education->start_date ? \Carbon\Carbon::parse($education->start_date)->format('M Y') : 'N/A' }}
+                                                                -
+                                                                {{ $education->end_date ? \Carbon\Carbon::parse($education->end_date)->format('M Y') : 'Present' }}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @empty
+                                                <li>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content text-muted">No education records yet.</div>
+                                                    </div>
+                                                </li>
+                                            @endforelse
                                         </ul>
                                     </div>
                                 </div>
@@ -373,42 +631,32 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Experience <a href="#" class="edit-icon" data-toggle="modal" data-target="#experience_info"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Experience <a href="#emp_onboarding" class="edit-icon" data-toggle="tab"><i class="fa fa-pencil"></i></a></h3>
                                     <div class="experience-box">
                                         <ul class="experience-list">
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Zen Corporation</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                            @forelse(($experiences ?? collect()) as $experience)
+                                                <li>
+                                                    <div class="experience-user">
+                                                        <div class="before-circle"></div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Ron-tech</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content">
+                                                            <a href="#/" class="name">{{ ($experience->job_title ?: 'Role') . ' at ' . ($experience->company_name ?: 'Company') }}</a>
+                                                            <span class="time">
+                                                                {{ $experience->start_date ? \Carbon\Carbon::parse($experience->start_date)->format('M Y') : 'N/A' }}
+                                                                -
+                                                                {{ $experience->is_current ? 'Present' : ($experience->end_date ? \Carbon\Carbon::parse($experience->end_date)->format('M Y') : 'N/A') }}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="experience-user">
-                                                    <div class="before-circle"></div>
-                                                </div>
-                                                <div class="experience-content">
-                                                    <div class="timeline-content">
-                                                        <a href="#/" class="name">Web Designer at Dalt Technology</a>
-                                                        <span class="time">Jan 2013 - Present (5 years 2 months)</span>
+                                                </li>
+                                            @empty
+                                                <li>
+                                                    <div class="experience-content">
+                                                        <div class="timeline-content text-muted">No work experience records yet.</div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @endforelse
                                         </ul>
                                     </div>
                                 </div>
@@ -417,261 +665,119 @@
                     </div>
                 </div>
                 <!-- /Profile Info Tab -->
+
+                <div class="tab-pane fade" id="emp_onboarding">
+                    <div class="row">
+                        <div class="col-md-6 d-flex">
+                            <div class="card profile-box flex-fill">
+                                <div class="card-body">
+                                    <h3 class="card-title">Uploaded Documents</h3>
+                                    <ul class="list-group">
+                                        @forelse(($documents ?? collect()) as $document)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>{{ strtoupper($document->document_type) }}</strong>
+                                                    <div class="text-muted small">{{ $document->title ?: basename($document->file_path) }}</div>
+                                                </div>
+                                                <div class="text-right">
+                                                    <a href="{{ $document->file_url }}" target="_blank" class="btn btn-sm btn-outline-primary">Open</a>
+                                                    <div>
+                                                        <small class="{{ $document->is_verified ? 'text-success' : 'text-muted' }}">
+                                                            {{ $document->is_verified ? 'Verified' : 'Pending verification' }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @empty
+                                            <li class="list-group-item text-muted">No onboarding documents uploaded yet.</li>
+                                        @endforelse
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex">
+                            <div class="card profile-box flex-fill">
+                                <div class="card-body">
+                                    <h3 class="card-title">References</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Referee</th>
+                                                    <th>Contact</th>
+                                                    <th>Status</th>
+                                                    <th>Feedback</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse(($references ?? collect()) as $reference)
+                                                    <tr>
+                                                        <td>
+                                                            <strong>{{ $reference->referee_name }}</strong>
+                                                            <div class="text-muted small">{{ $reference->relationship ?: 'N/A' }} | {{ $reference->company_name ?: 'N/A' }}</div>
+                                                        </td>
+                                                        <td>
+                                                            <div>{{ $reference->email ?: 'N/A' }}</div>
+                                                            <div>{{ $reference->phone ?: 'N/A' }}</div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge {{ $reference->is_verified ? 'bg-success' : 'bg-secondary' }}">
+                                                                {{ $reference->is_verified ? 'Verified' : 'Pending' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{ $reference->verification_feedback ?: '-' }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-muted">No references submitted yet.</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <small class="text-muted">To verify references and add admin comments, use Admin panel: People > Employees > Edit > Onboarding & References.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Projects Tab -->
                 <div class="tab-pane fade" id="emp_projects">
                     <div class="row">
-                        <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="dropdown profile-action">
-                                        <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a data-target="#edit_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a data-target="#delete_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                        @forelse(($projectSnapshots ?? collect()) as $project)
+                            <div class="col-lg-4 col-sm-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="project-title">{{ $project->project_name ?: 'Unspecified Workstream' }}</h4>
+                                        <small class="block text-ellipsis m-b-15">
+                                            <span class="text-xs">{{ $project->entry_count }}</span>
+                                            <span class="text-muted">timesheet entries</span>
+                                        </small>
+                                        <p class="text-muted mb-2">Worked {{ $project->worked_hours }}h of {{ $project->assigned_hours }}h assigned.</p>
+                                        <div class="pro-deadline m-b-15">
+                                            <div class="sub-title">Last activity:</div>
+                                            <div class="text-muted">
+                                                {{ $project->last_activity ? \Carbon\Carbon::parse($project->last_activity)->format('M j, Y') : 'N/A' }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <h4 class="project-title"><a href="project-view.html">Office Management</a></h4>
-                                    <small class="block text-ellipsis m-b-15">
-                                        <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
-                                        <span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
-                                    </small>
-                                    <p class="text-muted">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. When an unknown printer took a galley of type and
-                                        scrambled it...
-                                    </p>
-                                    <div class="pro-deadline m-b-15">
-                                        <div class="sub-title">
-                                            Deadline:
+                                        <p class="m-b-5">Progress <span class="text-success float-right">{{ $project->progress }}%</span></p>
+                                        <div class="progress progress-xs mb-0">
+                                            <div style="width: {{ $project->progress }}%" role="progressbar" class="progress-bar bg-success"></div>
                                         </div>
-                                        <div class="text-muted">
-                                            17 Apr 2019
-                                        </div>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Project Leader :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/img/profiles/avatar-16.jpg"></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Team :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Richard Miles"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Smith"><img alt="" src="assets/img/profiles/avatar-10.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Mike Litorus"><img alt="" src="assets/img/profiles/avatar-05.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="all-users">+15</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-                                    <div class="progress progress-xs mb-0">
-                                        <div style="width: 40%" title="" data-toggle="tooltip" role="progressbar" class="progress-bar bg-success" data-original-title="40%"></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="dropdown profile-action">
-                                        <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a data-target="#edit_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a data-target="#delete_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                    <h4 class="project-title"><a href="project-view.html">Project Management</a></h4>
-                                    <small class="block text-ellipsis m-b-15">
-                                        <span class="text-xs">2</span> <span class="text-muted">open tasks, </span>
-                                        <span class="text-xs">5</span> <span class="text-muted">tasks completed</span>
-                                    </small>
-                                    <p class="text-muted">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. When an unknown printer took a galley of type and
-                                        scrambled it...
-                                    </p>
-                                    <div class="pro-deadline m-b-15">
-                                        <div class="sub-title">
-                                            Deadline:
-                                        </div>
-                                        <div class="text-muted">
-                                            17 Apr 2019
-                                        </div>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Project Leader :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/img/profiles/avatar-16.jpg"></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Team :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Richard Miles"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Smith"><img alt="" src="assets/img/profiles/avatar-10.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Mike Litorus"><img alt="" src="assets/img/profiles/avatar-05.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="all-users">+15</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-                                    <div class="progress progress-xs mb-0">
-                                        <div style="width: 40%" title="" data-toggle="tooltip" role="progressbar" class="progress-bar bg-success" data-original-title="40%"></div>
+                        @empty
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="mb-2">No Projects Yet</h5>
+                                        <p class="text-muted mb-0">Projects are generated from timesheet workstreams once activity is logged.</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="dropdown profile-action">
-                                        <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a data-target="#edit_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a data-target="#delete_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                    <h4 class="project-title"><a href="project-view.html">Video Calling App</a></h4>
-                                    <small class="block text-ellipsis m-b-15">
-                                        <span class="text-xs">3</span> <span class="text-muted">open tasks, </span>
-                                        <span class="text-xs">3</span> <span class="text-muted">tasks completed</span>
-                                    </small>
-                                    <p class="text-muted">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. When an unknown printer took a galley of type and
-                                        scrambled it...
-                                    </p>
-                                    <div class="pro-deadline m-b-15">
-                                        <div class="sub-title">
-                                            Deadline:
-                                        </div>
-                                        <div class="text-muted">
-                                            17 Apr 2019
-                                        </div>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Project Leader :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/img/profiles/avatar-16.jpg"></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Team :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Richard Miles"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Smith"><img alt="" src="assets/img/profiles/avatar-10.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Mike Litorus"><img alt="" src="assets/img/profiles/avatar-05.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="all-users">+15</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-                                    <div class="progress progress-xs mb-0">
-                                        <div style="width: 40%" title="" data-toggle="tooltip" role="progressbar" class="progress-bar bg-success" data-original-title="40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="dropdown profile-action">
-                                        <a aria-expanded="false" data-toggle="dropdown" class="action-icon dropdown-toggle" href="#"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a data-target="#edit_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a data-target="#delete_project" data-toggle="modal" href="#" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                    <h4 class="project-title"><a href="project-view.html">Hospital Administration</a></h4>
-                                    <small class="block text-ellipsis m-b-15">
-                                        <span class="text-xs">12</span> <span class="text-muted">open tasks, </span>
-                                        <span class="text-xs">4</span> <span class="text-muted">tasks completed</span>
-                                    </small>
-                                    <p class="text-muted">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. When an unknown printer took a galley of type and
-                                        scrambled it...
-                                    </p>
-                                    <div class="pro-deadline m-b-15">
-                                        <div class="sub-title">
-                                            Deadline:
-                                        </div>
-                                        <div class="text-muted">
-                                            17 Apr 2019
-                                        </div>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Project Leader :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor"><img alt="" src="assets/img/profiles/avatar-16.jpg"></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="project-members m-b-15">
-                                        <div>Team :</div>
-                                        <ul class="team-members">
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Doe"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Richard Miles"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="John Smith"><img alt="" src="assets/img/profiles/avatar-10.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-toggle="tooltip" title="Mike Litorus"><img alt="" src="assets/img/profiles/avatar-05.jpg"></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="all-users">+15</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-                                    <div class="progress progress-xs mb-0">
-                                        <div style="width: 40%" title="" data-toggle="tooltip" role="progressbar" class="progress-bar bg-success" data-original-title="40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
                 <!-- /Projects Tab -->
@@ -907,14 +1013,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="profile-img-wrap edit-img">
-                                        <img class="inline-block" src="{{ URL::to('/assets/images/'. $users->avatar) }}" alt="{{ $users->name }}">
-                                        <div class="fileupload btn">
-                                            <span class="btn-text">edit</span>
-                                            <input class="upload" type="file" id="image" name="images">
-                                            @if(!empty($users))
+                                        <img class="inline-block" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}">
+                                    </div>
+                                    <div class="profile-avatar-upload">
+                                        <label class="mb-1 d-block">Profile Picture</label>
+                                        <input class="form-control" type="file" name="images" accept="image/*">
+                                        <small class="text-muted d-block mt-1">JPG, PNG, or WEBP. Max 5MB.</small>
+                                        @if(!empty($users))
                                             <input type="hidden" name="hidden_image" id="e_image" value="{{ $users->avatar }}">
-                                            @endif
-                                        </div>
+                                        @endif
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -988,7 +1095,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Pin Code</label>
+                                        <label>Postal Code</label>
                                         @if(!empty($users))
                                             <input type="text" class="form-control" id="pin_code" name="pin_code" value="{{ $users->pin_code }}">
                                         @else
@@ -1180,7 +1287,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>IFSC Code</label>
+                                        <label>Bank Code (NIP)</label>
                                         <input type="text" class="form-control @error('ifsc_code') is-invalid @enderror" name="ifsc_code" value="{{ old('ifsc_code') }}">
                                     </div>
                                 </div>
@@ -1411,237 +1518,6 @@
         </div>
         <!-- /Emergency Contact Modal -->
         
-        <!-- Education Modal -->
-        <div id="education_info" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"> Education Informations</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
-                                                    </div>
-                                                    <label class="focus-label">Starting Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
-                                                    </div>
-                                                    <label class="focus-label">Complete Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Education Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Oxford University" class="form-control floating">
-                                                    <label class="focus-label">Institution</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Subject</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <div class="cal-icon">
-                                                        <input type="text" value="01/06/2002" class="form-control floating datetimepicker">
-                                                    </div>
-                                                    <label class="focus-label">Starting Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <div class="cal-icon">
-                                                        <input type="text" value="31/05/2006" class="form-control floating datetimepicker">
-                                                    </div>
-                                                    <label class="focus-label">Complete Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="BE Computer Science" class="form-control floating">
-                                                    <label class="focus-label">Degree</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus focused">
-                                                    <input type="text" value="Grade A" class="form-control floating">
-                                                    <label class="focus-label">Grade</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Education Modal -->
-        
-        <!-- Experience Modal -->
-        <div id="experience_info" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Experience Informations</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-scroll">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
-                                                    </div>
-                                                    <label class="focus-label">Period From</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
-                                                    </div>
-                                                    <label class="focus-label">Period To</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Experience Informations <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Digital Devlopment Inc">
-                                                    <label class="focus-label">Company Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="United States">
-                                                    <label class="focus-label">Location</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <input type="text" class="form-control floating" value="Web Developer">
-                                                    <label class="focus-label">Job Position</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="01/07/2007">
-                                                    </div>
-                                                    <label class="focus-label">Period From</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group form-focus">
-                                                    <div class="cal-icon">
-                                                        <input type="text" class="form-control floating datetimepicker" value="08/06/2018">
-                                                    </div>
-                                                    <label class="focus-label">Period To</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="add-more">
-                                            <a href="javascript:void(0);"><i class="fa fa-plus-circle"></i> Add More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Experience Modal -->
     <!-- /Page Content -->
     </div>
     @section('script')

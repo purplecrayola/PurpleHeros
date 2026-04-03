@@ -262,6 +262,27 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::get('my/payslips/{payslip}/download', 'download')->middleware('auth')->name('my/payslips/download');
     });
 
+    Route::controller(EmployeeSignatureController::class)->group(function () {
+        Route::get('signature/request/{token}', 'show')->name('signature/request/show');
+        Route::post('signature/request/{token}', 'submit')->name('signature/request/submit');
+        Route::get('signature/request/{token}/download-signed', 'downloadSigned')->name('signature/request/download-signed');
+    });
+
+    Route::controller(ReferenceCheckController::class)->group(function () {
+        Route::get('reference/check/{token}', 'show')->name('reference/check/show');
+        Route::post('reference/check/{token}', 'submit')->name('reference/check/submit');
+    });
+
+    // --------------------------- learning catalog  ----------------------------//
+    Route::controller(LearningCatalogController::class)->group(function () {
+        Route::get('learning/catalog', 'index')->middleware('auth')->name('learning/catalog');
+        Route::get('learning/course/{id}', 'viewCourse')->middleware('auth')->name('learning/course/view');
+        Route::post('learning/course/{id}/start', 'startCourse')->middleware('auth')->name('learning/course/start');
+        Route::post('learning/enrollment/{id}/progress', 'recordProgress')->middleware('auth')->name('learning/enrollment/progress');
+        Route::post('learning/enrollment/{id}/bookmark', 'addBookmark')->middleware('auth')->name('learning/enrollment/bookmark');
+        Route::post('learning/enrollment/{id}/telemetry', 'telemetry')->middleware('auth')->name('learning/enrollment/telemetry');
+    });
+
     // ---------------------------- reports  ----------------------------//
     Route::controller(ExpenseReportsController::class)->group(function () {
         Route::redirect(
@@ -309,10 +330,12 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::get('performance/annual/review', 'annualReview')->middleware('auth')->name('performance/annual/review');
         Route::get('performance/annual/review/{year}/download', 'downloadAnnualReview')->middleware('auth')->name('performance/annual/review/download');
         Route::post('performance/annual/review/{year}/self-save', 'saveSelfAnnualReview')->middleware('auth')->name('performance/annual/review/self-save');
+        Route::post('performance/annual/review/{year}/acknowledge', 'acknowledgeAnnualReview')->middleware('auth')->name('performance/annual/review/acknowledge');
         Route::get('performance/team/annual-reviews', 'teamAnnualReviews')->middleware('auth')->name('performance/team/annual-reviews');
         Route::post('performance/team/annual-reviews/generate', 'generateAnnualReviews')->middleware('auth')->name('performance/team/annual-reviews/generate');
         Route::match(['get', 'post'], 'performance/team/annual-reviews/{id}', 'managerAnnualReview')->middleware('auth')->name('performance/team/annual-reviews/view');
         Route::get('performance/team/annual-reviews/{id}/download', 'downloadAnnualReviewById')->middleware('auth')->name('performance/team/annual-reviews/download');
+        Route::post('performance/team/annual-reviews/{id}/progress', 'adminProgressAnnualReview')->middleware('auth')->name('performance/team/annual-reviews/progress');
         Route::get('performance/team/reviews', 'teamReviews')->middleware('auth')->name('performance/team/reviews');
         Route::post('performance/team/reviews/{id}', 'reviewGoal')->middleware('auth')->name('performance/team/reviews/save');
     });

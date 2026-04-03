@@ -5,13 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PersonalInformation;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 class PersonalInformationController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /** save record */
     public function saveRecord(Request $request)
     {
+        abort_unless(Auth::user()?->canAccessUserId($request->input('user_id')), 403);
         $request->validate([
             'passport_no'          => 'required|string|max:255',
             'passport_expiry_date' => 'required|string|max:255',

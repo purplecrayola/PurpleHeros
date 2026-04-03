@@ -1,203 +1,144 @@
 @extends('layouts.settings')
-    @section('style')
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" >
-    <!-- checkbox style -->
+@section('style')
     <link rel="stylesheet" href="{{ URL::to('assets/css/checkbox-style.css') }}">
-    @endsection
-    @section('content')
-    <!-- Page Wrapper -->
+@endsection
+@section('content')
     <div class="page-wrapper">
-        <!-- Page Content -->
         <div class="content container-fluid">
-            <!-- Page Header -->
             <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3 class="page-title">Roles & Permissions</h3>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Roles</h3>
+                        <p class="text-muted mb-0">Manage the role catalog used by user accounts. Fine-grained module permissions are not configurable yet in this edition.</p>
                     </div>
                 </div>
             </div>
-            {{-- message --}}
+            @include('settings.partials.settings-tabs', ['active' => 'roles'])
+
             {!! Toastr::message() !!}
-            <!-- /Page Header -->
+
             <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3">
-                    <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#add_role"><i class="fa fa-plus"></i> Add Roles</a>
+                <div class="col-md-4">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="la la-key"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>{{ $summary['roles_count'] }}</h3>
+                                <span>Configured Roles</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="la la-users"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>{{ $summary['assigned_users'] }}</h3>
+                                <span>User Assignments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="la la-warning"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>{{ $summary['unassigned_roles'] }}</h3>
+                                <span>Unused Roles</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4 col-xl-4">
+                    <a href="#" class="btn btn-primary btn-block mb-3" data-toggle="modal" data-target="#add_role"><i class="fa fa-plus"></i> Add Role</a>
                     <div class="roles-menu">
                         <ul>
-                            @foreach ($rolesPermissions as $rolesName )
-                            <li class="{{ $loop->first ? 'active' : '' }}">
-                                <span hidden class="id">{{ $rolesName->id }}</span>
-                                <a class="active" href="javascript:void(0);"><span class="roleNmae">{{ $rolesName->permissions_name }}</span>
-                                    <span class="role-action">
-                                        <span class="action-circle large rolesUpdate" data-toggle="modal" data-id="'.$rolesName->id.'" data-target="#edit_role">
-                                            <i class="material-icons">edit</i>
+                            @forelse ($rolesPermissions as $role)
+                                <li data-id="{{ $role->id }}" data-role-name="{{ $role->role_type }}" data-role-users="{{ $role->assigned_users }}" class="{{ $loop->first ? 'active' : '' }}">
+                                    <a href="javascript:void(0);">
+                                        <span>
+                                            <span class="roleName">{{ $role->role_type }}</span>
+                                            <small class="d-block text-muted">{{ $role->assigned_users }} {{ \Illuminate\Support\Str::plural('user', $role->assigned_users) }}</small>
                                         </span>
-                                        <span class="action-circle large delete-btn rolesDelete" data-toggle="modal"  data-id="'.$rolesName->id.'" data-target="#delete_role">
-                                            <i class="material-icons">delete</i>
+                                        <span class="role-action">
+                                            <span class="action-circle large rolesUpdate" data-toggle="modal" data-target="#edit_role">
+                                                <i class="material-icons">edit</i>
+                                            </span>
+                                            <span class="action-circle large delete-btn rolesDelete" data-toggle="modal" data-target="#delete_role">
+                                                <i class="material-icons">delete</i>
+                                            </span>
                                         </span>
-                                    </span>
-                                </a>
-                            </li>
-                            @endforeach
+                                    </a>
+                                </li>
+                            @empty
+                                <li class="active"><a href="javascript:void(0);"><span>No roles have been configured yet.</span></a></li>
+                            @endforelse
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-8 col-md-8 col-lg-8 col-xl-9">
-                    <h6 class="card-title m-b-20">Module Access</h6>
-                    <div class="m-b-30">
-                        <ul class="list-group notification-list">
-                            <li class="list-group-item">
-                                Employee
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="staff_module" class="check">
-                                    <label for="staff_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Holidays
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="holidays_module" class="check" checked>
-                                    <label for="holidays_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Leaves
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="leave_module" class="check" checked>
-                                    <label for="leave_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Events
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="events_module" class="check" checked>
-                                    <label for="events_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Chat
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="chat_module" class="check" checked>
-                                    <label for="chat_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Jobs
-                                <div class="status-toggle">
-                                    <input type="checkbox" id="job_module" class="check">
-                                    <label for="job_module" class="checktoggle">checkbox</label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>      	
-                    <div class="table-responsive">
-                        <table class="table table-striped custom-table">
-                            <thead>
-                                <tr>
-                                    <th>Module Permission</th>
-                                    <th class="text-center">Read</th>
-                                    <th class="text-center">Write</th>
-                                    <th class="text-center">Create</th>
-                                    <th class="text-center">Delete</th>
-                                    <th class="text-center">Import</th>
-                                    <th class="text-center">Export</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Employee</td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Holidays</td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Leaves</td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Events</td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="option-input checkbox" checked>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="col-lg-8 col-xl-8">
+                    <div class="card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title">Role Guidance</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="mb-2">What this page controls</h6>
+                                <ul class="mb-0">
+                                    <li>Role labels available during user creation and user updates</li>
+                                    <li>The role names shown in employee, payroll, and user management screens</li>
+                                    <li>Basic role cleanup for SMB deployments</li>
+                                </ul>
+                            </div>
+                            <div class="mb-4">
+                                <h6 class="mb-2">What this page does not control yet</h6>
+                                <ul class="mb-0">
+                                    <li>Field-level permissions</li>
+                                    <li>Module-by-module access rules</li>
+                                    <li>Approval routing or workflow permissions</li>
+                                </ul>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Assigned Users</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($rolesPermissions as $role)
+                                            <tr>
+                                                <td>{{ $role->role_type }}</td>
+                                                <td>{{ $role->assigned_users }}</td>
+                                                <td>
+                                                    @if ($role->assigned_users > 0)
+                                                        <span class="badge bg-inverse-success">In Use</span>
+                                                    @else
+                                                        <span class="badge bg-inverse-warning">Unused</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">No roles available.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Page Content -->
-        
-        <!-- Add Role Modal -->
+
         <div id="add_role" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -212,19 +153,18 @@
                             @csrf
                             <div class="form-group">
                                 <label>Role Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('roleName') is-invalid @enderror" id="roleName" name="roleName" value="{{ old('roleName') }}" placeholder="Enter role name">
+                                <input type="text" class="form-control @error('roleName') is-invalid @enderror" id="roleName" name="roleName" value="{{ old('roleName') }}" placeholder="e.g. HR Manager">
+                                @error('roleName')<span class="invalid-feedback d-block"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+                                <button type="submit" class="btn btn-primary submit-btn">Save Role</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Add Role Modal -->
-        
-        <!-- Edit Role Modal -->
+
         <div id="edit_role" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-md">
@@ -240,26 +180,24 @@
                             <div class="form-group">
                                 <input type="hidden" name="id" id="e_id" value="">
                                 <label>Role Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="e_roleNmae" name="roleName" value="">
+                                <input type="text" class="form-control" id="e_roleName" name="roleName" value="">
                             </div>
                             <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn">Save</button>
+                                <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Edit Role Modal -->
 
-        <!-- Delete Role Modal -->
         <div class="modal custom-modal fade" id="delete_role" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-header">
                             <h3>Delete Role</h3>
-                            <p>Are you sure want to delete?</p>
+                            <p class="delete-message">Are you sure you want to delete this role?</p>
                         </div>
                         <div class="modal-btn delete-action">
                             <form action="{{ route('roles/permissions/delete') }}" method="POST">
@@ -279,39 +217,41 @@
                 </div>
             </div>
         </div>
-        <!-- /Delete Role Modal -->
-    </div>	
-    <!-- /Page Wrapper -->
+    </div>
+
     @section('script')
-    {{-- update js --}}
-    <script>
-        $(document).on('click','.rolesUpdate',function()
-        {
-            var _this = $(this).closest("li");;
-            $('#e_id').val(_this.find('.id').text());
-            $('#e_roleNmae').val(_this.find('.roleNmae').text());
-        });
-    </script>
-    {{-- delete js --}}
-    <script>
-        $(document).on('click','.rolesDelete',function()
-        {
-            var _this = $(this).closest("li");
-            $('.e_id').val(_this.find('.id').text());
-        });
-    </script>
-     <script>
-        $('#validation_role').validate({  
-            rules: {  
-                roleName: 'required',    
-            },  
-            messages: {
-                roleName: 'Please input new role name.',  
-            },  
-            submitHandler: function(form) {  
-                form.submit();
-            }  
-        });  
-    </script>
+        <script>
+            $(document).on('click', '.rolesUpdate', function() {
+                var item = $(this).closest('li');
+                $('#e_id').val(item.data('id'));
+                $('#e_roleName').val(item.data('role-name'));
+            });
+        </script>
+        <script>
+            $(document).on('click', '.rolesDelete', function() {
+                var item = $(this).closest('li');
+                $('.e_id').val(item.data('id'));
+                var assignedUsers = parseInt(item.data('role-users'), 10) || 0;
+                var roleName = item.data('role-name');
+                $('.delete-message').text(
+                    assignedUsers > 0
+                        ? '"' + roleName + '" is assigned to ' + assignedUsers + ' users. Remove those assignments before deleting this role.'
+                        : 'Are you sure you want to delete "' + roleName + '"?'
+                );
+            });
+        </script>
+        <script>
+            $('#validation_role').validate({
+                rules: {
+                    roleName: 'required',
+                },
+                messages: {
+                    roleName: 'Please enter a role name.',
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            });
+        </script>
     @endsection
 @endsection

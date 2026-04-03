@@ -90,6 +90,6 @@ class HolidayResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return auth()->check() && auth()->user()->canManageTimeAttendance();
+        return auth()->check() && auth()->user()->canAccessHrPanel();
     }
 }

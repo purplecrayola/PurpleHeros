@@ -1,191 +1,111 @@
-
 @extends('layouts.master')
 @section('content')
-    {{-- message --}}
     {!! Toastr::message() !!}
-    <!-- Page Wrapper -->
     <div class="page-wrapper">
-        <!-- Page Content -->
         <div class="content container-fluid">
-            <!-- Page Header -->
             <div class="page-header">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Daily Report</h3>
+                        <h3 class="page-title">Daily Attendance Report</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Daily Report</li>
+                            <li class="breadcrumb-item active">Daily Attendance Report</li>
                         </ul>
-                    </div>
-                    <div class="col-auto">
-                        <a href="#" class="btn btn-primary">PDF</a>
                     </div>
                 </div>
             </div>
-            <!-- /Page Header -->
-            
-            <!-- Content Starts -->
+
+            <form method="GET" action="{{ route('form/daily/reports/page') }}" class="row filter-row mb-4">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group form-focus">
+                        <input class="form-control floating" type="date" name="report_date" value="{{ $selectedDate }}">
+                        <label class="focus-label">Report Date</label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <button type="submit" class="btn btn-success btn-block">Load</button>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <a href="{{ route('form/daily/reports/page') }}" class="btn btn-outline-secondary btn-block">Reset</a>
+                </div>
+            </form>
+
             <div class="row justify-content-center">
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
+                <div class="col-md-3 col-sm-6 d-flex">
+                    <div class="card flex-fill">
                         <div class="card-body text-center">
-                            <h3><b>101</b></h3>
+                            <h3><b>{{ $summary['total_employees'] }}</b></h3>
                             <p>Total Employees</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
+                <div class="col-md-3 col-sm-6 d-flex">
+                    <div class="card flex-fill">
                         <div class="card-body text-center">
-                            <h3 class="text-success"><b>84</b></h3>
-                            <p>Today Present</p>
+                            <h3 class="text-success"><b>{{ $summary['present'] }}</b></h3>
+                            <p>Present</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
+                <div class="col-md-3 col-sm-6 d-flex">
+                    <div class="card flex-fill">
                         <div class="card-body text-center">
-                            <h3 class="text-danger"><b>12</b></h3>
-                            <p>Today Absent</p>
+                            <h3 class="text-info"><b>{{ $summary['remote'] }}</b></h3>
+                            <p>Remote</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card">
+                <div class="col-md-3 col-sm-6 d-flex">
+                    <div class="card flex-fill">
                         <div class="card-body text-center">
-                            <h3><b>5</b></h3>
-                            <p>Today Left</p>
+                            <h3 class="text-danger"><b>{{ $summary['absent'] }}</b></h3>
+                            <p>Absent</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Search Filter -->
-            <div class="row filter-row mb-4">
-                <div class="col-sm-6 col-md-3">  
-                    <div class="form-group form-focus">
-                        <input class="form-control floating" type="text">
-                        <label class="focus-label">Employee</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3"> 
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
-                            <option>Select Department</option>
-                            <option>Designing</option>
-                            <option>Development</option>
-                            <option>Finance</option>
-                            <option>Hr & Finance</option>
-                        </select>
-                        <label class="focus-label">Department</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">From</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">To</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">  
-                    <a href="#" class="btn btn-success btn-block"> Search </a>  
-                </div>     
+
+            <div class="table-responsive">
+                <table class="table table-striped custom-table mb-0 datatable">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($attendanceRows as $row)
+                            @php
+                                $avatar = \App\Support\MediaStorageManager::publicUrl($row->avatar ?? null, 'assets/img/profiles/photo_defaults.jpg', 'assets/images');
+                                $departmentName = $row->profile_department ?: $row->user_department ?: 'Unassigned';
+                            @endphp
+                            <tr>
+                                <td>
+                                    <h2 class="table-avatar">
+                                        <a href="{{ url('employee/profile/' . $row->user_id) }}" class="avatar"><img alt="{{ $row->name }}" src="{{ $avatar }}"></a>
+                                        <a href="{{ url('employee/profile/' . $row->user_id) }}">{{ $row->name }} <span>{{ $row->user_id }}</span></a>
+                                    </h2>
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($row->attendance_date)->format('d M Y') }}</td>
+                                <td>{{ $departmentName }}</td>
+                                <td><span class="badge bg-inverse-info">{{ ucfirst($row->status) }}</span></td>
+                                <td>{{ $row->check_in ?: 'N/A' }}</td>
+                                <td>{{ $row->check_out ?: 'N/A' }}</td>
+                                <td>{{ $row->notes ?: 'N/A' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No attendance records exist for {{ \Carbon\Carbon::parse($selectedDate)->format('d M Y') }}.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <!-- /Search Filter -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped custom-table mb-0 datatable">
-                            <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    <th>Date</th>
-                                    <th>Department</th>
-                                    <th class="text-center">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('assets/img/profiles/avatar-02.jpg') }}"></a>
-                                            <a href="profile.html">John Doe <span>#0001</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>20 Dec 2020</td>
-                                    <td>Design</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-outline-info btn-sm">Week off</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('assets/img/profiles/avatar-09.jpg') }}"></a>
-                                            <a href="profile.html">Richard Miles <span>#0002</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>20 Dec 2020</td>
-                                    <td>Web Developer</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-outline-danger btn-sm">Absent</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('assets/img/profiles/avatar-10.jpg') }}"></a>
-                                            <a href="profile.html">John Smith <span>#003</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>20 Dec 2020</td>
-                                    <td>Android Developer</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-outline-info btn-sm">Week off</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('assets/img/profiles/avatar-05.jpg') }}"></a>
-                                            <a href="profile.html">Mike Litorus <span>#004</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>20 Dec 2020</td>
-                                    <td>IOS Developer</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-outline-info btn-sm">Week off</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"><img alt="" src="{{ URL::to('assets/img/profiles/avatar-11.jpg') }}"></a>
-                                            <a href="profile.html">Wilmer Deluna <span>#005</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>20 Dec 2020</td>
-                                    <td>Team Leader</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-outline-info btn-sm">Week off</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- /Content End -->
         </div>
-        <!-- /Page Content -->
     </div>
-    <!-- /Page Wrapper -->
 @endsection

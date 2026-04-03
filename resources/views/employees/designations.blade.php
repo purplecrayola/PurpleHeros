@@ -14,7 +14,7 @@
                     <div class="col">
                         <h3 class="page-title">Designations</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Designations</li>
                         </ul>
                     </div>
