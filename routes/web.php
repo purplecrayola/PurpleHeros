@@ -87,27 +87,27 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // -----------------------------settings-------------------------------------//
     Route::redirect(
         'company/settings/page',
-        config('legacy_admin_cutover.legacy_to_filament.company/settings/page', '/admin/company-settings')
+        '/admin/company-settings'
     )->middleware('auth')->name('company/settings/page');
     Route::redirect(
         'roles/permissions/page',
-        config('legacy_admin_cutover.legacy_to_filament.roles/permissions/page', '/admin/roles-permissions')
+        '/admin/roles-permissions'
     )->middleware('auth')->name('roles/permissions/page');
     Route::redirect(
         'localization/page',
-        config('legacy_admin_cutover.legacy_to_filament.localization/page', '/admin/company-settings')
+        '/admin/company-settings'
     )->middleware('auth')->name('localization/page');
     Route::redirect(
         'salary/settings/page',
-        config('legacy_admin_cutover.legacy_to_filament.salary/settings/page', '/admin/payroll-defaults')
+        '/admin/payroll-defaults'
     )->middleware('auth')->name('salary/settings/page');
     Route::redirect(
         'performance/settings/page',
-        config('legacy_admin_cutover.legacy_to_filament.performance/settings/page', '/admin/performance-settings')
+        '/admin/performance-settings'
     )->middleware('auth')->name('performance/settings/page');
     Route::redirect(
         'email/settings/page',
-        config('legacy_admin_cutover.legacy_to_filament.email/settings/page', '/admin/email-settings')
+        '/admin/email-settings'
     )->middleware('auth')->name('email/settings/page');
 
     // ----------------------------- manage users -------d-----------------------//
@@ -175,19 +175,19 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     Route::controller(EmployeeController::class)->group(function () {
         Route::redirect(
             'all/employee/card',
-            config('legacy_admin_cutover.legacy_to_filament.all/employee/card', '/admin/employees')
+            '/admin/employees'
         )->middleware('auth')->name('all/employee/card');
         Route::redirect(
             'all/employee/list',
-            config('legacy_admin_cutover.legacy_to_filament.all/employee/list', '/admin/employees')
+            '/admin/employees'
         )->middleware('auth')->name('all/employee/list');
         Route::redirect(
             'form/departments/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/departments/page', '/admin/departments')
+            '/admin/departments'
         )->middleware('auth')->name('form/departments/page');
         Route::redirect(
             'form/designations/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/designations/page', '/admin/position-types')
+            '/admin/position-types'
         )->middleware('auth')->name('form/designations/page');
         Route::get('employee/timesheets', 'timeSheetIndex')->middleware('auth')->name('employee/timesheets');
         Route::get('employee/overtime', 'overTimeIndex')->middleware('auth')->name('employee/overtime');
@@ -201,7 +201,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     Route::get('form/timesheet/page', function () {
         if (auth()->user()?->isAdmin()) {
-            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/timesheet/page', '/admin/timesheet-entries'));
+            return redirect('/admin/timesheet-entries');
         }
 
         return redirect()->route('employee/timesheets');
@@ -209,7 +209,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     Route::get('form/overtime/page', function () {
         if (auth()->user()?->isAdmin()) {
-            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/overtime/page', '/admin/overtime-entries'));
+            return redirect('/admin/overtime-entries');
         }
 
         return redirect()->route('employee/overtime');
@@ -230,7 +230,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     Route::get('form/holidays/new', function () {
         if (auth()->user()?->isAdmin()) {
-            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/holidays/new', '/admin/holidays'));
+            return redirect('/admin/holidays');
         }
 
         return redirect()->route('employee/holidays');
@@ -240,7 +240,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     Route::controller(LeavesController::class)->group(function () {
         Route::redirect(
             'form/leaves/new',
-            config('legacy_admin_cutover.legacy_to_filament.form/leaves/new', '/admin/leaves-admins')
+            '/admin/leaves-admins'
         )->middleware('auth')->name('form/leaves/new');
         Route::get('form/leavesemployee/new', 'leavesEmployee')->middleware('auth')->name('form/leavesemployee/new');
         Route::post('employee/leaves/save', 'saveRecord')->middleware('auth')->name('employee/leaves/save');
@@ -252,33 +252,33 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     Route::controller(LeavesController::class)->group(function () {
         Route::redirect(
             'form/leavesettings/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/leavesettings/page', '/admin/leave-settings')
+            '/admin/leave-settings'
         )->middleware('auth')->name('form/leavesettings/page');
         Route::redirect(
             'attendance/page',
-            config('legacy_admin_cutover.legacy_to_filament.attendance/page', '/admin/attendance-records')
+            '/admin/attendance-records'
         )->middleware('auth')->name('attendance/page');
         Route::get('attendance/employee/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/employee/page');
         Route::post('attendance/employee/check-in', 'attendanceCheckIn')->middleware('auth')->name('attendance/employee/check-in');
         Route::post('attendance/employee/check-out', 'attendanceCheckOut')->middleware('auth')->name('attendance/employee/check-out');
         Route::redirect(
             'form/shiftscheduling/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/shiftscheduling/page', '/admin/shift-scheduling')
+            '/admin/shift-scheduling'
         )->middleware('auth')->name('form/shiftscheduling/page');
         Route::redirect(
             'form/shiftlist/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/shiftlist/page', '/admin/shift-scheduling')
+            '/admin/shift-scheduling'
         )->middleware('auth')->name('form/shiftlist/page');
     });
 
     // ------------------------ form payroll  ----------------------------//
     Route::redirect(
         'form/salary/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/salary/page', '/admin/staff-salaries')
+        '/admin/staff-salaries'
     )->middleware('auth')->name('form/salary/page');
     Route::redirect(
         'form/payroll/items',
-        config('legacy_admin_cutover.legacy_to_filament.form/payroll/items', '/admin/payroll-policy-sets')
+        '/admin/payroll-policy-sets'
     )->middleware('auth')->name('form/payroll/items');
 
     Route::controller(PayslipPortalController::class)->group(function () {
@@ -310,41 +310,41 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // ---------------------------- reports  ----------------------------//
     Route::redirect(
         'form/expense/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/expense/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/expense/reports/page');
     Route::redirect(
         'form/invoice/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/invoice/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/invoice/reports/page');
     Route::redirect(
         'form/daily/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/daily/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/daily/reports/page');
     Route::redirect(
         'form/leave/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/leave/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/leave/reports/page');
     Route::redirect(
         'form/payments/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/payments/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/payments/reports/page');
     Route::redirect(
         'form/employee/reports/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/employee/reports/page', '/admin/reports-hub')
+        '/admin/reports-hub'
     )->middleware('auth')->name('form/employee/reports/page');
 
     // --------------------------- performance  -------------------------//
     Route::redirect(
         'form/performance/indicator/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/performance/indicator/page', '/admin/performance-hub')
+        '/admin/performance-hub'
     )->middleware('auth')->name('form/performance/indicator/page');
     Route::redirect(
         'form/performance/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/performance/page', '/admin/performance-hub')
+        '/admin/performance-hub'
     )->middleware('auth')->name('form/performance/page');
     Route::redirect(
         'form/performance/appraisal/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/performance/appraisal/page', '/admin/performance-hub')
+        '/admin/performance-hub'
     )->middleware('auth')->name('form/performance/appraisal/page');
 
     // --------------------------- performance tracker  -------------------------//
@@ -369,19 +369,19 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // --------------------------- training  ----------------------------//
     Route::redirect(
         'form/training/list/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/training/list/page', '/admin/trainings')
+        '/admin/trainings'
     )->middleware('auth')->name('form/training/list/page');
 
     // --------------------------- trainers  ----------------------------//
     Route::redirect(
         'form/trainers/list/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/trainers/list/page', '/admin/trainers')
+        '/admin/trainers'
     )->middleware('auth')->name('form/trainers/list/page');
 
     // ------------------------- training type  -------------------------//
     Route::redirect(
         'form/training/type/list/page',
-        config('legacy_admin_cutover.legacy_to_filament.form/training/type/list/page', '/admin/training-types')
+        '/admin/training-types'
     )->middleware('auth')->name('form/training/type/list/page');
 
     // ----------------------------- sales  ----------------------------//
@@ -420,35 +420,4 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     Route::controller(BankInformationController::class)->group(function () {
         Route::post('bank/information/save', 'saveRecord')->middleware('auth')->name('bank/information/save');
     });
-});
-
-// ----------------------------- legacy cutover redirects ------------------------------//
-// These are intentionally registered after legacy routes so they become the effective match.
-Route::middleware('auth')->group(function () {
-    if (config('legacy_admin_cutover.enabled', true)) {
-        $explicitRedirects = [
-            'localization/page',
-            'email/settings/page',
-            'salary/settings/page',
-            'form/expense/reports/page',
-            'form/invoice/reports/page',
-            'form/performance/indicator/page',
-            'form/performance/page',
-            'form/performance/appraisal/page',
-            'form/training/list/page',
-            'form/trainers/list/page',
-            'form/training/type/list/page',
-            'form/leavesettings/page',
-            'form/shiftscheduling/page',
-            'form/shiftlist/page',
-        ];
-
-        foreach ((array) config('legacy_admin_cutover.legacy_to_filament', []) as $legacyPath => $filamentPath) {
-            if (in_array($legacyPath, $explicitRedirects, true)) {
-                continue;
-            }
-
-            Route::redirect($legacyPath, $filamentPath);
-        }
-    }
 });

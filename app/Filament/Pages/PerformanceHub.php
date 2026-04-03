@@ -118,11 +118,6 @@ class PerformanceHub extends Page
             ->send();
     }
 
-    public function getLegacyCutoverMap(): array
-    {
-        return (array) config('legacy_admin_cutover.legacy_to_filament', []);
-    }
-
     private function objectivesForYear(string $userId, int $year)
     {
         return PerformanceObjective::query()

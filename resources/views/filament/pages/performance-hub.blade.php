@@ -68,27 +68,4 @@
         </div>
     </x-filament::section>
 
-    <x-filament::section heading="Legacy Admin Cutover Map">
-        @php($cutoverMap = $this->getLegacyCutoverMap())
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50 text-left">
-                    <tr>
-                        <th class="px-3 py-2">Legacy Path</th>
-                        <th class="px-3 py-2">Filament Path</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 bg-white">
-                    @forelse($cutoverMap as $legacyPath => $filamentPath)
-                        <tr>
-                            <td class="px-3 py-2"><code>{{ $legacyPath }}</code></td>
-                            <td class="px-3 py-2"><code>{{ $filamentPath }}</code></td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="2" class="px-3 py-3 text-slate-500">No cutover mappings configured.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </x-filament::section>
 </x-filament-panels::page>
