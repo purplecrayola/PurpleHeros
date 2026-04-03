@@ -125,7 +125,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/holidays/save') }}" method="POST">
+                        <form action="{{ route('employee/holidays/save') }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label>Holiday Name <span class="text-danger">*</span></label>
@@ -154,7 +154,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/holidays/update') }}" method="POST">
+                        <form action="{{ route('employee/holidays/update') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" id="holiday_edit_id">
                             <div class="form-group">
@@ -182,7 +182,7 @@
                             <h3>Delete Holiday</h3>
                             <p>Remove <strong id="holiday_delete_name"></strong> from the calendar?</p>
                         </div>
-                        <form action="{{ route('form/holidays/delete') }}" method="POST">
+                        <form action="{{ route('employee/holidays/delete') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" id="holiday_delete_id">
                             <div class="modal-btn delete-action">

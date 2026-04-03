@@ -121,7 +121,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/leaves/save') }}" method="POST">
+                        <form action="{{ route('employee/leaves/save') }}" method="POST">
                             @csrf
                             <input type="hidden" class="form-control" name="user_id" value="{{ Auth::user()->user_id }}">
                             <div class="form-group">
@@ -168,7 +168,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/leaves/edit') }}" method="POST">
+                        <form action="{{ route('employee/leaves/edit') }}" method="POST">
                             @csrf
                             <input type="hidden" id="e_id" name="id" value="">
                             <div class="form-group">
@@ -218,7 +218,7 @@
                             <p>Are you sure want to Cancel this leave?</p>
                         </div>
                         <div class="modal-btn delete-action">
-                            <form action="{{ route('form/leaves/edit/delete') }}" method="POST">
+                            <form action="{{ route('employee/leaves/delete') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="id" class="e_id" value="">
                                 <div class="row">

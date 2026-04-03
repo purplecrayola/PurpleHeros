@@ -123,7 +123,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/timesheet/save') }}" method="POST">
+                        <form action="{{ route('employee/timesheets/save') }}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-6">
@@ -193,7 +193,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/timesheet/update') }}" method="POST">
+                        <form action="{{ route('employee/timesheets/update') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" id="e_timesheet_id">
                             <div class="row">
@@ -256,7 +256,7 @@
                             <p>Are you sure you want to delete this entry?</p>
                         </div>
                         <div class="modal-btn delete-action">
-                            <form action="{{ route('form/timesheet/delete') }}" method="POST">
+                            <form action="{{ route('employee/timesheets/delete') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="id" id="d_timesheet_id">
                                 <div class="row">

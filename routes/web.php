@@ -191,12 +191,12 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         )->middleware('auth')->name('form/designations/page');
         Route::get('employee/timesheets', 'timeSheetIndex')->middleware('auth')->name('employee/timesheets');
         Route::get('employee/overtime', 'overTimeIndex')->middleware('auth')->name('employee/overtime');
-        Route::post('form/timesheet/save', 'saveRecordTimeSheets')->middleware('auth')->name('form/timesheet/save');    
-        Route::post('form/timesheet/update', 'updateRecordTimeSheets')->middleware('auth')->name('form/timesheet/update');    
-        Route::post('form/timesheet/delete', 'deleteRecordTimeSheets')->middleware('auth')->name('form/timesheet/delete');
-        Route::post('form/overtime/save', 'saveRecordOverTime')->middleware('auth')->name('form/overtime/save');    
-        Route::post('form/overtime/update', 'updateRecordOverTime')->middleware('auth')->name('form/overtime/update');    
-        Route::post('form/overtime/delete', 'deleteRecordOverTime')->middleware('auth')->name('form/overtime/delete');  
+        Route::post('employee/timesheets/save', 'saveRecordTimeSheets')->middleware('auth')->name('employee/timesheets/save');
+        Route::post('employee/timesheets/update', 'updateRecordTimeSheets')->middleware('auth')->name('employee/timesheets/update');
+        Route::post('employee/timesheets/delete', 'deleteRecordTimeSheets')->middleware('auth')->name('employee/timesheets/delete');
+        Route::post('employee/overtime/save', 'saveRecordOverTime')->middleware('auth')->name('employee/overtime/save');
+        Route::post('employee/overtime/update', 'updateRecordOverTime')->middleware('auth')->name('employee/overtime/update');
+        Route::post('employee/overtime/delete', 'deleteRecordOverTime')->middleware('auth')->name('employee/overtime/delete');
     });
 
     Route::get('form/timesheet/page', function () {
@@ -223,9 +223,9 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // --------------------------- form holiday ---------------------------//
     Route::controller(HolidayController::class)->group(function () {
         Route::get('employee/holidays', 'holiday')->middleware('auth')->name('employee/holidays');
-        Route::post('form/holidays/save', 'saveRecord')->middleware('auth')->name('form/holidays/save');
-        Route::post('form/holidays/update', 'updateRecord')->middleware('auth')->name('form/holidays/update');    
-        Route::post('form/holidays/delete', 'deleteRecord')->middleware('auth')->name('form/holidays/delete');
+        Route::post('employee/holidays/save', 'saveRecord')->middleware('auth')->name('employee/holidays/save');
+        Route::post('employee/holidays/update', 'updateRecord')->middleware('auth')->name('employee/holidays/update');
+        Route::post('employee/holidays/delete', 'deleteRecord')->middleware('auth')->name('employee/holidays/delete');
     });
 
     Route::get('form/holidays/new', function () {
@@ -243,9 +243,9 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
             config('legacy_admin_cutover.legacy_to_filament.form/leaves/new', '/admin/leaves-admins')
         )->middleware('auth')->name('form/leaves/new');
         Route::get('form/leavesemployee/new', 'leavesEmployee')->middleware('auth')->name('form/leavesemployee/new');
-        Route::post('form/leaves/save', 'saveRecord')->middleware('auth')->name('form/leaves/save');
-        Route::post('form/leaves/edit', 'editRecordLeave')->middleware('auth')->name('form/leaves/edit');
-        Route::post('form/leaves/edit/delete','deleteLeave')->middleware('auth')->name('form/leaves/edit/delete');    
+        Route::post('employee/leaves/save', 'saveRecord')->middleware('auth')->name('employee/leaves/save');
+        Route::post('employee/leaves/edit', 'editRecordLeave')->middleware('auth')->name('employee/leaves/edit');
+        Route::post('employee/leaves/delete','deleteLeave')->middleware('auth')->name('employee/leaves/delete');
     });
 
     // ------------------------ form attendance  -------------------------//

@@ -131,7 +131,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/overtime/save') }}" method="POST">
+                        <form action="{{ route('employee/overtime/save') }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label>Select Employee <span class="text-danger">*</span></label>
@@ -196,7 +196,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('form/overtime/update') }}" method="POST">
+                        <form action="{{ route('employee/overtime/update') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" id="e_overtime_id">
                             <div class="form-group">
@@ -253,7 +253,7 @@
                             <p>Are you sure want to cancel this?</p>
                         </div>
                         <div class="modal-btn delete-action">
-                            <form action="{{ route('form/overtime/delete') }}" method="POST">
+                            <form action="{{ route('employee/overtime/delete') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="id" id="d_overtime_id">
                                 <div class="row">
