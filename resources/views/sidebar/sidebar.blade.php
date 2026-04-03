@@ -48,12 +48,6 @@
                             <span>Settings</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('admin/admin-migration-tracker*') ? 'active' : '' }}">
-                        <a href="{{ url('/admin/admin-migration-tracker') }}">
-                            <i class="la la-flag-checkered"></i>
-                            <span>Migration Tracker</span>
-                        </a>
-                    </li>
                     <li>
                         <a href="{{ route('em/dashboard') }}">
                             <i class="la la-id-badge"></i>
