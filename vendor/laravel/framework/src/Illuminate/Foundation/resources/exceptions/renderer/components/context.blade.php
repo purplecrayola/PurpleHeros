@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Str')
 <x-laravel-exceptions-renderer::card class="mt-6 overflow-x-auto">
     <div>
         <span class="text-xl font-bold lg:text-2xl">Request</span>
@@ -5,7 +6,7 @@
 
     <div class="mt-2">
         <span>{{ $exception->request()->method() }}</span>
-        <span class="text-gray-500">{{ $exception->request()->httpHost() }}</span>
+        <span class="text-gray-500">{{ Str::start($exception->request()->path(), '/') }}</span>
     </div>
 
     <div class="mt-4">
@@ -50,7 +51,7 @@
                 class="min-w-0 flex-grow"
                 style="-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 3rem), transparent calc(100% - 1rem))"
             >
-                <pre class="scrollbar-hidden mx-5 my-3 overflow-y-hidden text-xs lg:text-sm"><code class="overflow-y-hidden scrollbar-hidden overflow-x-scroll scrollbar-hidden-x">{!! $exception->requestBody() ?: 'No body data' !!}</code></pre>
+                <pre class="scrollbar-hidden mx-5 my-3 overflow-y-hidden text-xs lg:text-sm"><code class="overflow-y-hidden scrollbar-hidden overflow-x-scroll scrollbar-hidden-x">{{ $exception->requestBody() ?: 'No body data' }}</code></pre>
             </span>
         </div>
     </div>
@@ -104,7 +105,7 @@
                     class="min-w-0 flex-grow"
                     style="-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 3rem), transparent calc(100% - 1rem))"
                 >
-                    <pre class="scrollbar-hidden mx-5 my-3 overflow-y-hidden text-xs lg:text-sm"><code class="overflow-y-hidden scrollbar-hidden overflow-x-scroll scrollbar-hidden-x">{!! $routeParametersContext !!}</code></pre>
+                    <pre class="scrollbar-hidden mx-5 my-3 overflow-y-hidden text-xs lg:text-sm"><code class="overflow-y-hidden scrollbar-hidden overflow-x-scroll scrollbar-hidden-x">{{ $routeParametersContext }}</code></pre>
                 </span>
             </div>
         </div>

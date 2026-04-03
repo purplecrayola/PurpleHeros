@@ -1,0 +1,673 @@
+:root {
+    --ax-bg-start: #f7f3ff;
+    --ax-bg-mid: #eef1ff;
+    --ax-bg-end: #eef3ff;
+    --ax-surface: #ffffff;
+    --ax-surface-soft: #f8fafc;
+    --ax-border: color-mix(in srgb, var(--ax-neutral, #d6dbe6) 85%, #ffffff 15%);
+    --ax-text: #0f172a;
+    --ax-muted: #52607a;
+    --ax-shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.07);
+    --ax-shadow-strong: 0 22px 50px rgba(15, 23, 42, 0.14);
+    --ax-radius: 16px;
+    --ax-radius-sm: 12px;
+}
+
+.fi-body {
+    color: var(--ax-text);
+    background:
+        radial-gradient(circle at 9% 7%, color-mix(in srgb, var(--ax-primary) 18%, transparent 82%), transparent 38%),
+        radial-gradient(circle at 86% 2%, color-mix(in srgb, var(--ax-dark) 16%, transparent 84%), transparent 34%),
+        linear-gradient(155deg, var(--ax-bg-start) 0%, var(--ax-bg-mid) 48%, var(--ax-bg-end) 100%);
+    font-family: "Manrope", "Plus Jakarta Sans", "Sora", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.fi-body,
+.fi-main,
+.fi-page,
+.fi-section {
+    color: var(--ax-text);
+}
+
+.fi-main .fi-page {
+    animation: ax-page-enter 260ms ease-out;
+    padding: 1.1rem 1.2rem 1.6rem;
+}
+
+.fi-page .fi-header-heading,
+.fi-page .fi-breadcrumbs,
+.fi-page .fi-breadcrumbs a,
+.fi-page .fi-header-subheading {
+    color: #0f172a !important;
+}
+
+.fi-page .fi-header-heading {
+    font-weight: 800;
+    letter-spacing: -0.015em;
+}
+
+.fi-page .fi-breadcrumbs {
+    opacity: 0.75;
+}
+
+.fi-topbar {
+    background: color-mix(in srgb, #ffffff 84%, transparent 16%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--ax-border);
+}
+
+.fi-sidebar {
+    background:
+        radial-gradient(circle at 14% 8%, color-mix(in srgb, var(--ax-primary) 34%, transparent 66%), transparent 34%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--ax-primary) 60%, var(--ax-dark) 40%) 0%,
+            color-mix(in srgb, var(--ax-primary) 28%, var(--ax-dark) 72%) 55%,
+            var(--ax-dark, #00163f) 100%
+        );
+    border-right: 1px solid color-mix(in srgb, var(--ax-primary) 24%, var(--ax-dark) 76%);
+}
+
+.fi-sidebar-item-label,
+.fi-sidebar-group-label,
+.fi-sidebar-nav-item-button {
+    color: var(--ax-sidebar-text, #eef5ff);
+    letter-spacing: 0.01em;
+    font-weight: 600;
+}
+
+.fi-sidebar-nav-item-icon {
+    color: var(--ax-sidebar-muted, #95a6be);
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-button,
+.fi-sidebar-nav-item-button:hover {
+    background: color-mix(in srgb, var(--ax-primary) 20%, #ffffff 80%);
+    color: #0c1630;
+}
+
+.fi-sidebar-item-active .fi-sidebar-nav-item-icon,
+.fi-sidebar-nav-item-button:hover .fi-sidebar-nav-item-icon {
+    color: #15203b;
+}
+
+.fi-section,
+.fi-ta-ctn,
+.fi-fo-field-wrp,
+.fi-wi-widget,
+.fi-ta-filter-indicators {
+    border: 1px solid var(--ax-border);
+    border-radius: var(--ax-radius);
+    background: color-mix(in srgb, var(--ax-surface) 91%, #f3f7ff 9%);
+    box-shadow: var(--ax-shadow-soft);
+}
+
+.fi-section-header,
+.fi-section-content {
+    border-color: color-mix(in srgb, var(--ax-border) 84%, #ffffff 16%);
+}
+
+.fi-section-content,
+.fi-fo-field-wrp {
+    padding: 1rem;
+}
+
+.fi-wi-stats-overview-stat {
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--ax-border) 80%, #ffffff 20%);
+    background: linear-gradient(165deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.ax-hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.2rem;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--ax-primary) 22%, #ffffff 78%);
+    background:
+        radial-gradient(circle at 85% 18%, color-mix(in srgb, var(--ax-primary) 17%, transparent 83%), transparent 40%),
+        linear-gradient(165deg, #ffffff 0%, #f4f7ff 100%);
+}
+
+.ax-hero-copy {
+    max-width: 620px;
+}
+
+.ax-hero-kicker {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ax-primary) 72%, #1f2937 28%);
+}
+
+.ax-hero-title {
+    margin: 0.15rem 0 0.25rem;
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+}
+
+.ax-hero-subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--ax-muted);
+}
+
+.ax-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ax-hero-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.42rem 0.74rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--ax-primary) 20%, #dbe3f3 80%);
+    background: color-mix(in srgb, var(--ax-primary) 9%, #ffffff 91%);
+    color: #0f1c3a;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: transform 140ms ease, background-color 140ms ease;
+}
+
+.ax-hero-chip:hover {
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--ax-primary) 17%, #ffffff 83%);
+}
+
+.fi-ta-table thead {
+    background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%);
+}
+
+.fi-ta-header-cell,
+.fi-ta-header-cell * {
+    color: #0f172a !important;
+}
+
+.fi-ta-ctn {
+    overflow: hidden;
+}
+
+.fi-ta-header,
+.fi-ta-content,
+.fi-ta-footer {
+    background: #ffffff !important;
+}
+
+.fi-ta-header {
+    border-bottom: 1px solid color-mix(in srgb, var(--ax-border) 78%, #ffffff 22%);
+}
+
+.fi-ta-content {
+    border-top: 0;
+}
+
+.fi-ta-table tbody tr {
+    transition: background-color 170ms ease, transform 170ms ease;
+}
+
+.fi-ta-table tbody tr:hover {
+    background: #f3f7ff;
+}
+
+.fi-ta-cell,
+.fi-ta-cell * {
+    color: #0f172a;
+}
+
+.fi-ta-actions a,
+.fi-ta-actions button {
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.fi-badge {
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.fi-btn-color-primary {
+    background: linear-gradient(135deg, var(--ax-primary) 0%, color-mix(in srgb, var(--ax-primary) 70%, var(--ax-dark) 30%) 100%) !important;
+    border: 0 !important;
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--ax-primary) 33%, transparent 67%) !important;
+}
+
+.fi-btn-color-primary:hover {
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+}
+
+.fi-input-wrp,
+.fi-fo-select,
+.fi-fo-date-time-picker {
+    border-radius: var(--ax-radius-sm);
+}
+
+.fi-input-wrp {
+    background: #ffffff;
+    border: 1px solid color-mix(in srgb, var(--ax-border) 84%, #ffffff 16%);
+}
+
+/* Admin login redesign */
+.fi-simple-layout {
+    background:
+        radial-gradient(1200px 680px at 12% 0%, rgba(183, 109, 255, 0.52) 0%, rgba(183, 109, 255, 0.18) 42%, transparent 70%),
+        radial-gradient(900px 520px at 90% 6%, rgba(244, 197, 146, 0.52) 0%, rgba(244, 197, 146, 0.16) 40%, transparent 74%),
+        #eceaf6;
+}
+
+.fi-simple-main {
+    max-width: min(1180px, 96vw) !important;
+    padding: 0 !important;
+    margin: 1.25rem auto !important;
+    border-radius: 26px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+}
+
+.pc-admin-login-page .fi-simple-header {
+    display: none;
+}
+
+.pc-admin-login-wrap {
+    width: 100%;
+    min-height: min(760px, 92vh);
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #2a263b;
+    box-shadow: 0 38px 90px rgba(15, 23, 42, 0.26);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    padding: 18px;
+    gap: 16px;
+}
+
+.pc-admin-login-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.pc-admin-login-hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pc-admin-login-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(12, 9, 24, 0.24) 0%, rgba(12, 9, 24, 0.78) 100%),
+        linear-gradient(135deg, rgba(138, 0, 255, 0.18) 0%, rgba(0, 22, 63, 0.58) 100%);
+}
+
+.pc-admin-login-hero-copy {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 44px;
+    color: #fff;
+}
+
+.pc-admin-login-kicker {
+    display: inline-flex;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.pc-admin-login-hero-copy h1 {
+    margin: 0 0 8px;
+    font-size: clamp(2.2rem, 3.8vw, 3.1rem);
+    line-height: 1.02;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.pc-admin-login-hero-copy p {
+    margin: 0;
+    font-size: 1.12rem;
+    max-width: 30ch;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pc-admin-login-panel {
+    padding: 44px 40px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #2f2a45 0%, #272238 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+}
+
+.pc-admin-login-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pc-admin-login-logo-tile {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    display: grid;
+    place-items: center;
+}
+
+.pc-admin-login-logo-tile img {
+    max-width: 34px;
+    max-height: 22px;
+    filter: brightness(0) invert(1);
+}
+
+.pc-admin-login-head h2 {
+    margin: 0;
+    font-size: 1.38rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #fff;
+}
+
+.pc-admin-login-head p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.45;
+}
+
+.pc-admin-login-panel .fi-input-label,
+.pc-admin-login-panel .fi-fo-field-wrp-label,
+.pc-admin-login-panel .fi-fo-field-wrp-label span {
+    color: rgba(255, 255, 255, 0.84) !important;
+}
+
+.pc-admin-login-form .fi-input-wrp {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.pc-admin-login-form input {
+    color: #fff !important;
+}
+
+.pc-admin-login-form input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.pc-admin-login-form .fi-input-wrp .fi-input-wrp-prefix,
+.pc-admin-login-form .fi-input-wrp .fi-input-wrp-suffix,
+.pc-admin-login-form .fi-input-wrp svg {
+    color: rgba(255, 255, 255, 0.62) !important;
+}
+
+.pc-admin-login-panel .fi-checkbox-input {
+    border-color: rgba(255, 255, 255, 0.32) !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.pc-admin-login-panel .fi-checkbox-input:checked {
+    background-color: var(--ax-primary) !important;
+    border-color: var(--ax-primary) !important;
+}
+
+.pc-admin-login-panel .fi-fo-checkbox-list-option-label,
+.pc-admin-login-panel .fi-fo-checkbox-list-option-label span,
+.pc-admin-login-panel .fi-fo-field-wrp-helper-text {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.pc-admin-login-form .fi-ac-action {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.pc-admin-login-form .fi-btn-color-primary {
+    border-radius: 14px !important;
+    min-height: 52px;
+}
+
+.pc-admin-login-form .fi-btn-color-primary .fi-btn-label {
+    color: #fff !important;
+}
+
+.pc-admin-login-footnote {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.pc-admin-login-hero-copy h1,
+.pc-admin-login-hero-copy p,
+.pc-admin-login-kicker {
+    color: #fff !important;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+@media (max-width: 1024px) {
+    .pc-admin-login-wrap {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .pc-admin-login-hero {
+        min-height: 280px;
+    }
+
+    .pc-admin-login-panel {
+        padding: 26px 22px;
+    }
+}
+
+.fi-input-wrp input,
+.fi-input-wrp textarea,
+.fi-input-wrp select {
+    color: #0f172a !important;
+}
+
+.fi-input-wrp input::placeholder,
+.fi-input-wrp textarea::placeholder {
+    color: #667892;
+}
+
+.fi-fo-field-wrp-label {
+    color: #23324d;
+    font-weight: 700;
+}
+
+.fi-simple-layout {
+    position: relative;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--ax-primary) 18%, transparent 82%), transparent 42%),
+        radial-gradient(circle at 92% 16%, color-mix(in srgb, var(--ax-dark) 12%, transparent 88%), transparent 38%),
+        linear-gradient(160deg, #f4f1ff 0%, #edf2ff 45%, #f8fbff 100%);
+}
+
+.fi-simple-layout::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+    mask-image: radial-gradient(circle at center, black 35%, transparent 84%);
+}
+
+.fi-simple-main-ctn {
+    max-width: 1120px;
+    width: 100%;
+}
+
+.fi-simple-main {
+    border-radius: 22px;
+    border: 1px solid color-mix(in srgb, var(--ax-border) 80%, #ffffff 20%);
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 255, 0.96) 100%);
+    box-shadow: var(--ax-shadow-strong);
+    overflow: hidden;
+    max-width: 470px;
+}
+
+.fi-simple-main,
+.fi-simple-main * {
+    color: #0f172a;
+}
+
+.fi-simple-main .fi-fo-field-wrp-label span,
+.fi-simple-main .fi-checkbox-label,
+.fi-simple-main .fi-input-wrp input,
+.fi-simple-main .fi-input-wrp textarea,
+.fi-simple-main .fi-link {
+    color: #0f172a !important;
+}
+
+.fi-simple-main .fi-input-wrp input::placeholder,
+.fi-simple-main .fi-input-wrp textarea::placeholder {
+    color: #61708b;
+}
+
+.fi-simple-main .fi-logo {
+    margin-bottom: 0.25rem;
+}
+
+.fi-simple-main .fi-fo-field-wrp {
+    box-shadow: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+.fi-simple-main [type="submit"] {
+    min-height: 44px;
+}
+
+.fi-simple-main .fi-btn {
+    border-radius: 12px;
+}
+
+.fi-simple-main .fi-checkbox-label {
+    font-size: 0.9rem;
+    color: #334155 !important;
+}
+
+.fi-simple-main .fi-link {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .fi-main .fi-page {
+        padding: 0.75rem 0.75rem 1.2rem;
+    }
+
+    .fi-simple-main {
+        border-radius: 16px;
+        margin: 0 0.75rem;
+    }
+
+    .fi-section,
+    .fi-ta-ctn,
+    .fi-wi-widget {
+        border-radius: 14px;
+    }
+
+    .ax-hero {
+        padding: 0.95rem;
+    }
+
+    .ax-hero-actions {
+        width: 100%;
+    }
+}
+
+@keyframes ax-page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Admin login contrast hardening */
+.pc-admin-login-page .fi-simple-main,
+.pc-admin-login-page .fi-simple-main * {
+    color: inherit;
+}
+
+.pc-admin-login-page .pc-admin-login-head h2,
+.pc-admin-login-page .pc-admin-login-head p,
+.pc-admin-login-page .pc-admin-login-kicker,
+.pc-admin-login-page .pc-admin-login-hero-copy h1,
+.pc-admin-login-page .pc-admin-login-hero-copy p,
+.pc-admin-login-page .pc-admin-login-footnote,
+.pc-admin-login-page .pc-admin-login-footnote span {
+    color: #ffffff !important;
+}
+
+.pc-admin-login-page .pc-admin-login-head p,
+.pc-admin-login-page .pc-admin-login-footnote {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-fo-field-wrp-label span,
+.pc-admin-login-page .pc-admin-login-form .fi-input-label,
+.pc-admin-login-page .pc-admin-login-form .fi-checkbox-label,
+.pc-admin-login-page .pc-admin-login-form .fi-link,
+.pc-admin-login-page .pc-admin-login-form .fi-fo-field-wrp-helper-text {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp input,
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp textarea,
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp select {
+    color: #ffffff !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp input::placeholder,
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp textarea::placeholder {
+    color: rgba(255, 255, 255, 0.58) !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp .fi-input-wrp-prefix,
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp .fi-input-wrp-suffix,
+.pc-admin-login-page .pc-admin-login-form .fi-input-wrp svg {
+    color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.pc-admin-login-page .pc-admin-login-form .fi-btn-color-primary,
+.pc-admin-login-page .pc-admin-login-form .fi-btn-color-primary .fi-btn-label,
+.pc-admin-login-page .pc-admin-login-form [type="submit"] {
+    color: #ffffff !important;
+}
