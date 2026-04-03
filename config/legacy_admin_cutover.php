@@ -13,6 +13,8 @@ return [
     'enabled' => env('LEGACY_ADMIN_CUTOVER_ENABLED', true),
 
     'legacy_to_filament' => [
+        'company/settings/page' => '/admin/company-settings',
+        'roles/permissions/page' => '/admin/roles-permissions',
         'form/departments/page' => '/admin/departments',
         'form/designations/page' => '/admin/position-types',
         'all/employee/card' => '/admin/employees',

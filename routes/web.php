@@ -85,30 +85,30 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     });
 
     // -----------------------------settings-------------------------------------//
-    Route::controller(SettingController::class)->group(function () {
-        Route::get('company/settings/page', 'companySettings')->middleware('auth')->name('company/settings/page'); /** index page */
-        Route::post('company/settings/save', 'saveRecord')->middleware('auth')->name('company/settings/save'); /** save record or update */
-        Route::get('roles/permissions/page', 'rolesPermissions')->middleware('auth')->name('roles/permissions/page');
-        Route::post('roles/permissions/save', 'addRecord')->middleware('auth')->name('roles/permissions/save');
-        Route::post('roles/permissions/update', 'editRolesPermissions')->middleware('auth')->name('roles/permissions/update');
-        Route::post('roles/permissions/delete', 'deleteRolesPermissions')->middleware('auth')->name('roles/permissions/delete');
-        Route::redirect(
-            'localization/page',
-            config('legacy_admin_cutover.legacy_to_filament.localization/page', '/admin/company-settings')
-        )->middleware('auth')->name('localization/page');
-        Route::redirect(
-            'salary/settings/page',
-            config('legacy_admin_cutover.legacy_to_filament.salary/settings/page', '/admin/payroll-defaults')
-        )->middleware('auth')->name('salary/settings/page');
-        Route::get('performance/settings/page', 'performanceSettingsIndex')->middleware('auth')->name('performance/settings/page');
-        Route::post('performance/settings/save', 'savePerformanceSettings')->middleware('auth')->name('performance/settings/save');
-        Route::redirect(
-            'email/settings/page',
-            config('legacy_admin_cutover.legacy_to_filament.email/settings/page', '/admin/email-settings')
-        )->middleware('auth')->name('email/settings/page');
-        Route::post('email/settings/save', 'saveEmailSettings')->middleware('auth')->name('email/settings/save');
-        Route::post('email/settings/test', 'sendEmailSettingsTest')->middleware('auth')->name('email/settings/test');
-    });
+    Route::redirect(
+        'company/settings/page',
+        config('legacy_admin_cutover.legacy_to_filament.company/settings/page', '/admin/company-settings')
+    )->middleware('auth')->name('company/settings/page');
+    Route::redirect(
+        'roles/permissions/page',
+        config('legacy_admin_cutover.legacy_to_filament.roles/permissions/page', '/admin/roles-permissions')
+    )->middleware('auth')->name('roles/permissions/page');
+    Route::redirect(
+        'localization/page',
+        config('legacy_admin_cutover.legacy_to_filament.localization/page', '/admin/company-settings')
+    )->middleware('auth')->name('localization/page');
+    Route::redirect(
+        'salary/settings/page',
+        config('legacy_admin_cutover.legacy_to_filament.salary/settings/page', '/admin/payroll-defaults')
+    )->middleware('auth')->name('salary/settings/page');
+    Route::redirect(
+        'performance/settings/page',
+        config('legacy_admin_cutover.legacy_to_filament.performance/settings/page', '/admin/performance-settings')
+    )->middleware('auth')->name('performance/settings/page');
+    Route::redirect(
+        'email/settings/page',
+        config('legacy_admin_cutover.legacy_to_filament.email/settings/page', '/admin/email-settings')
+    )->middleware('auth')->name('email/settings/page');
 
     // ----------------------------- manage users -------d-----------------------//
     Route::controller(UserManagementController::class)->group(function () {
@@ -173,25 +173,22 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     
     // ---------------------------- form employee ---------------------------//
     Route::controller(EmployeeController::class)->group(function () {
-        Route::get('all/employee/card', 'cardAllEmployee')->middleware('auth')->name('all/employee/card');
-        Route::get('all/employee/list', 'listAllEmployee')->middleware('auth')->name('all/employee/list');
-        Route::post('all/employee/save', 'saveRecord')->middleware('auth')->name('all/employee/save');
-        Route::get('all/employee/view/edit/{employee_id}', 'viewRecord');
-        Route::post('all/employee/update', 'updateRecord')->middleware('auth')->name('all/employee/update');
-        Route::post('all/employee/delete/{employee_id}', 'deleteRecord')->middleware('auth')->name('all/employee/delete');
-        Route::post('all/employee/search', 'employeeSearch')->name('all/employee/search');
-        Route::post('all/employee/list/search', 'employeeListSearch')->name('all/employee/list/search');
-
-        Route::get('form/departments/page', 'index')->middleware('auth')->name('form/departments/page');    
-        Route::post('form/departments/save', 'saveRecordDepartment')->middleware('auth')->name('form/departments/save');    
-        Route::post('form/department/update', 'updateRecordDepartment')->middleware('auth')->name('form/department/update');    
-        Route::post('form/department/delete', 'deleteRecordDepartment')->middleware('auth')->name('form/department/delete');  
-        
-        Route::get('form/designations/page', 'designationsIndex')->middleware('auth')->name('form/designations/page');    
-        Route::post('form/designations/save', 'saveRecordDesignations')->middleware('auth')->name('form/designations/save');    
-        Route::post('form/designations/update', 'updateRecordDesignations')->middleware('auth')->name('form/designations/update');    
-        Route::post('form/designations/delete', 'deleteRecordDesignations')->middleware('auth')->name('form/designations/delete');
-        
+        Route::redirect(
+            'all/employee/card',
+            config('legacy_admin_cutover.legacy_to_filament.all/employee/card', '/admin/employees')
+        )->middleware('auth')->name('all/employee/card');
+        Route::redirect(
+            'all/employee/list',
+            config('legacy_admin_cutover.legacy_to_filament.all/employee/list', '/admin/employees')
+        )->middleware('auth')->name('all/employee/list');
+        Route::redirect(
+            'form/departments/page',
+            config('legacy_admin_cutover.legacy_to_filament.form/departments/page', '/admin/departments')
+        )->middleware('auth')->name('form/departments/page');
+        Route::redirect(
+            'form/designations/page',
+            config('legacy_admin_cutover.legacy_to_filament.form/designations/page', '/admin/position-types')
+        )->middleware('auth')->name('form/designations/page');
         Route::get('form/timesheet/page', 'timeSheetIndex')->middleware('auth')->name('form/timesheet/page');    
         Route::post('form/timesheet/save', 'saveRecordTimeSheets')->middleware('auth')->name('form/timesheet/save');    
         Route::post('form/timesheet/update', 'updateRecordTimeSheets')->middleware('auth')->name('form/timesheet/update');    
@@ -218,7 +215,10 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     // -------------------------- form leaves ----------------------------//
     Route::controller(LeavesController::class)->group(function () {
-        Route::get('form/leaves/new', 'leaves')->middleware('auth')->name('form/leaves/new');
+        Route::redirect(
+            'form/leaves/new',
+            config('legacy_admin_cutover.legacy_to_filament.form/leaves/new', '/admin/leaves-admins')
+        )->middleware('auth')->name('form/leaves/new');
         Route::get('form/leavesemployee/new', 'leavesEmployee')->middleware('auth')->name('form/leavesemployee/new');
         Route::post('form/leaves/save', 'saveRecord')->middleware('auth')->name('form/leaves/save');
         Route::post('form/leaves/edit', 'editRecordLeave')->middleware('auth')->name('form/leaves/edit');
@@ -231,7 +231,10 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
             'form/leavesettings/page',
             config('legacy_admin_cutover.legacy_to_filament.form/leavesettings/page', '/admin/leave-settings')
         )->middleware('auth')->name('form/leavesettings/page');
-        Route::get('attendance/page', 'attendanceIndex')->middleware('auth')->name('attendance/page');
+        Route::redirect(
+            'attendance/page',
+            config('legacy_admin_cutover.legacy_to_filament.attendance/page', '/admin/attendance-records')
+        )->middleware('auth')->name('attendance/page');
         Route::get('attendance/employee/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/employee/page');
         Route::post('attendance/employee/check-in', 'attendanceCheckIn')->middleware('auth')->name('attendance/employee/check-in');
         Route::post('attendance/employee/check-out', 'attendanceCheckOut')->middleware('auth')->name('attendance/employee/check-out');
@@ -246,16 +249,14 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     });
 
     // ------------------------ form payroll  ----------------------------//
-    Route::controller(PayrollController::class)->group(function () {
-        Route::get('form/salary/page', 'salary')->middleware('auth')->name('form/salary/page');
-        Route::post('form/salary/save','saveRecord')->middleware('auth')->name('form/salary/save');
-        Route::post('form/salary/update', 'updateRecord')->middleware('auth')->name('form/salary/update');
-        Route::post('form/salary/delete', 'deleteRecord')->middleware('auth')->name('form/salary/delete');
-        Route::get('form/salary/view/{user_id}', 'salaryView')->middleware('auth');
-        Route::get('form/payroll/items', 'payrollItems')->middleware('auth')->name('form/payroll/items');    
-        Route::get('extra/report/pdf', 'reportPDF')->middleware('auth');    
-        Route::get('extra/report/excel', 'reportExcel')->middleware('auth');    
-    });
+    Route::redirect(
+        'form/salary/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/salary/page', '/admin/staff-salaries')
+    )->middleware('auth')->name('form/salary/page');
+    Route::redirect(
+        'form/payroll/items',
+        config('legacy_admin_cutover.legacy_to_filament.form/payroll/items', '/admin/payroll-policy-sets')
+    )->middleware('auth')->name('form/payroll/items');
 
     Route::controller(PayslipPortalController::class)->group(function () {
         Route::get('my/payslips', 'index')->middleware('auth')->name('my/payslips');
@@ -284,42 +285,44 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     });
 
     // ---------------------------- reports  ----------------------------//
-    Route::controller(ExpenseReportsController::class)->group(function () {
-        Route::redirect(
-            'form/expense/reports/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/expense/reports/page', '/admin/reports-hub')
-        )->middleware('auth')->name('form/expense/reports/page');
-        Route::redirect(
-            'form/invoice/reports/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/invoice/reports/page', '/admin/reports-hub')
-        )->middleware('auth')->name('form/invoice/reports/page');
-        Route::get('form/daily/reports/page', 'dailyReport')->middleware('auth')->name('form/daily/reports/page');
-        Route::get('form/leave/reports/page','leaveReport')->middleware('auth')->name('form/leave/reports/page');
-        Route::get('form/payments/reports/page','paymentsReportIndex')->middleware('auth')->name('form/payments/reports/page');
-        Route::get('form/employee/reports/page','employeeReportsIndex')->middleware('auth')->name('form/employee/reports/page');
-    });
+    Route::redirect(
+        'form/expense/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/expense/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/expense/reports/page');
+    Route::redirect(
+        'form/invoice/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/invoice/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/invoice/reports/page');
+    Route::redirect(
+        'form/daily/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/daily/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/daily/reports/page');
+    Route::redirect(
+        'form/leave/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/leave/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/leave/reports/page');
+    Route::redirect(
+        'form/payments/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/payments/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/payments/reports/page');
+    Route::redirect(
+        'form/employee/reports/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/employee/reports/page', '/admin/reports-hub')
+    )->middleware('auth')->name('form/employee/reports/page');
 
     // --------------------------- performance  -------------------------//
-    Route::controller(PerformanceController::class)->group(function () {
-        Route::redirect(
-            'form/performance/indicator/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/performance/indicator/page', '/admin/performance-hub')
-        )->middleware('auth')->name('form/performance/indicator/page');
-        Route::redirect(
-            'form/performance/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/performance/page', '/admin/performance-hub')
-        )->middleware('auth')->name('form/performance/page');
-        Route::redirect(
-            'form/performance/appraisal/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/performance/appraisal/page', '/admin/performance-hub')
-        )->middleware('auth')->name('form/performance/appraisal/page');
-        Route::post('form/performance/indicator/save','saveRecordIndicator')->middleware('auth')->name('form/performance/indicator/save');
-        Route::post('form/performance/indicator/delete','deleteIndicator')->middleware('auth')->name('form/performance/indicator/delete');
-        Route::post('form/performance/indicator/update', 'updateIndicator')->middleware('auth')->name('form/performance/indicator/update');
-        Route::post('form/performance/appraisal/save', 'saveRecordAppraisal')->middleware('auth')->name('form/performance/appraisal/save');
-        Route::post('form/performance/appraisal/update', 'updateAppraisal')->middleware('auth')->name('form/performance/appraisal/update');
-        Route::post('form/performance/appraisal/delete', 'deleteAppraisal')->middleware('auth')->name('form/performance/appraisal/delete');
-    });
+    Route::redirect(
+        'form/performance/indicator/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/performance/indicator/page', '/admin/performance-hub')
+    )->middleware('auth')->name('form/performance/indicator/page');
+    Route::redirect(
+        'form/performance/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/performance/page', '/admin/performance-hub')
+    )->middleware('auth')->name('form/performance/page');
+    Route::redirect(
+        'form/performance/appraisal/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/performance/appraisal/page', '/admin/performance-hub')
+    )->middleware('auth')->name('form/performance/appraisal/page');
 
     // --------------------------- performance tracker  -------------------------//
     Route::controller(PerformanceTrackerController::class)->group(function () {
@@ -341,37 +344,22 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     });
 
     // --------------------------- training  ----------------------------//
-    Route::controller(TrainingController::class)->group(function () {
-        Route::redirect(
-            'form/training/list/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/training/list/page', '/admin/trainings')
-        )->middleware('auth')->name('form/training/list/page');
-        Route::post('form/training/save', 'addNewTraining')->middleware('auth')->name('form/training/save');
-        Route::post('form/training/delete', 'deleteTraining')->middleware('auth')->name('form/training/delete');
-        Route::post('form/training/update', 'updateTraining')->middleware('auth')->name('form/training/update');    
-    });
+    Route::redirect(
+        'form/training/list/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/training/list/page', '/admin/trainings')
+    )->middleware('auth')->name('form/training/list/page');
 
     // --------------------------- trainers  ----------------------------//
-    Route::controller(TrainersController::class)->group(function () {
-        Route::redirect(
-            'form/trainers/list/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/trainers/list/page', '/admin/trainers')
-        )->middleware('auth')->name('form/trainers/list/page');
-        Route::post('form/trainers/save', 'saveRecord')->middleware('auth')->name('form/trainers/save');
-        Route::post('form/trainers/update', 'updateRecord')->middleware('auth')->name('form/trainers/update');
-        Route::post('form/trainers/delete', 'deleteRecord')->middleware('auth')->name('form/trainers/delete');
-    });
+    Route::redirect(
+        'form/trainers/list/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/trainers/list/page', '/admin/trainers')
+    )->middleware('auth')->name('form/trainers/list/page');
 
     // ------------------------- training type  -------------------------//
-    Route::controller(TrainingTypeController::class)->group(function () {
-        Route::redirect(
-            'form/training/type/list/page',
-            config('legacy_admin_cutover.legacy_to_filament.form/training/type/list/page', '/admin/training-types')
-        )->middleware('auth')->name('form/training/type/list/page');
-        Route::post('form/training/type/save', 'saveRecord')->middleware('auth')->name('form/training/type/save');
-        Route::post('form//training/type/update', 'updateRecord')->middleware('auth')->name('form//training/type/update');
-        Route::post('form//training/type/delete', 'deleteTrainingType')->middleware('auth')->name('form//training/type/delete');    
-    });
+    Route::redirect(
+        'form/training/type/list/page',
+        config('legacy_admin_cutover.legacy_to_filament.form/training/type/list/page', '/admin/training-types')
+    )->middleware('auth')->name('form/training/type/list/page');
 
     // ----------------------------- sales  ----------------------------//
     Route::controller(SalesController::class)->group(function () {
