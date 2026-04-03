@@ -189,16 +189,31 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
             'form/designations/page',
             config('legacy_admin_cutover.legacy_to_filament.form/designations/page', '/admin/position-types')
         )->middleware('auth')->name('form/designations/page');
-        Route::get('form/timesheet/page', 'timeSheetIndex')->middleware('auth')->name('form/timesheet/page');    
+        Route::get('employee/timesheets', 'timeSheetIndex')->middleware('auth')->name('employee/timesheets');
+        Route::get('employee/overtime', 'overTimeIndex')->middleware('auth')->name('employee/overtime');
         Route::post('form/timesheet/save', 'saveRecordTimeSheets')->middleware('auth')->name('form/timesheet/save');    
         Route::post('form/timesheet/update', 'updateRecordTimeSheets')->middleware('auth')->name('form/timesheet/update');    
         Route::post('form/timesheet/delete', 'deleteRecordTimeSheets')->middleware('auth')->name('form/timesheet/delete');
-        
-        Route::get('form/overtime/page', 'overTimeIndex')->middleware('auth')->name('form/overtime/page');    
         Route::post('form/overtime/save', 'saveRecordOverTime')->middleware('auth')->name('form/overtime/save');    
         Route::post('form/overtime/update', 'updateRecordOverTime')->middleware('auth')->name('form/overtime/update');    
         Route::post('form/overtime/delete', 'deleteRecordOverTime')->middleware('auth')->name('form/overtime/delete');  
     });
+
+    Route::get('form/timesheet/page', function () {
+        if (auth()->user()?->isAdmin()) {
+            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/timesheet/page', '/admin/timesheet-entries'));
+        }
+
+        return redirect()->route('employee/timesheets');
+    })->middleware('auth')->name('form/timesheet/page');
+
+    Route::get('form/overtime/page', function () {
+        if (auth()->user()?->isAdmin()) {
+            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/overtime/page', '/admin/overtime-entries'));
+        }
+
+        return redirect()->route('employee/overtime');
+    })->middleware('auth')->name('form/overtime/page');
 
     // ------------------------- profile employee --------------------------//
     Route::controller(EmployeeController::class)->group(function () {
@@ -207,11 +222,19 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     // --------------------------- form holiday ---------------------------//
     Route::controller(HolidayController::class)->group(function () {
-        Route::get('form/holidays/new', 'holiday')->middleware('auth')->name('form/holidays/new');
+        Route::get('employee/holidays', 'holiday')->middleware('auth')->name('employee/holidays');
         Route::post('form/holidays/save', 'saveRecord')->middleware('auth')->name('form/holidays/save');
         Route::post('form/holidays/update', 'updateRecord')->middleware('auth')->name('form/holidays/update');    
         Route::post('form/holidays/delete', 'deleteRecord')->middleware('auth')->name('form/holidays/delete');
     });
+
+    Route::get('form/holidays/new', function () {
+        if (auth()->user()?->isAdmin()) {
+            return redirect(config('legacy_admin_cutover.legacy_to_filament.form/holidays/new', '/admin/holidays'));
+        }
+
+        return redirect()->route('employee/holidays');
+    })->middleware('auth')->name('form/holidays/new');
 
     // -------------------------- form leaves ----------------------------//
     Route::controller(LeavesController::class)->group(function () {

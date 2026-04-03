@@ -560,7 +560,7 @@ class EmployeeController extends Controller
 
             DB::commit();
             Toastr::success('Timesheet entry created successfully :)', 'Success');
-            return redirect()->route('form/timesheet/page');
+            return redirect()->route('employee/timesheets');
         } catch (\Throwable $e) {
             DB::rollBack();
             Toastr::error('Timesheet entry creation failed :)', 'Error');
@@ -613,7 +613,7 @@ class EmployeeController extends Controller
 
             DB::commit();
             Toastr::success('Timesheet entry updated successfully :)', 'Success');
-            return redirect()->route('form/timesheet/page');
+            return redirect()->route('employee/timesheets');
         } catch (\Throwable $e) {
             DB::rollBack();
             Toastr::error('Timesheet entry update failed :)', 'Error');
@@ -633,7 +633,7 @@ class EmployeeController extends Controller
             $this->assertCanManageEntryOwner((string) $entry->user_id);
             $entry->delete();
             Toastr::success('Timesheet entry deleted successfully :)', 'Success');
-            return redirect()->route('form/timesheet/page');
+            return redirect()->route('employee/timesheets');
         } catch (\Throwable $e) {
             Toastr::error('Timesheet entry delete failed :)', 'Error');
             return redirect()->back();
@@ -691,7 +691,7 @@ class EmployeeController extends Controller
 
             DB::commit();
             Toastr::success('Overtime entry created successfully :)', 'Success');
-            return redirect()->route('form/overtime/page');
+            return redirect()->route('employee/overtime');
         } catch (\Throwable $e) {
             DB::rollBack();
             Toastr::error('Overtime entry creation failed :)', 'Error');
@@ -732,7 +732,7 @@ class EmployeeController extends Controller
 
             DB::commit();
             Toastr::success('Overtime entry updated successfully :)', 'Success');
-            return redirect()->route('form/overtime/page');
+            return redirect()->route('employee/overtime');
         } catch (\Throwable $e) {
             DB::rollBack();
             Toastr::error('Overtime entry update failed :)', 'Error');
@@ -752,7 +752,7 @@ class EmployeeController extends Controller
             $this->assertCanManageEntryOwner((string) $entry->user_id);
             $entry->delete();
             Toastr::success('Overtime entry deleted successfully :)', 'Success');
-            return redirect()->route('form/overtime/page');
+            return redirect()->route('employee/overtime');
         } catch (\Throwable $e) {
             Toastr::error('Overtime entry delete failed :)', 'Error');
             return redirect()->back();

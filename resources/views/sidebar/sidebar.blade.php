@@ -87,20 +87,20 @@
                             <span>My Attendance</span>
                         </a>
                     </li>
-                    <li class="{{ set_active(['form/timesheet/page']) }}">
-                        <a href="{{ route('form/timesheet/page') }}">
+                    <li class="{{ set_active(['employee/timesheets']) }}">
+                        <a href="{{ route('employee/timesheets') }}">
                             <i class="la la-file-text"></i>
                             <span>My Timesheets</span>
                         </a>
                     </li>
-                    <li class="{{ set_active(['form/overtime/page']) }}">
-                        <a href="{{ route('form/overtime/page') }}">
+                    <li class="{{ set_active(['employee/overtime']) }}">
+                        <a href="{{ route('employee/overtime') }}">
                             <i class="la la-hourglass-half"></i>
                             <span>My Overtime</span>
                         </a>
                     </li>
-                    <li class="{{ set_active(['form/holidays/new']) }}">
-                        <a href="{{ route('form/holidays/new') }}">
+                    <li class="{{ set_active(['employee/holidays']) }}">
+                        <a href="{{ route('employee/holidays') }}">
                             <i class="la la-gift"></i>
                             <span>Holidays</span>
                         </a>

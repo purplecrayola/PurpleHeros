@@ -177,7 +177,7 @@ class HomeController extends Controller
             ['label' => 'View Profile', 'route' => route('profile_user'), 'icon' => 'la la-id-card'],
             ['label' => 'Request Leave', 'route' => route('form/leavesemployee/new'), 'icon' => 'la la-calendar'],
             ['label' => 'Check Attendance', 'route' => route('attendance/employee/page'), 'icon' => 'la la-clock-o'],
-            ['label' => 'Review Timesheets', 'route' => route('form/timesheet/page'), 'icon' => 'la la-file-text'],
+            ['label' => 'Review Timesheets', 'route' => route('employee/timesheets'), 'icon' => 'la la-file-text'],
         ];
 
         $activityFeed = collect([
