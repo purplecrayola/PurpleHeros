@@ -1,0 +1,115 @@
+name: Deploy Production (HostGator)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy To heros.purplecrayola.com
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.HG_SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.HG_PORT }}" -H "${{ secrets.HG_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Compute release id
+        id: meta
+        run: |
+          echo "release_id=$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload release files
+        env:
+          HG_HOST: ${{ secrets.HG_HOST }}
+          HG_PORT: ${{ secrets.HG_PORT }}
+          HG_USER: ${{ secrets.HG_USER }}
+          HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
+          RELEASE_ID: ${{ steps.meta.outputs.release_id }}
+        run: |
+          ssh -p "$HG_PORT" "$HG_USER@$HG_HOST" "mkdir -p '$HG_APP_PATH/releases/$RELEASE_ID'"
+
+          rsync -az --delete \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="node_modules" \
+            --exclude="vendor" \
+            --exclude=".env" \
+            --exclude="storage" \
+            --exclude="bootstrap/cache/*" \
+            -e "ssh -p $HG_PORT" \
+            ./ "$HG_USER@$HG_HOST:$HG_APP_PATH/releases/$RELEASE_ID/"
+
+      - name: Activate release and run Laravel tasks
+        env:
+          HG_HOST: ${{ secrets.HG_HOST }}
+          HG_PORT: ${{ secrets.HG_PORT }}
+          HG_USER: ${{ secrets.HG_USER }}
+          HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
+          RELEASE_ID: ${{ steps.meta.outputs.release_id }}
+        run: |
+          ssh -p "$HG_PORT" "$HG_USER@$HG_HOST" <<EOF
+            set -e
+
+            APP_PATH="$HG_APP_PATH"
+            RELEASE_PATH="$APP_PATH/releases/$RELEASE_ID"
+            SHARED_PATH="$APP_PATH/shared"
+
+            mkdir -p "$SHARED_PATH/storage" "$SHARED_PATH/bootstrap-cache"
+
+            if [ ! -f "$SHARED_PATH/.env" ]; then
+              cp "$RELEASE_PATH/.env.example" "$SHARED_PATH/.env"
+            fi
+
+            rm -rf "$RELEASE_PATH/storage"
+            ln -sfn "$SHARED_PATH/storage" "$RELEASE_PATH/storage"
+
+            mkdir -p "$RELEASE_PATH/bootstrap"
+            rm -rf "$RELEASE_PATH/bootstrap/cache"
+            ln -sfn "$SHARED_PATH/bootstrap-cache" "$RELEASE_PATH/bootstrap/cache"
+
+            ln -sfn "$SHARED_PATH/.env" "$RELEASE_PATH/.env"
+
+            cd "$RELEASE_PATH"
+            composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+
+            # Build frontend assets when Node project is present.
+            if [ -f "package.json" ]; then
+              npm ci
+              npm run build
+            fi
+
+            php artisan migrate --force
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            ln -sfn "$RELEASE_PATH" "$APP_PATH/current"
+
+            # Keep only the 5 most recent releases.
+            ls -1dt "$APP_PATH"/releases/* | tail -n +6 | xargs -r rm -rf
+          EOF
+
+      - name: Deploy summary
+        env:
+          RELEASE_ID: ${{ steps.meta.outputs.release_id }}
+        run: |
+          echo "Production deployed successfully."
+          echo "Release: $RELEASE_ID"
