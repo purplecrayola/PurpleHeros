@@ -25,7 +25,8 @@
             </div>
         </div>
 
-        <div class="mt-4 grid gap-4 md:grid-cols-3">
+        <div class="mt-4 pc-filter-shell">
+            <div class="pc-filter-grid cols-3">
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Search</label>
                 <input type="text" wire:model.live.debounce.300ms="search" class="w-full rounded-lg border-slate-300 text-sm" placeholder="Employee, ID, email" />
@@ -45,6 +46,7 @@
                         <option value="{{ $key }}">{{ $label }}</option>
                     @endforeach
                 </select>
+            </div>
             </div>
         </div>
     </x-filament::section>
@@ -150,7 +152,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-3 py-6 text-center text-slate-500">No onboarding records found for current filters.</td>
+                            <td colspan="7" class="px-3 py-6 pc-empty-state">No onboarding records found for current filters.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -198,7 +200,7 @@
                     @php($filteredAuditTrailEntries = $this->getFilteredAuditTrailEntries())
 
                     @if (empty($filteredAuditTrailEntries))
-                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm pc-empty-state">
                             No signature audit events match the selected filters.
                         </div>
                     @else
@@ -275,7 +277,7 @@
 
                 <div class="max-h-[70vh] space-y-3 overflow-y-auto bg-slate-50 p-5">
                     @if ($responses->isEmpty())
-                        <div class="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+                        <div class="rounded-xl border border-slate-200 bg-white p-5 text-sm pc-empty-state">
                             No referee records found for this employee.
                         </div>
                     @else

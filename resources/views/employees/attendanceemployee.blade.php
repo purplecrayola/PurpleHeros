@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('content')
-    @include('employees.partials.self-service-style')
-    <div class="page-wrapper self-service-modern">
+        <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Attendance workspace'])
             @php
                 $hasRecords = $records->isNotEmpty();
             @endphp

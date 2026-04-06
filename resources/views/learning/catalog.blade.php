@@ -3,6 +3,7 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Learning workspace'])
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -11,6 +12,7 @@
                             <li class="breadcrumb-item"><a href="{{ route('em/dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Learning Catalog</li>
                         </ul>
+                        <p class="section-intro">Discover assigned and available learning paths, then open a course to continue progress.</p>
                     </div>
                 </div>
             </div>
@@ -50,9 +52,9 @@
                                     <p class="mb-3"><strong>Completion:</strong> {{ number_format((float) $enrollment->completion_percent, 1) }}%</p>
                                     <form method="POST" action="{{ route('learning/course/start', ['id' => $course->id]) }}" class="d-inline">
                                         @csrf
-                                        <button type="submit" class="btn btn-primary btn-sm">Start</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Continue</button>
                                     </form>
-                                    <a href="{{ route('learning/course/view', ['id' => $course->id]) }}" class="btn btn-outline-secondary btn-sm">Open</a>
+                                    <a href="{{ route('learning/course/view', ['id' => $course->id]) }}" class="btn btn-outline-secondary btn-sm">View Course</a>
                                 @else
                                     <span class="badge badge-warning">Not enrolled</span>
                                 @endif
@@ -72,4 +74,3 @@
         </div>
     </div>
 @endsection
-

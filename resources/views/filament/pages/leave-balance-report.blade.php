@@ -1,12 +1,13 @@
 <x-filament-panels::page>
     <x-filament::section heading="Leave Balance by Employee">
-        <div class="mb-4 flex flex-wrap items-center gap-2">
+        <div class="mb-4 pc-export-wrap">
             <x-filament::button size="sm" color="gray" wire:click="exportBalance('csv')">Export CSV</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportBalance('xlsx')">Export XLSX</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportBalance('pdf')">Export PDF</x-filament::button>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="pc-filter-shell">
+            <div class="pc-filter-grid cols-3">
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-700">Year</label>
                 <select wire:model.live="year" class="w-full rounded-lg border-slate-300 text-sm">
@@ -32,6 +33,7 @@
                     class="w-full rounded-lg border-slate-300 text-sm"
                     placeholder="Name or User ID"
                 />
+            </div>
             </div>
         </div>
     </x-filament::section>
@@ -81,7 +83,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ 4 + ($bands->count() * 3) }}" class="px-3 py-6 text-center text-slate-500">
+                            <td colspan="{{ 4 + ($bands->count() * 3) }}" class="px-3 py-6 pc-empty-state">
                                 No employees found for the current filter.
                             </td>
                         </tr>

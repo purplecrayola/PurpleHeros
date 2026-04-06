@@ -29,6 +29,7 @@ class EditCompanySettings extends EditRecord
         $data = $this->processBrandUpload($data, 'header_logo_upload', 'header_logo_path', 'header-logo');
         $data = $this->processBrandUpload($data, 'login_logo_upload', 'login_logo_path', 'login-logo');
         $data = $this->processBrandUpload($data, 'favicon_upload', 'favicon_path', 'favicon');
+        $data = $this->processBrandUpload($data, 'login_image_upload', 'login_image_path', 'login-hero');
 
         return $data;
     }

@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper performance-team-annual-page">
         <div class="content container-fluid">
-            <div class="page-header">
+            <div class="page-header performance-team-annual-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Team Annual Appraisals</h3>
@@ -45,7 +45,7 @@
 
             <div class="card mb-3">
                 <div class="card-body">
-                    <form action="{{ route('performance/team/annual-reviews') }}" method="GET" class="row">
+                    <form action="{{ route('performance/team/annual-reviews') }}" method="GET" class="row align-items-end performance-team-annual-filter-row">
                         <div class="col-md-3">
                             <label>Year</label>
                             <select class="form-control" name="year">
@@ -84,14 +84,16 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-1 align-self-end">
-                            <button type="submit" class="btn btn-success">Apply</button>
+                        <div class="col-md-1">
+                            <div class="performance-team-annual-filter-actions">
+                                <button type="submit" class="btn btn-success performance-team-annual-btn">Apply</button>
+                            </div>
                         </div>
                     </form>
                     <form action="{{ route('performance/team/annual-reviews/generate') }}" method="POST" class="mt-3">
                         @csrf
                         <input type="hidden" name="year" value="{{ $year }}">
-                        <button type="submit" class="btn btn-primary" onclick="return confirm('Generate annual review shells for all active employees for {{ $year }}?')">
+                        <button type="submit" class="btn btn-primary performance-team-annual-btn" onclick="return confirm('Generate annual review shells for all active employees for {{ $year }}?')">
                             Generate Annual Reviews For Active Employees ({{ $year }})
                         </button>
                     </form>
@@ -216,4 +218,36 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('style')
+<style>
+    .performance-team-annual-page .performance-team-annual-header {
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+    .performance-team-annual-page .performance-team-annual-filter-row .form-control {
+        min-height: 40px;
+        height: 40px;
+    }
+    .performance-team-annual-page .performance-team-annual-filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .performance-team-annual-page .performance-team-annual-btn {
+        min-height: 40px;
+        border-radius: 12px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    @media (max-width: 767px) {
+        .performance-team-annual-page .performance-team-annual-btn {
+            width: 100%;
+        }
+    }
+</style>
 @endsection

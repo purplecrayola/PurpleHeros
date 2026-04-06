@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('Purple HR')
+            ->brandName(CompanySettings::current()->company_name ?: 'Purple Crayola')
             ->favicon(fn (): string => CompanySettings::current()->assetUrl('favicon_path', 'assets/img/favicon.ico'))
             ->darkMode(false)
             ->login(AdminLogin::class)

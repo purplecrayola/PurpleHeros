@@ -1,9 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper performance-tracker-page">
         <div class="content container-fluid">
-            <div class="page-header">
+            @include('employees.partials.employee-topbar', ['context' => 'Performance workspace'])
+            <div class="page-header performance-tracker-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Performance Tracker</h3>
@@ -11,16 +12,17 @@
                             <li class="breadcrumb-item"><a href="{{ Auth::user()->isAdmin() ? route('home') : route('em/dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Performance Tracker</li>
                         </ul>
+                        <p class="section-intro">Plan goals, update progress, and keep objective tracking aligned with your review cycle.</p>
                     </div>
                 </div>
             </div>
 
             {!! Toastr::message() !!}
 
-            <div class="card mb-3">
+            <div class="card mb-3 performance-filter-card">
                 <div class="card-body">
-                    <form action="{{ route('performance/tracker') }}" method="GET" class="row">
-                        <div class="col-md-3">
+                    <form action="{{ route('performance/tracker') }}" method="GET" class="row align-items-end">
+                        <div class="col-md-3 col-sm-6">
                             <label>Year</label>
                             <select name="year" class="form-control">
                                 @foreach($years as $availableYear)
@@ -28,9 +30,11 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3 align-self-end">
-                            <button type="submit" class="btn btn-success">Apply</button>
-                            <a href="{{ route('performance/annual/review', ['year' => $year]) }}" class="btn btn-outline-primary ml-2">Open Annual Review</a>
+                        <div class="col-md-5 col-sm-6">
+                            <div class="performance-filter-actions">
+                                <button type="submit" class="btn btn-success performance-filter-btn">Apply</button>
+                                <a href="{{ route('performance/annual/review', ['year' => $year]) }}" class="btn btn-outline-primary performance-filter-btn">View Annual Review</a>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -41,7 +45,7 @@
                 <div class="card-body">
                     <form action="{{ route('performance/tracker/goal/save') }}" method="POST">
                         @csrf
-                        <div class="row">
+                        <div class="row performance-goal-row">
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>Type</label>
@@ -89,7 +93,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Goal</button>
+                        <button type="submit" class="btn btn-primary">Save Goal Plan</button>
                     </form>
                 </div>
             </div>
@@ -147,7 +151,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-outline-primary">Save Objective</button>
+                        <button type="submit" class="btn btn-outline-primary">Save Objective Plan</button>
                     </form>
 
                     <hr>
@@ -253,6 +257,47 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('style')
+<style>
+    body.employee-dashboard-shell .performance-tracker-page .performance-tracker-header {
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+    body.employee-dashboard-shell .performance-filter-card .card-body {
+        padding-bottom: 18px;
+    }
+    body.employee-dashboard-shell .performance-filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    body.employee-dashboard-shell .performance-filter-btn {
+        min-height: 40px;
+        border-radius: 12px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    body.employee-dashboard-shell .performance-goal-row .form-control,
+    body.employee-dashboard-shell .performance-goal-row .input-group .form-control {
+        min-height: 40px;
+        height: 40px;
+    }
+    body.employee-dashboard-shell .performance-goal-row textarea.form-control {
+        min-height: 104px;
+        height: auto;
+    }
+    @media (max-width: 767px) {
+        body.employee-dashboard-shell .performance-filter-actions .performance-filter-btn {
+            width: 100%;
+        }
+    }
+</style>
 @endsection
 
 @section('script')

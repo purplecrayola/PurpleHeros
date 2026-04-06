@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('content')
     {!! Toastr::message() !!}
-    @include('employees.partials.self-service-style')
-    <div class="page-wrapper self-service-modern">
+        <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Overtime workspace'])
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -15,7 +15,7 @@
                         <p class="section-intro">Submit and track overtime requests with status visibility.</p>
                     </div>
                     <div class="col-auto float-right ml-auto">
-                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_overtime"><i class="fa fa-plus"></i> Add Overtime</a>
+                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_overtime"><i class="fa fa-plus"></i> Request Overtime</a>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                             <tbody>
                                 @forelse ($overtimeEntries as $entry)
                                     @php
-                                        $avatar = \App\Support\MediaStorageManager::publicUrl($entry->avatar, 'assets/img/profiles/avatar-01.jpg', 'assets/images');
+                                        $avatar = \App\Support\MediaStorageManager::publicUrl($entry->avatar, 'assets/img/profiles/avatar-01.jpg');
                                         $badgeClass = match ($entry->status) {
                                             'Approved' => 'success',
                                             'Rejected' => 'danger',
@@ -125,7 +125,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Overtime</h5>
+                        <h5 class="modal-title">Request Overtime</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -178,7 +178,7 @@
                                 @error('description')<span class="invalid-feedback d-block"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn" type="submit">Save Overtime</button>
+                                <button class="btn btn-primary submit-btn" type="submit">Submit Request</button>
                             </div>
                         </form>
                     </div>
@@ -236,7 +236,7 @@
                                 <textarea rows="4" class="form-control" name="description" id="e_ot_description"></textarea>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn" type="submit">Update Overtime</button>
+                                <button class="btn btn-primary submit-btn" type="submit">Save Changes</button>
                             </div>
                         </form>
                     </div>

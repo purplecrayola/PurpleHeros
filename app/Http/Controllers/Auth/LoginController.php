@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\InAppNotification;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
@@ -67,6 +68,15 @@ class LoginController extends Controller
                 Toastr::success('Login successfully :)', 'Success');
 
                 $defaultRedirect = $user->isAdmin() ? url('/admin') : route('em/dashboard');
+
+                if ($user->notifications()->count() === 0) {
+                    $user->notify(new InAppNotification(
+                        'Welcome to Purple Crayola',
+                        'Your notification center is active. You will see workflow and system updates here.',
+                        $defaultRedirect,
+                        'info'
+                    ));
+                }
 
                 return redirect()->intended($defaultRedirect);
             }

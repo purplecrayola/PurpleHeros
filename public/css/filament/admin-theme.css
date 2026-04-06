@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap");
+
 :root {
     --ax-bg-start: #f7f3ff;
     --ax-bg-mid: #eef1ff;
@@ -285,9 +287,9 @@
     width: 100%;
     min-height: min(760px, 92vh);
     border-radius: 26px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: #2a263b;
-    box-shadow: 0 38px 90px rgba(15, 23, 42, 0.26);
+    border: 1px solid #e3ddf0;
+    background: #ffffff;
+    box-shadow: 0 24px 60px rgba(40, 24, 82, 0.12);
     overflow: hidden;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
@@ -326,21 +328,22 @@
 
 .pc-admin-login-kicker {
     display: inline-flex;
-    margin-bottom: 14px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+    padding-left: 14px;
+    border-left: 3px solid #6d28d9;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 .pc-admin-login-hero-copy h1 {
     margin: 0 0 8px;
-    font-size: clamp(2.2rem, 3.8vw, 3.1rem);
-    line-height: 1.02;
-    font-weight: 800;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.2rem, 3.3vw, 3.6rem);
+    line-height: 1.06;
+    font-weight: 700;
     letter-spacing: -0.02em;
 }
 
@@ -354,12 +357,14 @@
 .pc-admin-login-panel {
     padding: 44px 40px;
     border-radius: 18px;
-    background: linear-gradient(180deg, #2f2a45 0%, #272238 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #fcfcfd;
+    border: 1px solid #eae7f2;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 22px;
+    color: #171327;
+    font-family: "Inter", system-ui, sans-serif;
 }
 
 .pc-admin-login-head {
@@ -372,8 +377,8 @@
     width: 52px;
     height: 52px;
     border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #d9d4e5;
+    background: #f6f1ff;
     display: grid;
     place-items: center;
 }
@@ -381,52 +386,59 @@
 .pc-admin-login-logo-tile img {
     max-width: 34px;
     max-height: 22px;
-    filter: brightness(0) invert(1);
+    filter: none;
 }
 
 .pc-admin-login-head h2 {
     margin: 0;
-    font-size: 1.38rem;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.2rem, 3.4vw, 3.5rem);
     font-weight: 700;
-    letter-spacing: -0.01em;
-    color: #fff;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: #171327;
 }
 
 .pc-admin-login-head p {
     margin: 5px 0 0;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
+    color: #5e5873;
     line-height: 1.45;
 }
 
 .pc-admin-login-panel .fi-input-label,
 .pc-admin-login-panel .fi-fo-field-wrp-label,
 .pc-admin-login-panel .fi-fo-field-wrp-label span {
-    color: rgba(255, 255, 255, 0.84) !important;
+    color: #5e5873 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px !important;
+    font-weight: 600 !important;
 }
 
 .pc-admin-login-form .fi-input-wrp {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: #ffffff;
+    border: 1px solid #d9d4e5;
+    border-radius: 12px;
 }
 
 .pc-admin-login-form input {
-    color: #fff !important;
+    color: #171327 !important;
 }
 
 .pc-admin-login-form input::placeholder {
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: #8c869e !important;
 }
 
 .pc-admin-login-form .fi-input-wrp .fi-input-wrp-prefix,
 .pc-admin-login-form .fi-input-wrp .fi-input-wrp-suffix,
 .pc-admin-login-form .fi-input-wrp svg {
-    color: rgba(255, 255, 255, 0.62) !important;
+    color: #6d28d9 !important;
 }
 
 .pc-admin-login-panel .fi-checkbox-input {
-    border-color: rgba(255, 255, 255, 0.32) !important;
-    background-color: rgba(255, 255, 255, 0.06) !important;
+    border-color: #cbc4db !important;
+    background-color: #ffffff !important;
 }
 
 .pc-admin-login-panel .fi-checkbox-input:checked {
@@ -437,11 +449,11 @@
 .pc-admin-login-panel .fi-fo-checkbox-list-option-label,
 .pc-admin-login-panel .fi-fo-checkbox-list-option-label span,
 .pc-admin-login-panel .fi-fo-field-wrp-helper-text {
-    color: rgba(255, 255, 255, 0.78) !important;
+    color: #5e5873 !important;
 }
 
 .pc-admin-login-form .fi-ac-action {
-    color: rgba(255, 255, 255, 0.82);
+    color: #6d28d9;
 }
 
 .pc-admin-login-form .fi-btn-color-primary {
@@ -458,7 +470,7 @@
     flex-direction: column;
     gap: 4px;
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.62);
+    color: #5e5873;
 }
 
 .pc-admin-login-hero-copy h1,
@@ -623,17 +635,20 @@
 
 .pc-admin-login-page .pc-admin-login-head h2,
 .pc-admin-login-page .pc-admin-login-head p,
-.pc-admin-login-page .pc-admin-login-kicker,
-.pc-admin-login-page .pc-admin-login-hero-copy h1,
-.pc-admin-login-page .pc-admin-login-hero-copy p,
 .pc-admin-login-page .pc-admin-login-footnote,
 .pc-admin-login-page .pc-admin-login-footnote span {
+    color: inherit !important;
+}
+
+.pc-admin-login-page .pc-admin-login-kicker,
+.pc-admin-login-page .pc-admin-login-hero-copy h1,
+.pc-admin-login-page .pc-admin-login-hero-copy p {
     color: #ffffff !important;
 }
 
 .pc-admin-login-page .pc-admin-login-head p,
 .pc-admin-login-page .pc-admin-login-footnote {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: #5e5873 !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-fo-field-wrp-label span,
@@ -641,33 +656,349 @@
 .pc-admin-login-page .pc-admin-login-form .fi-checkbox-label,
 .pc-admin-login-page .pc-admin-login-form .fi-link,
 .pc-admin-login-page .pc-admin-login-form .fi-fo-field-wrp-helper-text {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: #5e5873 !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: #ffffff !important;
+    border-color: #d9d4e5 !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp input,
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp textarea,
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp select {
-    color: #ffffff !important;
+    color: #171327 !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp input::placeholder,
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp textarea::placeholder {
-    color: rgba(255, 255, 255, 0.58) !important;
+    color: #8c869e !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp .fi-input-wrp-prefix,
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp .fi-input-wrp-suffix,
 .pc-admin-login-page .pc-admin-login-form .fi-input-wrp svg {
-    color: rgba(255, 255, 255, 0.72) !important;
+    color: #6d28d9 !important;
 }
 
 .pc-admin-login-page .pc-admin-login-form .fi-btn-color-primary,
 .pc-admin-login-page .pc-admin-login-form .fi-btn-color-primary .fi-btn-label,
 .pc-admin-login-page .pc-admin-login-form [type="submit"] {
     color: #ffffff !important;
+}
+
+/* Purple Crayola v3 admin system overrides (Filament) */
+:root {
+    --pc-surface-primary: #fcfcfd;
+    --pc-surface-secondary: #f8f8fb;
+    --pc-surface-sidebar: #fafafc;
+    --pc-surface-wash: #f6f1ff;
+    --pc-text-primary: #171327;
+    --pc-text-secondary: #5e5873;
+    --pc-text-muted: #8c869e;
+    --pc-purple-700: #5b2de1;
+    --pc-purple-600: #6d28d9;
+    --pc-purple-100: #efe7ff;
+    --pc-border-subtle: #eae7f2;
+    --pc-border-default: #d9d4e5;
+    --pc-border-strong: #cbc4db;
+}
+
+.fi-body {
+    background: var(--pc-surface-primary) !important;
+    color: var(--pc-text-primary) !important;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif !important;
+}
+
+.fi-main .fi-page {
+    padding: 1.35rem 1.4rem 1.8rem !important;
+}
+
+.fi-page .fi-header-heading {
+    font-family: "Playfair Display", serif !important;
+    font-weight: 700 !important;
+    font-size: clamp(2rem, 3.3vw, 3.4rem) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.02em !important;
+    color: var(--pc-text-primary) !important;
+}
+
+.fi-page .fi-breadcrumbs,
+.fi-page .fi-breadcrumbs a,
+.fi-page .fi-header-subheading {
+    color: var(--pc-text-secondary) !important;
+}
+
+.fi-topbar {
+    background: var(--pc-surface-primary) !important;
+    border-bottom: 1px solid var(--pc-border-subtle) !important;
+    backdrop-filter: none !important;
+}
+
+.fi-sidebar {
+    background: var(--pc-surface-sidebar) !important;
+    border-right: 1px solid var(--pc-border-subtle) !important;
+}
+
+.fi-sidebar-item-label,
+.fi-sidebar-group-label,
+.fi-sidebar-nav-item-button {
+    color: var(--pc-text-secondary) !important;
+    font-size: 15px !important;
+    line-height: 22px !important;
+    font-weight: 500 !important;
+}
+
+.fi-sidebar-nav-item-icon {
+    color: #8ba3c7 !important;
+}
+
+.fi-sidebar-nav-item-button:hover {
+    background: var(--pc-surface-wash) !important;
+    color: var(--pc-text-primary) !important;
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-button {
+    background: var(--pc-purple-100) !important;
+    color: var(--pc-purple-600) !important;
+}
+
+.fi-sidebar-item-active .fi-sidebar-nav-item-icon,
+.fi-sidebar-nav-item-button:hover .fi-sidebar-nav-item-icon {
+    color: var(--pc-purple-600) !important;
+}
+
+.fi-section,
+.fi-ta-ctn,
+.fi-fo-field-wrp,
+.fi-wi-widget,
+.fi-ta-filter-indicators {
+    border: 1px solid var(--pc-border-subtle) !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.fi-section-header,
+.fi-section-content {
+    border-color: var(--pc-border-subtle) !important;
+}
+
+.fi-wi-stats-overview-stat {
+    border: 1px solid var(--pc-border-subtle) !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.fi-input-wrp,
+.fi-fo-select,
+.fi-fo-date-time-picker {
+    border-radius: 12px !important;
+}
+
+.fi-input-wrp {
+    background: #ffffff !important;
+    border: 1px solid var(--pc-border-default) !important;
+    box-shadow: none !important;
+}
+
+.fi-input-wrp:focus-within {
+    border-color: var(--pc-purple-600) !important;
+    box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.12) !important;
+}
+
+.fi-btn {
+    border-radius: 12px !important;
+}
+
+.fi-btn-color-primary {
+    background: var(--pc-purple-600) !important;
+    border: 1px solid var(--pc-purple-600) !important;
+    box-shadow: none !important;
+}
+
+.fi-btn-color-primary:hover {
+    background: var(--pc-purple-700) !important;
+    border-color: var(--pc-purple-700) !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+.fi-btn-color-gray,
+.fi-btn-color-danger {
+    border-radius: 12px !important;
+}
+
+.fi-ta-table thead {
+    background: var(--pc-surface-secondary) !important;
+}
+
+.fi-ta-header-cell,
+.fi-ta-header-cell * {
+    color: var(--pc-text-secondary) !important;
+    font-size: 12px !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+}
+
+.fi-ta-header,
+.fi-ta-content,
+.fi-ta-footer {
+    background: #ffffff !important;
+}
+
+.fi-ta-header {
+    border-bottom: 1px solid var(--pc-border-subtle) !important;
+}
+
+.fi-ta-table tbody tr:hover {
+    background: var(--pc-surface-wash) !important;
+}
+
+.fi-ta-cell,
+.fi-ta-cell * {
+    color: var(--pc-text-primary) !important;
+}
+
+.fi-body a:focus-visible,
+.fi-body button:focus-visible,
+.fi-body input:focus-visible,
+.fi-body select:focus-visible,
+.fi-body textarea:focus-visible,
+.fi-body [role="button"]:focus-visible {
+    outline: 2px solid var(--pc-purple-600) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+}
+
+.fi-btn,
+.fi-icon-btn {
+    min-height: 40px;
+}
+
+.fi-size-xs .fi-btn,
+.fi-size-sm .fi-btn {
+    min-height: 36px;
+}
+
+.fi-section-content p,
+.fi-section-content .text-sm,
+.fi-section-content .text-xs {
+    color: var(--pc-text-secondary);
+}
+
+/* Shared UX sweep patterns for custom Filament page views */
+.pc-filter-shell {
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 16px;
+    background: var(--pc-surface-secondary);
+    padding: 14px;
+}
+
+.pc-filter-grid {
+    display: grid;
+    gap: 14px;
+}
+
+@media (min-width: 768px) {
+    .pc-filter-grid.cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.pc-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.pc-action-row.right {
+    justify-content: flex-end;
+}
+
+.pc-export-wrap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 12px;
+    background: #fff;
+    padding: 4px;
+}
+
+.pc-empty-state {
+    text-align: center;
+    color: var(--pc-text-secondary) !important;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 18px 12px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfaff 100%);
+}
+
+.fi-ta-actions {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px !important;
+}
+
+.fi-ta-actions .fi-btn,
+.fi-ta-actions .fi-icon-btn {
+    min-height: 36px;
+}
+
+.fi-ta-ctn,
+.fi-section .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+}
+
+.fi-modal-window {
+    border: 1px solid var(--pc-border-subtle) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 24px rgba(40, 24, 82, 0.08) !important;
+}
+
+.fi-modal-header {
+    border-bottom: 1px solid var(--pc-border-subtle) !important;
+}
+
+.fi-modal-heading {
+    color: var(--pc-text-primary) !important;
+    font-size: 18px !important;
+    line-height: 28px !important;
+    font-weight: 600 !important;
+}
+
+.fi-modal-content {
+    color: var(--pc-text-secondary) !important;
+}
+
+.fi-modal-footer {
+    border-top: 1px solid var(--pc-border-subtle) !important;
+}
+
+@media (max-width: 640px) {
+    .fi-header-actions {
+        width: 100%;
+    }
+
+    .fi-header-actions .fi-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pc-export-wrap,
+    .pc-action-row.right {
+        width: 100%;
+    }
+
+    .pc-export-wrap .fi-btn,
+    .pc-action-row.right .fi-btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
 }

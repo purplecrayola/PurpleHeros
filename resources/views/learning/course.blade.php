@@ -3,6 +3,7 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Learning workspace'])
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -11,11 +12,12 @@
                             <li class="breadcrumb-item"><a href="{{ route('learning/catalog') }}">Learning Catalog</a></li>
                             <li class="breadcrumb-item active">Course</li>
                         </ul>
+                        <p class="section-intro">Review learning assets, track completion, and keep your course progress up to date.</p>
                     </div>
                     <div class="col-auto">
                         <form method="POST" action="{{ route('learning/course/start', ['id' => $course->id]) }}">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Start Course</button>
+                            <button type="submit" class="btn btn-primary">Continue Course</button>
                         </form>
                     </div>
                 </div>
@@ -52,7 +54,7 @@
                                     <th>Asset</th>
                                     <th>Type</th>
                                     <th>Progress</th>
-                                    <th>Open / Player</th>
+                                    <th>View / Player</th>
                                     <th>Track Progress</th>
                                     <th>Bookmark</th>
                                 </tr>
@@ -81,13 +83,13 @@
                                                 ></audio>
                                             @elseif($asset->asset_type === 'pdf' && $assetUrl)
                                                 <div class="mb-1">
-                                                    <a href="{{ $assetUrl }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Open PDF</a>
+                                                    <a href="{{ $assetUrl }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">View PDF</a>
                                                     <button
                                                         type="button"
                                                         class="btn btn-sm btn-outline-primary js-open-pdf-viewer"
                                                         data-asset-id="{{ $asset->id }}"
                                                     >
-                                                        Open Viewer
+                                                        View Inline
                                                     </button>
                                                 </div>
                                                 <div
@@ -110,7 +112,7 @@
                                                     ></canvas>
                                                 </div>
                                             @elseif($assetUrl)
-                                                <a href="{{ $assetUrl }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary js-open-asset" data-asset-id="{{ $asset->id }}">Open</a>
+                                                <a href="{{ $assetUrl }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary js-open-asset" data-asset-id="{{ $asset->id }}">View</a>
                                             @else
                                                 <span class="text-muted">No link/file</span>
                                             @endif
@@ -129,7 +131,7 @@
                                                 @csrf
                                                 <input type="hidden" name="learning_asset_id" value="{{ $asset->id }}">
                                                 <input type="text" name="label" class="form-control form-control-sm mr-2" placeholder="Label" style="width:120px;">
-                                                <button type="submit" class="btn btn-sm btn-outline-primary">Add</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">Save Bookmark</button>
                                             </form>
                                         </td>
                                     </tr>

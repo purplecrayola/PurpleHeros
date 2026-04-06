@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('content')
     {!! Toastr::message() !!}
-    @include('employees.partials.self-service-style')
-    <div class="page-wrapper self-service-modern">
+        <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Timesheet workspace'])
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -15,7 +15,7 @@
                         <p class="section-intro">Log work done by day and maintain project-level visibility for your manager.</p>
                     </div>
                     <div class="col-auto float-right ml-auto">
-                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_todaywork"><i class="fa fa-plus"></i> Add Time Entry</a>
+                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_todaywork"><i class="fa fa-plus"></i> Log Time Entry</a>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                             <tbody>
                                 @forelse ($timesheets as $entry)
                                     @php
-                                        $avatar = \App\Support\MediaStorageManager::publicUrl($entry->avatar, 'assets/img/profiles/avatar-01.jpg', 'assets/images');
+                                        $avatar = \App\Support\MediaStorageManager::publicUrl($entry->avatar, 'assets/img/profiles/avatar-01.jpg');
                                     @endphp
                                     <tr
                                         data-id="{{ $entry->id }}"
@@ -117,7 +117,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Time Entry</h5>
+                        <h5 class="modal-title">Log Time Entry</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -175,7 +175,7 @@
                                 @error('description')<span class="invalid-feedback d-block"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn" type="submit">Save Entry</button>
+                                <button class="btn btn-primary submit-btn" type="submit">Save Time Entry</button>
                             </div>
                         </form>
                     </div>
@@ -239,7 +239,7 @@
                                 <textarea rows="4" class="form-control" name="description" id="e_description"></textarea>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn" type="submit">Update Entry</button>
+                                <button class="btn btn-primary submit-btn" type="submit">Save Changes</button>
                             </div>
                         </form>
                     </div>

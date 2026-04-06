@@ -17,6 +17,7 @@ use App\Models\ProfileInformation;
 use App\Models\TimesheetEntry;
 use App\Models\User;
 use App\Models\UserEmergencyContact;
+use App\Support\InAppNotifier;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -556,7 +557,24 @@ class EmployeeController extends Controller
             ]);
             $payload['user_id'] = $this->resolveManagedUserId($request->input('user_id'));
 
-            TimesheetEntry::create($payload);
+            $entry = TimesheetEntry::create($payload);
+
+            InAppNotifier::notifyUserId(
+                (string) $entry->user_id,
+                'Timesheet submitted',
+                sprintf('Timesheet for %s (%s hrs) has been submitted.', (string) $entry->project_name, (string) $entry->worked_hours),
+                route('employee/timesheets'),
+                'info'
+            );
+
+            InAppNotifier::notifyRoles(
+                ['Super Admin', 'Admin', 'HR Manager', 'Operations Manager'],
+                'New timesheet entry',
+                sprintf('A new timesheet entry was submitted for %s.', (string) $entry->project_name),
+                url('/admin/timesheet-entries'),
+                'info',
+                [(string) $entry->user_id]
+            );
 
             DB::commit();
             Toastr::success('Timesheet entry created successfully :)', 'Success');

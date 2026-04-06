@@ -16,10 +16,16 @@ use Illuminate\Support\Facades\Route;
 /** for side bar menu active */
 if (! function_exists('set_active')) {
     function set_active($route) {
-        if (is_array($route )){
-            return in_array(Request::path(), $route) ? 'active' : '';
+        $path = Request::path();
+        $routes = is_array($route) ? $route : [$route];
+
+        foreach ($routes as $pattern) {
+            if ($path === $pattern || Request::is($pattern)) {
+                return 'active';
+            }
         }
-        return Request::path() == $route ? 'active' : '';
+
+        return '';
     }
 }
 
@@ -76,6 +82,13 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::get('/home', 'index')->name('home');
         Route::get('em/dashboard', 'emDashboard')->name('em/dashboard');
         Route::get('search', 'globalSearch')->middleware('auth')->name('global/search');
+        Route::post('employee/people-ops/contact', 'contactPeopleOps')->middleware('auth')->name('employee/people-ops/contact');
+    });
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::post('notifications/{notificationId}/read', 'markAsRead')->middleware('auth')->name('notifications/read');
+        Route::post('notifications/read-all', 'markAllAsRead')->middleware('auth')->name('notifications/read-all');
+        Route::post('notifications/clear', 'clearAll')->middleware('auth')->name('notifications/clear');
     });
 
     // ----------------------------- lock screen --------------------------------//
