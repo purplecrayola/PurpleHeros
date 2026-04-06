@@ -1,12 +1,14 @@
 <x-filament-panels::page>
     <x-filament::section heading="Create Role">
-        <div class="flex gap-3">
+        <div class="pc-filter-shell">
+            <div class="pc-action-row">
             <div class="w-full max-w-md">
                 <x-filament::input.wrapper>
                     <x-filament::input type="text" wire:model="newRoleName" placeholder="Role name" />
                 </x-filament::input.wrapper>
             </div>
             <x-filament::button wire:click="createRole">Add Role</x-filament::button>
+            </div>
         </div>
     </x-filament::section>
 
@@ -22,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
-                    @foreach($roles as $role)
+                    @forelse($roles as $role)
                         <tr>
                             <td class="px-3 py-2">
                                 @if($editingRoleId === (int) $role->id)
@@ -46,7 +48,11 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-3 py-3 pc-empty-state">No roles configured yet.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

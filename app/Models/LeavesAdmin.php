@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\InAppNotifier;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -67,6 +68,14 @@ class LeavesAdmin extends Model
             'approved_at' => Carbon::now(),
             'rejection_reason' => null,
         ]);
+
+        InAppNotifier::notifyUserId(
+            (string) $this->user_id,
+            'Leave request approved',
+            sprintf('Your %s leave request has been approved.', (string) $this->leave_type),
+            route('form/leavesemployee/new'),
+            'success'
+        );
     }
 
     public function rejectBy(User $approver, ?string $reason = null): void
@@ -77,6 +86,19 @@ class LeavesAdmin extends Model
             'approved_at' => Carbon::now(),
             'rejection_reason' => $reason,
         ]);
+
+        $message = sprintf('Your %s leave request was rejected.', (string) $this->leave_type);
+        if ($reason) {
+            $message .= ' Reason: ' . $reason;
+        }
+
+        InAppNotifier::notifyUserId(
+            (string) $this->user_id,
+            'Leave request rejected',
+            $message,
+            route('form/leavesemployee/new'),
+            'negative'
+        );
     }
 
     public static function buildSignature(string $userId, string $leaveType, string $fromDate, string $toDate): string

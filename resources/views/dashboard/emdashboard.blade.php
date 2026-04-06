@@ -1,193 +1,825 @@
 @extends('layouts.master')
 @section('content')
-    @include('employees.partials.self-service-style')
+    @php
+        $calendarBase = \Carbon\Carbon::now()->startOfMonth();
+        $calendarMonthLabel = $calendarBase->format('F Y');
+        $gridStart = $calendarBase->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
+        $gridEnd = $calendarBase->copy()->endOfMonth()->endOfWeek(\Carbon\Carbon::SUNDAY);
+        $dayCursor = $gridStart->copy();
+        $today = \Carbon\Carbon::today();
+        $firstName = trim(strtok((string) $user->name, ' ')) ?: $user->name;
+        $selectedDate = $upcomingHoliday
+            ? \Carbon\Carbon::parse($upcomingHoliday->date_holiday)->toDateString()
+            : $today->toDateString();
+    @endphp
+
     <style>
-        .employee-dashboard-v2 .employee-dashboard-hero {
-            background: linear-gradient(135deg, rgba(var(--pc-dark-rgb), 0.98) 0%, rgba(var(--pc-primary-rgb), 0.9) 100%) !important;
-            border: 0;
-            border-radius: 20px;
-            box-shadow: 0 18px 36px rgba(0, 22, 63, 0.16);
-            margin-bottom: 18px !important;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+        body.employee-dashboard-shell {
+            background: #fcfcfd;
         }
-        .employee-dashboard-v2 .employee-dashboard-eyebrow,
-        .employee-dashboard-v2 .employee-dashboard-title,
-        .employee-dashboard-v2 .employee-dashboard-subtitle,
-        .employee-dashboard-v2 .employee-dashboard-meta {
-            color: #ffffff !important;
+
+        body.employee-dashboard-shell .header {
+            display: none;
         }
-        .employee-dashboard-v2 .employee-dashboard-eyebrow {
-            color: rgba(255, 255, 255, 0.72) !important;
+
+        body.employee-dashboard-shell .sidebar {
+            width: 240px;
+            top: 0;
+            bottom: 0;
+            border-right: 1px solid #eae7f2;
+            background: #fafafc;
+            box-shadow: none;
         }
-        .employee-dashboard-v2 .employee-dashboard-subtitle,
-        .employee-dashboard-v2 .employee-dashboard-meta {
-            color: rgba(255, 255, 255, 0.86) !important;
+
+        body.employee-dashboard-shell .sidebar .sidebar-inner {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-        .employee-dashboard-v2 .employee-dashboard-hero .card-body {
-            padding: 26px 24px;
+
+        body.employee-dashboard-shell .sidebar .slimScrollDiv,
+        body.employee-dashboard-shell .sidebar .slimScrollDiv > .sidebar-inner,
+        body.employee-dashboard-shell .sidebar .slimScrollDiv > .sidebar-inner > #sidebar-menu {
+            height: 100% !important;
         }
-        .employee-dashboard-v2 .employee-dashboard-title {
-            font-size: 2.1rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+
+        body.employee-dashboard-shell .sidebar .menu-title {
+            display: none;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-brand {
+            padding: 28px 24px 16px;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-brand img {
+            max-width: 182px;
+            height: auto;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav {
+            margin: 0;
+            padding: 10px 14px 12px;
+            list-style: none;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav li + li {
+            margin-top: 6px;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a {
+            border-radius: 12px;
+            color: #5e5873 !important;
+            font-size: 15px;
+            line-height: 22px;
+            font-weight: 500;
+            padding: 11px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 20px;
+            color: #8da1bc !important;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a span {
+            color: #5e5873 !important;
+            opacity: 1 !important;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav li.active a,
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a:hover {
+            color: #6d28d9 !important;
+            background: #f7f2ff;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav li.active a::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 9px;
+            bottom: 9px;
+            width: 3px;
+            border-radius: 999px;
+            background: #6d28d9;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav li.active a i,
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a:hover i {
+            color: #6d28d9;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav li.active a span,
+        body.employee-dashboard-shell .sidebar .employee-dashboard-nav a:hover span {
+            color: #6d28d9 !important;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-support {
+            margin-top: auto;
+            padding: 14px;
+            border-top: 1px solid #eae7f2;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-support a {
+            color: #171327;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-weight: 500;
+            border-radius: 12px;
+            border: 1px solid #eae7f2;
+            background: #fff;
+            padding: 11px 12px;
+        }
+
+        body.employee-dashboard-shell .sidebar .employee-dashboard-support small {
+            display: block;
+            color: #8c869e;
+            font-size: 12px;
+            line-height: 16px;
+            margin-top: 1px;
+        }
+
+        body.employee-dashboard-shell .page-wrapper {
+            margin-left: 240px;
+            padding-top: 0;
+        }
+
+        .employee-dashboard-v3 {
+            --pc-surface-primary: #fcfcfd;
+            --pc-surface-secondary: #f8f8fb;
+            --pc-surface-sidebar: #fafafc;
+            --pc-surface-wash: #f6f1ff;
+            --pc-text-primary: #171327;
+            --pc-text-secondary: #5e5873;
+            --pc-text-muted: #8c869e;
+            --pc-text-inverse: #ffffff;
+            --pc-purple-700: #5b2de1;
+            --pc-purple-600: #6d28d9;
+            --pc-purple-100: #efe7ff;
+            --pc-positive: #12b981;
+            --pc-pending: #f4a300;
+            --pc-negative: #e35d6a;
+            --pc-info: #4f46e5;
+            --pc-border-subtle: #eae7f2;
+            --pc-border-default: #d9d4e5;
+            --pc-border-strong: #cbc4db;
+            --pc-radius-sm: 8px;
+            --pc-radius-md: 12px;
+            --pc-radius-lg: 16px;
+            --pc-shadow-soft: 0 8px 24px rgba(40, 24, 82, 0.06);
+            --pc-font-display: 'Playfair Display', serif;
+            --pc-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+            font-family: var(--pc-font-sans);
+            color: var(--pc-text-primary);
+            background: var(--pc-surface-primary);
+        }
+
+        .employee-dashboard-v3 .content.container-fluid {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 40px 28px 36px;
+        }
+
+        .employee-dashboard-v3 .employee-topbar {
+            min-height: 64px;
+            border-bottom: 1px solid var(--pc-border-subtle);
+            margin-bottom: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 14px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .employee-topbar-bell {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: 999px;
+            color: var(--pc-text-primary);
+            background: #fff;
+        }
+
+        .employee-dashboard-v3 .employee-profile-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .employee-profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            object-fit: cover;
+            border: 1px solid var(--pc-border-subtle);
+        }
+
+        .employee-dashboard-v3 .employee-day {
+            font-size: 16px;
+            line-height: 24px;
+            color: var(--pc-text-secondary);
             margin-bottom: 8px;
         }
-        .employee-dashboard-v2 .employee-dashboard-subtitle {
-            max-width: 760px;
-            font-size: 1rem;
-            line-height: 1.55;
-            margin-bottom: 10px;
+
+        .employee-dashboard-v3 .employee-title {
+            font-family: var(--pc-font-display);
+            font-size: clamp(2rem, 4vw, 56px);
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+            margin: 0;
+            color: var(--pc-text-primary);
         }
-        .employee-dashboard-v2 .employee-dashboard-meta {
+
+        .employee-dashboard-v3 .employee-subtitle {
+            margin-top: 14px;
+            max-width: 620px;
+            font-size: 16px;
+            line-height: 24px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .employee-main-grid {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+            gap: 30px;
+            align-items: start;
+        }
+
+        .employee-dashboard-v3 .section-title {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 28px;
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .status-panel {
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-lg);
+            background: #fff;
+            padding: 22px;
+        }
+
+        .employee-dashboard-v3 .status-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .employee-dashboard-v3 .status-card {
+            border-radius: 0;
+            border: 0;
+            background: transparent;
+            padding: 8px 4px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .employee-dashboard-v3 .status-card + .status-card {
+            border-left: 1px solid var(--pc-border-default);
+            padding-left: 18px;
+        }
+
+        .employee-dashboard-v3 .status-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .employee-dashboard-v3 .status-icon-wrap.positive {
+            color: var(--pc-positive);
+            background: rgba(18, 185, 129, 0.12);
+        }
+
+        .employee-dashboard-v3 .status-icon-wrap.pending {
+            color: var(--pc-pending);
+            background: rgba(244, 163, 0, 0.14);
+        }
+
+        .employee-dashboard-v3 .status-icon-wrap.info {
+            color: var(--pc-info);
+            background: rgba(79, 70, 229, 0.13);
+        }
+
+        .employee-dashboard-v3 .status-label {
+            margin: 0;
+            font-size: 12px;
+            line-height: 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .status-value {
+            margin: 3px 0 0;
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 600;
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .status-detail {
+            margin: 2px 0 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .employee-dashboard-v3 .quick-card {
+            min-height: 100px;
+            border: 1px solid var(--pc-border-default);
+            border-radius: var(--pc-radius-lg);
+            background: #fff;
+            color: var(--pc-text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 500;
+            transition: background-color .16s ease, border-color .16s ease, transform .16s ease;
+        }
+
+        .employee-dashboard-v3 .quick-card span {
+            color: var(--pc-text-primary) !important;
+        }
+
+        .employee-dashboard-v3 .quick-card i {
+            color: var(--pc-purple-600);
+            font-size: 22px;
+        }
+
+        .employee-dashboard-v3 .quick-card:hover {
+            background: var(--pc-surface-wash);
+            border-color: var(--pc-border-strong);
+            transform: translateY(-1px);
+        }
+
+        .employee-dashboard-v3 .timeline-wrap {
+            margin-top: 30px;
+            border-top: 1px solid var(--pc-border-default);
+            padding-top: 30px;
+        }
+
+        .employee-dashboard-v3 .timeline-head,
+        .employee-dashboard-v3 .calendar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .employee-dashboard-v3 .timeline-view-all {
+            color: var(--pc-purple-600);
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .employee-dashboard-v3 .timeline-list {
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-lg);
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .employee-dashboard-v3 .timeline-item {
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--pc-border-subtle);
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .timeline-item:last-child {
+            border-bottom: 0;
+        }
+
+        .employee-dashboard-v3 .timeline-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--pc-radius-md);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .employee-dashboard-v3 .timeline-icon.purple {
+            background: var(--pc-purple-100);
+            color: var(--pc-purple-600);
+        }
+
+        .employee-dashboard-v3 .timeline-icon.mint {
+            background: rgba(18, 185, 129, 0.14);
+            color: var(--pc-positive);
+        }
+
+        .employee-dashboard-v3 .timeline-title {
+            margin: 0;
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 500;
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .timeline-detail {
+            margin: 1px 0 0;
+            font-size: 16px;
+            line-height: 24px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .timeline-date {
+            text-align: right;
+        }
+
+        .employee-dashboard-v3 .timeline-date-main {
+            margin: 0;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 500;
+        }
+
+        .employee-dashboard-v3 .timeline-date-sub {
+            margin: 1px 0 0;
+            font-size: 15px;
+            line-height: 22px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .calendar-card {
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-lg);
+            background: #fff;
+            padding: 14px;
+        }
+
+        .employee-dashboard-v3 .calendar-month {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 600;
+            line-height: 28px;
+            color: var(--pc-text-primary);
+        }
+
+        .employee-dashboard-v3 .calendar-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 4px;
+        }
+
+        .employee-dashboard-v3 .calendar-dow {
+            text-align: center;
+            font-size: 12px;
+            line-height: 16px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--pc-text-secondary);
+            padding: 6px 0 8px;
+        }
+
+        .employee-dashboard-v3 .calendar-day {
+            height: 34px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 34px;
+            font-size: 14px;
+            color: var(--pc-text-primary);
+            position: relative;
+        }
+
+        .employee-dashboard-v3 .calendar-day.muted {
+            color: var(--pc-text-muted);
+        }
+
+        .employee-dashboard-v3 .calendar-day.selected {
+            background: var(--pc-purple-600);
+            color: var(--pc-text-inverse);
             font-weight: 600;
         }
-        .employee-dashboard-v2 .employee-dashboard-actions {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        .employee-dashboard-v3 .calendar-day.today {
+            border-color: var(--pc-purple-600);
         }
-        .employee-dashboard-v2 .employee-dashboard-action {
-            font-weight: 700;
+
+        .employee-dashboard-v3 .calendar-day.has-event::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            background: var(--pc-purple-600);
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .employee-dashboard-v2 .employee-activity-item {
-            border-radius: 14px;
-            padding: 14px 16px;
+
+        .employee-dashboard-v3 .dashboard-quote {
+            margin-top: 26px;
+            border-left: 3px solid var(--pc-purple-600);
+            padding-left: 14px;
+            max-width: 560px;
         }
-        .employee-dashboard-v2 .employee-status-card .card-title {
-            margin-bottom: 10px;
+
+        .employee-dashboard-v3 .dashboard-quote p {
+            margin: 0;
+            font-family: var(--pc-font-display);
+            font-style: italic;
+            font-size: 20px;
+            line-height: 1.4;
+            color: var(--pc-text-primary);
         }
-        @media (max-width: 991px) {
-            .employee-dashboard-v2 .employee-dashboard-title {
-                font-size: 1.75rem;
+
+        .employee-dashboard-v3 .dashboard-quote small {
+            display: block;
+            margin-top: 8px;
+            color: var(--pc-purple-600);
+            font-weight: 600;
+        }
+
+        .employee-dashboard-v3 .dashboard-support {
+            margin-top: 18px;
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-md);
+            background: #fff;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--pc-text-secondary);
+        }
+
+        .employee-dashboard-v3 .dashboard-support a {
+            color: var(--pc-purple-600);
+            font-weight: 600;
+        }
+
+        .employee-dashboard-v3 .activity-feed {
+            margin-top: 14px;
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-md);
+            background: #fff;
+            padding: 14px;
+        }
+
+        .employee-dashboard-v3 .activity-feed-item + .activity-feed-item {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--pc-border-subtle);
+        }
+
+        .employee-dashboard-v3 .activity-feed-label {
+            margin: 0;
+            color: var(--pc-text-muted);
+            font-size: 12px;
+            line-height: 16px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .employee-dashboard-v3 .activity-feed-value {
+            margin: 2px 0 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--pc-text-secondary);
+        }
+
+        @media (max-width: 1199px) {
+            .employee-dashboard-v3 .employee-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-dashboard-v3 .quick-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
+
+        @media (max-width: 767px) {
+            body.employee-dashboard-shell .sidebar {
+                left: -240px;
+            }
+
+            body.employee-dashboard-shell .page-wrapper {
+                margin-left: 0;
+            }
+
+            .employee-dashboard-v3 .content.container-fluid {
+                padding: 16px 12px 24px;
+            }
+
+            .employee-dashboard-v3 .employee-topbar {
+                min-height: auto;
+                padding-bottom: 12px;
+                margin-bottom: 18px;
+            }
+
+            .employee-dashboard-v3 .quick-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .employee-dashboard-v3 .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-dashboard-v3 .status-card + .status-card {
+                border-left: 0;
+                border-top: 1px solid var(--pc-border-subtle);
+                padding-left: 4px;
+                padding-top: 14px;
+            }
+
+            .employee-dashboard-v3 .timeline-item {
+                grid-template-columns: 52px minmax(0, 1fr);
+            }
+
+                .employee-dashboard-v3 .timeline-date {
+                    text-align: left;
+                    grid-column: 2;
+                    margin-top: 4px;
+                }
+
+                .employee-dashboard-v3 .calendar-head {
+                    align-items: flex-start;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+        }
     </style>
-    <div class="page-wrapper self-service-modern employee-dashboard-v2">
-        <div class="content container-fluid employee-dashboard-page">
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h3 class="page-title">Employee Dashboard</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('em/dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Overview</li>
-                        </ul>
-                        <p class="section-intro">Your self-service command center for attendance, leave, payroll, and weekly work logs.</p>
-                    </div>
-                </div>
+
+    <div class="page-wrapper employee-dashboard-v3">
+        <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Self-service workspace'])
+
+            <div>
+                <p class="employee-day">{{ $todayLabel }}</p>
+                <h1 class="employee-title">Welcome, {{ $firstName }}</h1>
+                <p class="employee-subtitle">Here’s what’s happening with your work today. Track attendance, leave, payroll access, and submissions from one calm workspace.</p>
             </div>
 
-            <div class="employee-dashboard-hero card">
-                <div class="card-body">
-                    <div class="employee-dashboard-hero__content">
-                        <div class="employee-dashboard-hero__copy">
-                            <span class="employee-dashboard-eyebrow">Employee workspace</span>
-                            <h1 class="employee-dashboard-title">Welcome back, {{ $user->name }}</h1>
-                            <p class="employee-dashboard-subtitle">Review your people records, attendance, leave, and weekly submissions from one self-service dashboard.</p>
-                            <div class="employee-dashboard-meta">{{ $todayDate }} · {{ $user->department ?: 'Department pending' }} · {{ $user->position ?: 'Role pending' }}</div>
-                        </div>
-                        <div class="employee-dashboard-hero__avatar">
-                            <div class="employee-dashboard-avatar-frame">
-                                <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row employee-dashboard-grid">
-                <div class="col-xl-8 col-lg-7">
-                    <div class="employee-dashboard-metrics mb-4">
-                        @foreach ($metrics as $metric)
-                            <div class="employee-metric-card card panel-card">
-                                <div class="card-body">
-                                    <div class="employee-metric-value">{{ $metric['value'] }}</div>
-                                    <div class="employee-metric-label">{{ $metric['label'] }}</div>
-                                    <div class="employee-metric-helper">{{ $metric['helper'] }}</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="card panel-card mb-4">
-                        <div class="panel-head">
-                            <h4 class="panel-title">Quick Actions</h4>
-                            <span class="panel-meta">Shortcuts you use most</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="employee-dashboard-section-head">
-                                <p class="text-muted mb-0">Go straight to the self-service tasks you have access to.</p>
-                            </div>
-                            <div class="employee-dashboard-actions">
-                                @foreach ($quickActions as $action)
-                                    <a href="{{ $action['route'] }}" class="employee-dashboard-action">
-                                        <i class="{{ $action['icon'] }}"></i>
-                                        <span>{{ $action['label'] }}</span>
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card panel-card">
-                        <div class="panel-head">
-                            <h4 class="panel-title">Recent Activity</h4>
-                            <span class="panel-meta">{{ $activityFeed->count() }} items</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="employee-dashboard-section-head">
-                                <p class="text-muted mb-0">A clean summary of your latest HR and operations activity.</p>
-                            </div>
-                            <div class="employee-activity-list">
-                                @forelse ($activityFeed as $item)
-                                    <div class="employee-activity-item">
-                                        <div class="employee-activity-label">{{ $item['label'] }}</div>
-                                        <div class="employee-activity-value">{{ $item['value'] }}</div>
+            <div class="employee-main-grid">
+                <div>
+                    <h2 class="section-title">Current status</h2>
+                    <div class="status-panel">
+                        @php
+                            $statusPrimary = collect($statusSignals)->take(2);
+                        @endphp
+                        @if ($statusPrimary->count())
+                            <div class="status-grid">
+                            @foreach ($statusPrimary as $signal)
+                                <div class="status-card">
+                                    <span class="status-icon-wrap {{ $signal['tone'] }}">
+                                        <i class="{{ $signal['icon'] }}"></i>
+                                    </span>
+                                    <div>
+                                        <p class="status-label">{{ $signal['label'] }}</p>
+                                        <p class="status-value">{{ $signal['value'] }}</p>
+                                        <p class="status-detail">{{ $signal['detail'] }}</p>
                                     </div>
-                                @empty
-                                    <div class="employee-empty-state">No employee activity is recorded yet.</div>
-                                @endforelse
+                                </div>
+                            @endforeach
                             </div>
+                        @endif
+                    </div>
+
+                    <div class="timeline-wrap">
+                        <div class="timeline-head">
+                            <h2 class="section-title mb-0">Upcoming</h2>
+                            <a href="{{ route('employee/holidays') }}" class="timeline-view-all">View all <i class="la la-arrow-right"></i></a>
                         </div>
+
+                        <div class="timeline-list">
+                            @forelse ($upcomingItems as $item)
+                                <a href="{{ $item['route'] }}" class="timeline-item">
+                                    <span class="timeline-icon {{ $item['tone'] }}">
+                                        <i class="{{ $item['icon'] }}"></i>
+                                    </span>
+                                    <div>
+                                        <p class="timeline-title">{{ $item['title'] }}</p>
+                                        <p class="timeline-detail">{{ $item['detail'] }}</p>
+                                    </div>
+                                    <div class="timeline-date">
+                                        <p class="timeline-date-main">{{ $item['date'] }}</p>
+                                        <p class="timeline-date-sub">{{ $item['time'] }}</p>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="timeline-item">
+                                    <span class="timeline-icon purple"><i class="la la-calendar"></i></span>
+                                    <div>
+                                        <p class="timeline-title">No upcoming items</p>
+                                        <p class="timeline-detail">You are up to date for now.</p>
+                                    </div>
+                                    <div class="timeline-date">
+                                        <p class="timeline-date-main">-</p>
+                                        <p class="timeline-date-sub">-</p>
+                                    </div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <div class="dashboard-quote">
+                        <p>“Progress is built in the small, consistent steps we take every day.”</p>
+                        <small>- Purple Crayola</small>
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-lg-5">
-                    <div class="employee-dashboard-stack">
-                        <div class="card employee-status-card panel-card">
-                            <div class="card-body">
-                                <h3 class="card-title">Attendance snapshot</h3>
-                                @if ($latestAttendance)
-                                    <div class="employee-status-value">{{ $latestAttendance->status }}</div>
-                                    <div class="employee-status-meta">{{ \Carbon\Carbon::parse($latestAttendance->attendance_date)->format('d M Y') }}</div>
-                                    <div class="employee-status-note">Check in: {{ $latestAttendance->check_in ?: 'Not recorded' }} · Check out: {{ $latestAttendance->check_out ?: 'Not recorded' }}</div>
-                                @else
-                                    <div class="employee-empty-state">No attendance records yet.</div>
-                                @endif
-                            </div>
-                        </div>
+                <div>
+                    <h2 class="section-title">Quick actions</h2>
+                    <div class="quick-grid">
+                        @foreach ($quickActions as $action)
+                            <a href="{{ $action['route'] }}" class="quick-card" aria-label="{{ $action['label'] }}">
+                                <i class="{{ $action['icon'] }}"></i>
+                                <span>{{ $action['label'] }}</span>
+                            </a>
+                        @endforeach
+                        <a href="#" class="quick-card employee-people-ops-trigger" data-toggle="modal" data-target="#employeePeopleOpsModal" aria-label="Contact People Ops">
+                            <i class="la la-commenting-o"></i>
+                            <span>Contact People Ops</span>
+                        </a>
+                    </div>
 
-                        <div class="card employee-status-card panel-card">
-                            <div class="card-body">
-                                <h3 class="card-title">Leave snapshot</h3>
-                                @if ($latestLeave)
-                                    <div class="employee-status-value">{{ $latestLeave->leave_type }}</div>
-                                    <div class="employee-status-meta">{{ \Carbon\Carbon::parse($latestLeave->from_date)->format('d M Y') }} to {{ \Carbon\Carbon::parse($latestLeave->to_date)->format('d M Y') }}</div>
-                                    <div class="employee-status-note">{{ $latestLeave->leave_reason ?: 'Reason not provided' }}</div>
-                                @else
-                                    <div class="employee-empty-state">No leave requests yet.</div>
-                                @endif
-                            </div>
-                        </div>
+                    <div class="calendar-head mt-3">
+                        <h2 class="section-title mb-0">{{ $calendarMonthLabel }}</h2>
+                        <span class="text-muted">{{ $todayDate }}</span>
+                    </div>
+                    <div class="calendar-card">
+                        <div class="calendar-grid">
+                            @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $dow)
+                                <div class="calendar-dow">{{ $dow }}</div>
+                            @endforeach
 
-                        <div class="card employee-status-card panel-card">
-                            <div class="card-body">
-                                <h3 class="card-title">Upcoming holiday</h3>
-                                @if ($upcomingHoliday)
-                                    <div class="employee-status-value">{{ $upcomingHoliday->name_holiday }}</div>
-                                    <div class="employee-status-meta">{{ \Carbon\Carbon::parse($upcomingHoliday->date_holiday)->format('l, d M Y') }}</div>
-                                @else
-                                    <div class="employee-empty-state">No upcoming holidays are configured.</div>
-                                @endif
-                            </div>
+                            @while ($dayCursor <= $gridEnd)
+                                @php
+                                    $dateKey = $dayCursor->toDateString();
+                                    $isCurrentMonth = $dayCursor->month === $calendarBase->month;
+                                    $isToday = $dateKey === $today->toDateString();
+                                    $isSelected = $dateKey === $selectedDate;
+                                    $hasEvent = $upcomingHoliday && $dateKey === \Carbon\Carbon::parse($upcomingHoliday->date_holiday)->toDateString();
+                                @endphp
+                                <div>
+                                    <span class="calendar-day {{ !$isCurrentMonth ? 'muted' : '' }} {{ $isToday ? 'today' : '' }} {{ $isSelected ? 'selected' : '' }} {{ $hasEvent ? 'has-event' : '' }}">
+                                        {{ $dayCursor->day }}
+                                    </span>
+                                </div>
+                                @php($dayCursor->addDay())
+                            @endwhile
                         </div>
+                    </div>
+
+                    <div class="activity-feed">
+                        @forelse ($activityFeed as $item)
+                            <div class="activity-feed-item">
+                                <p class="activity-feed-label">{{ $item['label'] }}</p>
+                                <p class="activity-feed-value">{{ $item['value'] }}</p>
+                            </div>
+                        @empty
+                            <div class="activity-feed-item">
+                                <p class="activity-feed-label">Activity</p>
+                                <p class="activity-feed-value">No recent activity available yet.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>

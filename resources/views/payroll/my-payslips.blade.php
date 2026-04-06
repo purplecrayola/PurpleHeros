@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
-@include('employees.partials.self-service-style')
-<div class="page-wrapper self-service-modern">
+<div class="page-wrapper">
     <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Payslip workspace'])
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">

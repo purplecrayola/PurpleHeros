@@ -28,7 +28,7 @@
     </div>
 
     <x-filament::section heading="Top Courses By Enrollment">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b">
@@ -48,7 +48,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-2 py-3 text-gray-500">No learning data yet.</td>
+                            <td colspan="4" class="px-2 py-3 pc-empty-state">No learning data yet.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -57,7 +57,7 @@
     </x-filament::section>
 
     <x-filament::section heading="Asset Type Breakdown">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b">
@@ -77,7 +77,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-2 py-3 text-gray-500">No asset telemetry yet.</td>
+                            <td colspan="4" class="px-2 py-3 pc-empty-state">No asset telemetry yet.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -86,7 +86,7 @@
     </x-filament::section>
 
     <x-filament::section heading="Overdue Enrollment Queue">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b">
@@ -109,7 +109,7 @@
                             <td class="px-2 py-2">
                                 <a
                                     href="{{ route('filament.admin.resources.learning-enrollments.edit', ['record' => $enrollment->id]) }}"
-                                    class="text-primary-600 hover:underline"
+                                    class="fi-btn fi-btn-size-xs fi-color-gray fi-btn-color-gray fi-ac-action fi-ac-btn-action"
                                 >
                                     Open
                                 </a>
@@ -117,7 +117,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-2 py-3 text-gray-500">No overdue enrollments.</td>
+                            <td colspan="6" class="px-2 py-3 pc-empty-state">No overdue enrollments.</td>
                         </tr>
                     @endforelse
                 </tbody>

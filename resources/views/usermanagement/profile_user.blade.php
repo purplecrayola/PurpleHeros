@@ -14,24 +14,72 @@
     @php($displayAddress = trim((string) ($information?->address ?? '')) ?: 'N/A')
     @php($displayGender = trim((string) ($information?->gender ?? '')) ?: 'N/A')
     @php($displayReportsTo = trim((string) ($information?->reports_to ?? ($profileUser?->name ?? ''))) ?: 'N/A')
+    @php($todayLabel = \Carbon\Carbon::now()->format('l, M j'))
     @php($brandPrimary = $companySettings->brand_primary_color ?? '#8A00FF')
     @php($brandDark = $companySettings->brand_dark_color ?? '#00163F')
     @php($brandNeutral = $companySettings->brand_neutral_color ?? '#DCDDDF')
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
         .employee-profile-modern {
+            --pc-surface-primary: #fcfcfd;
+            --pc-surface-secondary: #f8f8fb;
+            --pc-surface-sidebar: #fafafc;
+            --pc-surface-wash: #f6f1ff;
+            --pc-text-primary: #171327;
+            --pc-text-secondary: #5e5873;
+            --pc-text-muted: #8c869e;
+            --pc-text-inverse: #ffffff;
+            --pc-purple-700: #5b2de1;
+            --pc-purple-600: #6d28d9;
+            --pc-purple-500: #7c3aed;
+            --pc-purple-100: #efe7ff;
+            --pc-positive: #12b981;
+            --pc-pending: #f4a300;
+            --pc-negative: #e35d6a;
+            --pc-info: #4f46e5;
+            --pc-border-subtle: #eae7f2;
+            --pc-border-default: #d9d4e5;
+            --pc-border-strong: #cbc4db;
+            --pc-radius-sm: 8px;
+            --pc-radius-md: 12px;
+            --pc-radius-lg: 16px;
+            --pc-shadow-soft: 0 8px 24px rgba(40, 24, 82, 0.06);
+            --pc-font-display: 'Playfair Display', serif;
+            --pc-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
             font-size: 15px;
-            background:
-                radial-gradient(circle at 8% 10%, rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.08), transparent 34%),
-                radial-gradient(circle at 100% 0%, rgba(0, 22, 63, 0.08), transparent 36%),
-                linear-gradient(180deg, rgba(247, 249, 255, 0.92), rgba(241, 244, 252, 0.98));
+            font-family: var(--pc-font-sans);
+            background: var(--pc-surface-primary);
+            color: var(--pc-text-primary);
         }
         .employee-profile-modern .content.container-fluid {
-            max-width: 1460px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 28px 24px 34px;
+            padding: 40px;
+        }
+        .employee-profile-modern .profile-identity-day {
+            color: var(--pc-text-secondary);
+            font-size: 16px;
+            line-height: 24px;
+            margin-bottom: 8px;
+        }
+        .employee-profile-modern .profile-identity-title {
+            margin: 0;
+            font-family: var(--pc-font-display);
+            font-size: clamp(2rem, 4vw, 56px);
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+            color: var(--pc-text-primary);
+        }
+        .employee-profile-modern .profile-identity-subtitle {
+            margin-top: 12px;
+            max-width: 560px;
+            color: var(--pc-text-secondary);
+            font-size: 16px;
+            line-height: 24px;
         }
         .employee-profile-modern .page-header {
-            margin-bottom: 18px;
+            display: none;
         }
         .employee-profile-modern .page-header .page-title {
             font-size: 2.35rem;
@@ -55,14 +103,14 @@
             font-weight: 500;
         }
         .profile-completion-card {
-            border-radius: 20px;
-            border: 1px solid rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.25);
-            box-shadow: 0 18px 36px rgba(0, 22, 63, 0.09);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 255, 0.95));
-            margin-bottom: 16px;
+            border-radius: 0;
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+            margin-bottom: 20px;
         }
         .profile-completion-card .card-body {
-            padding: 18px 20px;
+            padding: 0;
         }
         .profile-completion-card h5 {
             margin: 0;
@@ -70,8 +118,8 @@
             font-weight: 700;
         }
         .employee-profile-modern .badge.bg-primary {
-            background: linear-gradient(135deg, {{ $brandPrimary }}, {{ $brandDark }}) !important;
-            color: #fff !important;
+            background: var(--pc-purple-600) !important;
+            color: var(--pc-text-inverse) !important;
             border-radius: 999px;
             padding: 6px 10px;
             font-weight: 700;
@@ -80,37 +128,37 @@
             border-radius: 999px;
             overflow: hidden;
             height: 10px;
-            background: rgba(0, 22, 63, 0.08);
+            background: var(--pc-border-subtle);
         }
         .employee-profile-modern .progress-bar {
-            background: linear-gradient(90deg, {{ $brandPrimary }}, {{ $brandDark }}) !important;
+            background: var(--pc-purple-600) !important;
         }
         .employee-profile-modern .card.mb-0 {
-            border-radius: 22px;
-            border: 1px solid rgba(0, 22, 63, 0.08);
-            box-shadow: 0 18px 36px rgba(0, 22, 63, 0.09);
+            border: 0;
+            box-shadow: none;
             margin-bottom: 16px !important;
-            background: rgba(255, 255, 255, 0.96);
+            background: transparent;
         }
         .employee-profile-modern .card.mb-0 > .card-body {
-            padding: 18px;
+            padding: 0;
         }
         .employee-profile-modern .profile-view {
-            border-radius: 18px;
-            background: linear-gradient(120deg, rgba(255,255,255,0.98), rgba(244,247,255,0.95));
-            border: 1px solid rgba(0, 22, 63, 0.09);
-            box-shadow: 0 12px 28px rgba(0, 22, 63, 0.07);
-            padding: 20px;
+            border-radius: 0;
+            background: #fff;
+            border: 0;
+            border-bottom: 1px solid var(--pc-border-subtle);
+            box-shadow: none;
+            padding: 14px 0 18px;
             position: relative;
         }
         .employee-profile-modern .profile-img-wrap {
             position: static;
-            width: 124px;
-            height: 124px;
-            border-radius: 28px;
-            background: linear-gradient(145deg, rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.2), rgba(0, 22, 63, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+            width: 150px;
+            height: 150px;
+            border-radius: 999px;
+            background: #fff;
+            border: 3px solid var(--pc-purple-100);
+            box-shadow: none;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -129,9 +177,9 @@
             font-size: 13px;
         }
         .employee-profile-modern .profile-img-wrap .profile-img {
-            width: 108px;
-            height: 108px;
-            border-radius: 22px;
+            width: 134px;
+            height: 134px;
+            border-radius: 999px;
             overflow: hidden;
         }
         .employee-profile-modern .profile-img-wrap .profile-img img,
@@ -148,25 +196,41 @@
         .employee-profile-modern .profile-basic {
             margin-left: 0;
             min-height: auto;
+            position: relative;
+        }
+        .employee-profile-modern .profile-basic::before,
+        .employee-profile-modern .profile-basic::after,
+        .employee-profile-modern .profile-view .profile-basic::before,
+        .employee-profile-modern .profile-view .profile-basic::after {
+            display: none !important;
+            content: none !important;
+            border: 0 !important;
         }
         .employee-profile-modern .profile-info-left .user-name {
-            font-size: 2rem;
-            line-height: 1.08;
+            font-family: var(--pc-font-display);
+            font-size: clamp(2rem, 3vw, 3rem);
+            line-height: 1.04;
             letter-spacing: -0.02em;
-            font-weight: 800;
-            color: #0f172a;
+            font-weight: 700;
+            color: var(--pc-text-primary);
             margin-bottom: 2px;
         }
         .employee-profile-modern .profile-info-left h6 {
-            color: rgba(15, 23, 42, 0.8) !important;
-            font-size: 1rem;
-            font-weight: 700;
+            color: var(--pc-text-primary) !important;
+            font-size: clamp(1.35rem, 1.7vw, 1.75rem);
+            font-weight: 600;
             margin-bottom: 4px;
         }
+        .employee-profile-modern .profile-info-left {
+            border-right: 0 !important;
+            border-bottom: 0 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
         .employee-profile-modern .profile-info-left small {
-            color: rgba(15, 23, 42, 0.68) !important;
-            font-size: 0.95rem;
-            font-weight: 500;
+            color: var(--pc-text-secondary) !important;
+            font-size: 16px;
+            font-weight: 400;
             margin-bottom: 8px;
             display: block;
         }
@@ -178,34 +242,46 @@
             color: #0f172a;
             border: 1px solid rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.24);
             font-weight: 700;
-            font-size: 0.82rem;
-            padding: 4px 12px;
+            font-size: 14px;
+            padding: 6px 14px;
             margin: 1px 0 8px;
         }
         .employee-profile-modern .profile-info-left .doj {
-            font-size: 0.95rem;
+            font-size: 16px;
             color: rgba(15, 23, 42, 0.66) !important;
             margin-bottom: 14px;
+            display: inline-block;
+            margin-left: 8px;
         }
         .employee-profile-modern .profile-view .staff-msg .btn-custom {
-            border: none;
+            border: 1px solid var(--pc-purple-600);
             color: #fff;
-            min-height: 44px;
+            min-height: 52px;
             border-radius: 12px;
-            padding: 10px 18px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, {{ $brandPrimary }}, {{ $brandDark }});
-            box-shadow: 0 12px 26px rgba(138, 0, 255, 0.28);
-            transition: transform .18s ease, box-shadow .18s ease;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--pc-purple-600);
+            box-shadow: none;
+            transition: background-color .18s ease;
         }
         .employee-profile-modern .profile-view .staff-msg .btn-custom:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 16px 28px rgba(138, 0, 255, 0.34);
+            background: var(--pc-purple-700);
+        }
+        .employee-profile-modern .profile-view .staff-msg .btn-custom i {
+            font-size: 18px;
+            margin-right: 10px !important;
         }
         .employee-profile-modern .profile-basic > .row > .col-md-7 {
-            border-left: 1px dashed rgba(15, 23, 42, 0.2);
-            padding-left: 28px;
+            border-left: 1px solid var(--pc-border-subtle) !important;
+            padding-left: 40px;
+            box-shadow: none !important;
+            background-image: none !important;
+        }
+        .employee-profile-modern .profile-basic > .row > .col-md-7::before,
+        .employee-profile-modern .profile-basic > .row > .col-md-7::after {
+            display: none !important;
+            content: none !important;
         }
         .employee-profile-modern .profile-view .personal-info,
         .employee-profile-modern .profile-box .personal-info {
@@ -236,16 +312,18 @@
         }
         .employee-profile-modern .profile-view .personal-info .title,
         .employee-profile-modern .profile-box .personal-info .title {
-            font-weight: 700;
-            color: rgba(15, 23, 42, 0.78);
-            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--pc-text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
             white-space: normal;
         }
         .employee-profile-modern .profile-view .personal-info .text,
         .employee-profile-modern .profile-box .personal-info .text {
-            color: rgba(15, 23, 42, 0.76);
+            color: var(--pc-text-primary);
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 16px;
         }
         .employee-profile-modern .profile-view .personal-info .text a,
         .employee-profile-modern .profile-box .personal-info .text a {
@@ -256,10 +334,10 @@
             color: {{ $brandPrimary }};
         }
         .employee-profile-modern .profile-box {
-            border: 1px solid color-mix(in srgb, {{ $brandNeutral }} 65%, white);
-            border-radius: 18px;
-            box-shadow: 0 10px 24px rgba(0, 22, 63, 0.07);
-            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid var(--pc-border-subtle);
+            border-radius: var(--pc-radius-lg);
+            box-shadow: none;
+            background: #fff;
         }
         .employee-profile-modern .profile-box .card-body {
             padding: 18px;
@@ -301,37 +379,39 @@
             vertical-align: middle;
         }
         .profile-tab-shell {
-            border: 1px solid color-mix(in srgb, {{ $brandDark }} 12%, white);
-            box-shadow: 0 8px 20px rgba(0, 22, 63, 0.06);
-            border-radius: 16px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.9);
-            margin-bottom: 16px;
+            border: 0;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: visible;
+            background: transparent;
+            margin-bottom: 12px;
         }
         .profile-tab-shell .user-tabs .line-tabs {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-left: 0;
+            padding-right: 0;
         }
         .profile-tab-shell .nav-tabs {
-            border-bottom: 0;
+            border-bottom: 1px solid var(--pc-border-subtle);
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
-            padding: 8px;
+            gap: 22px;
+            padding: 0;
         }
         .profile-tab-shell .nav-link {
             border: 0 !important;
-            border-radius: 999px;
+            border-bottom: 2px solid transparent !important;
+            border-radius: 0;
             margin: 0;
-            padding: 10px 16px;
-            font-weight: 700;
-            color: rgba(0, 22, 63, 0.64);
-            transition: all .18s ease;
+            padding: 12px 0 10px;
+            font-weight: 500;
+            color: var(--pc-text-secondary);
+            transition: color .18s ease, border-color .18s ease;
         }
         .profile-tab-shell .nav-link.active {
-            color: #fff !important;
-            background: linear-gradient(135deg, {{ $brandPrimary }}, {{ $brandDark }});
-            box-shadow: 0 10px 20px rgba(138, 0, 255, 0.2);
+            color: var(--pc-purple-600) !important;
+            background: transparent;
+            border-bottom-color: var(--pc-purple-600) !important;
+            box-shadow: none;
         }
         .employee-profile-modern .tab-content > .tab-pane {
             animation: fadeSlide .22s ease;
@@ -341,26 +421,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .employee-profile-modern .pro-edit {
-            top: 14px;
-            right: 14px;
+            display: none;
         }
-        .employee-profile-modern .pro-edit .edit-icon,
         .employee-profile-modern .edit-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            color: var(--pc-purple-600);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.11);
-            color: {{ $brandPrimary }};
-            border: 1px solid rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.2);
-            transition: all .16s ease;
+            gap: 6px;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            text-decoration: none;
+            transition: color .16s ease;
         }
-        .employee-profile-modern .pro-edit .edit-icon:hover,
         .employee-profile-modern .edit-icon:hover {
-            background: rgba({{ $companySettings->colorRgb('brand_primary_color', '#8A00FF') }}, 0.18);
-            transform: translateY(-1px);
+            color: var(--pc-purple-700);
+            text-decoration: underline;
         }
         .employee-profile-modern .experience-list .name {
             font-weight: 700;
@@ -398,6 +477,12 @@
             }
         }
         @media (max-width: 767px) {
+            body.employee-dashboard-shell .sidebar {
+                left: -240px;
+            }
+            body.employee-dashboard-shell .page-wrapper {
+                margin-left: 0;
+            }
             .employee-profile-modern .page-header .page-title {
                 font-size: 1.72rem;
             }
@@ -429,6 +514,12 @@
     <div class="page-wrapper employee-profile-modern">
         <!-- Page Content -->
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Self-service profile workspace'])
+            <div class="mb-4">
+                <p class="profile-identity-day">{{ $todayLabel }}</p>
+                <h1 class="profile-identity-title">My Profile</h1>
+                <p class="profile-identity-subtitle">Manage your personal records and statutory information from a single self-service workspace.</p>
+            </div>
             <!-- Page Header -->
             <div class="page-header">
                 <div class="row">
@@ -456,6 +547,23 @@
                 </div>
             </div>
             <!-- /Page Header -->
+            <div class="card tab-box profile-tab-shell">
+                <div class="row user-tabs">
+                    <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+                        <ul class="nav nav-tabs nav-tabs-bottom">
+                            <li class="nav-item"><a href="#emp_profile" data-toggle="tab" class="nav-link active">Profile</a></li>
+                            <li class="nav-item"><a href="#emp_onboarding" data-toggle="tab" class="nav-link">Onboarding</a></li>
+                            <li class="nav-item"><a href="#emp_projects" data-toggle="tab" class="nav-link">Projects</a></li>
+                            @if(Auth::user()?->isAdmin())
+                                <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link">Bank & Statutory <small class="text-danger">(Admin Only)</small></a></li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content">
+                <div id="emp_profile" class="pro-overview tab-pane fade show active">
             <div class="card mb-0">
                 <div class="card-body">
                     <div class="row">
@@ -477,7 +585,7 @@
                                                 <small class="text-muted">{{ $displayDesignation !== '' ? $displayDesignation : 'N/A' }}</small>
                                                 <div class="staff-id">User ID : {{ $displayUserId !== '' ? $displayUserId : 'N/A' }}</div>
                                                 <div class="small doj text-muted">Date of Join : {{ $displayJoinDate }}</div>
-                                                <div class="staff-msg"><a class="btn btn-custom" href="mailto:{{ $displayEmail }}">Send Message</a></div>
+                                                <div class="staff-msg"><a class="btn btn-custom" href="mailto:{{ $displayEmail }}"><i class="la la-paper-plane-o mr-2"></i>Send Message</a></div>
                                             </div>
                                         </div>
                                         <div class="col-md-7">
@@ -519,36 +627,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="pro-edit"><a data-target="#profile_info" data-toggle="modal" class="edit-icon" href="#"><i class="fa fa-pencil"></i></a></div>
+                                <div class="pro-edit"><a data-target="#profile_info" data-toggle="modal" class="edit-icon" href="#">Edit</a></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 					
-            <div class="card tab-box profile-tab-shell">
-                <div class="row user-tabs">
-                    <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
-                        <ul class="nav nav-tabs nav-tabs-bottom">
-                            <li class="nav-item"><a href="#emp_profile" data-toggle="tab" class="nav-link active">Profile</a></li>
-                            <li class="nav-item"><a href="#emp_onboarding" data-toggle="tab" class="nav-link">Onboarding</a></li>
-                            <li class="nav-item"><a href="#emp_projects" data-toggle="tab" class="nav-link">Projects</a></li>
-                            @if(Auth::user()?->isAdmin())
-                                <li class="nav-item"><a href="#bank_statutory" data-toggle="tab" class="nav-link">Bank & Statutory <small class="text-danger">(Admin Only)</small></a></li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="tab-content">
-                <div id="emp_profile" class="pro-overview tab-pane fade show active">
                     <div class="row">
                         <!-- Personal Informations -->
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Personal Information <a href="#" class="edit-icon" data-toggle="modal" data-target="#personal_info_modal"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Personal Information <a href="#" class="edit-icon" data-toggle="modal" data-target="#personal_info_modal">Edit</a></h3>
                                     <ul class="personal-info">
                                         <li>
                                             <div class="title">Passport No.</div>
@@ -626,7 +717,7 @@
                                 <div class="card-body">
                                     <h3 class="card-title">Emergency Contact
                                         <a href="#" class="edit-icon" data-toggle="modal" data-target="#emergency_contact_modal">
-                                            <i class="fa fa-pencil"></i>
+                                            Edit
                                         </a>
                                     </h3>
                                     <h5 class="section-title">Primary</h5>
@@ -698,7 +789,7 @@
                                     <h3 class="card-title">Bank information 
                                         @if($canEditBankInfo)
                                             <a href="#" class="edit-icon" data-toggle="modal" data-target="#bank_information_modal">
-                                                <i class="fa fa-pencil"></i>
+                                                Edit
                                             </a>
                                         @endif
                                     </h3>
@@ -771,7 +862,7 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Family Information <a href="#" class="edit-icon" data-toggle="modal" data-target="#family_info_modal"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Family Information <a href="#" class="edit-icon" data-toggle="modal" data-target="#family_info_modal">Edit</a></h3>
                                     <div class="table-responsive">
                                         <table class="table table-nowrap">
                                             <thead>
@@ -812,7 +903,7 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Education Information <a href="#emp_onboarding" class="edit-icon" data-toggle="tab"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Education Information <a href="#emp_onboarding" class="edit-icon" data-toggle="tab">Edit</a></h3>
                                     <div class="experience-box">
                                         <ul class="experience-list">
                                             @forelse(($educations ?? collect()) as $education)
@@ -847,7 +938,7 @@
                         <div class="col-md-6 d-flex">
                             <div class="card profile-box flex-fill">
                                 <div class="card-body">
-                                    <h3 class="card-title">Experience <a href="#emp_onboarding" class="edit-icon" data-toggle="tab"><i class="fa fa-pencil"></i></a></h3>
+                                    <h3 class="card-title">Experience <a href="#emp_onboarding" class="edit-icon" data-toggle="tab">Edit</a></h3>
                                     <div class="experience-box">
                                         <ul class="experience-list">
                                             @forelse(($experiences ?? collect()) as $experience)
@@ -2030,6 +2121,7 @@
         });
 
         bindRemoveButtons();
+
     </script>
     @endsection
 @endsection

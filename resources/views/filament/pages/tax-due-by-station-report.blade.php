@@ -24,7 +24,7 @@
                 </span>
         </div>
 
-        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+        <div class="pc-filter-shell">
             <div class="grid gap-4 md:grid-cols-3">
                 <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Year</label>
@@ -86,7 +86,7 @@
                 <h3 class="text-xl font-semibold tracking-tight text-slate-900">Station Summary</h3>
                 <p class="text-sm text-slate-500">PAYE totals grouped by tax station.</p>
             </div>
-            <div class="inline-flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white p-1">
+            <div class="pc-export-wrap">
                 <x-filament::button size="sm" color="gray" wire:click="exportStationSummary('csv')">CSV</x-filament::button>
                 <x-filament::button size="sm" color="gray" wire:click="exportStationSummary('xlsx')">XLSX</x-filament::button>
                 <x-filament::button size="sm" color="gray" wire:click="exportStationSummary('pdf')">PDF</x-filament::button>
@@ -116,7 +116,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="px-5 py-5 text-slate-500" colspan="3">No tax records found for this period.</td>
+                                <td class="px-5 py-5 pc-empty-state" colspan="3">No tax records found for this period.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -131,7 +131,7 @@
                 <h3 class="text-xl font-semibold tracking-tight text-slate-900">Per Employee Breakdown</h3>
                 <p class="text-sm text-slate-500">Detailed payroll tax and net salary line items.</p>
             </div>
-            <div class="inline-flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white p-1">
+            <div class="pc-export-wrap">
                 <x-filament::button size="sm" color="gray" wire:click="exportEmployeeBreakdown('csv')">CSV</x-filament::button>
                 <x-filament::button size="sm" color="gray" wire:click="exportEmployeeBreakdown('xlsx')">XLSX</x-filament::button>
                 <x-filament::button size="sm" color="gray" wire:click="exportEmployeeBreakdown('pdf')">PDF</x-filament::button>
@@ -174,7 +174,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="px-5 py-5 text-slate-500" colspan="6">No employee rows found for this filter.</td>
+                                <td class="px-5 py-5 pc-empty-state" colspan="6">No employee rows found for this filter.</td>
                             </tr>
                         @endforelse
                     </tbody>

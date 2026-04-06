@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AttendanceRecord;
 use App\Models\LeavePolicyBand;
 use App\Models\LeavesAdmin;
+use App\Support\InAppNotifier;
 use Brian2694\Toastr\Facades\Toastr;
 use DateTime;
 use Illuminate\Http\Request;
@@ -93,7 +94,7 @@ class LeavesController extends Controller
                 (string) $request->to_date,
             );
 
-            LeavesAdmin::create([
+            $leave = LeavesAdmin::create([
                 'user_id' => $request->user_id,
                 'leave_type' => $request->leave_type,
                 'from_date' => $request->from_date,
@@ -101,6 +102,23 @@ class LeavesController extends Controller
                 'day' => $days,
                 'leave_reason' => $request->leave_reason,
             ]);
+
+            InAppNotifier::notifyUserId(
+                (string) $leave->user_id,
+                'Leave request submitted',
+                sprintf('%s leave request from %s to %s has been submitted.', (string) $leave->leave_type, (string) $leave->from_date, (string) $leave->to_date),
+                route('form/leavesemployee/new'),
+                'info'
+            );
+
+            InAppNotifier::notifyRoles(
+                ['Super Admin', 'Admin', 'HR Manager'],
+                'New leave request',
+                sprintf('A leave request (%s) has been submitted for review.', (string) $leave->leave_type),
+                url('/admin/leaves-admins'),
+                'pending',
+                [(string) $leave->user_id]
+            );
 
             DB::commit();
             Toastr::success('Create new Leaves successfully :)', 'Success');

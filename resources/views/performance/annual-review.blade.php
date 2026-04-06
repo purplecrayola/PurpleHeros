@@ -1,9 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper performance-annual-review-page">
         <div class="content container-fluid">
-            <div class="page-header">
+            @include('employees.partials.employee-topbar', ['context' => 'Performance workspace'])
+            <div class="page-header performance-annual-review-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Annual Performance Review</h3>
@@ -11,13 +12,14 @@
                             <li class="breadcrumb-item"><a href="{{ Auth::user()->isAdmin() ? route('home') : route('em/dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Annual Review</li>
                         </ul>
+                        <p class="section-intro">Track workflow progress, review year-end summaries, and complete appraisal actions in one place.</p>
                         <p class="text-muted mb-0">{{ $subjectName }} · {{ $year }}</p>
                     </div>
                     <div class="col-auto">
                         @if($mode === 'self')
-                            <a href="{{ route('performance/annual/review/download', ['year' => $year]) }}" class="btn btn-outline-primary">Download PDF</a>
+                            <a href="{{ route('performance/annual/review/download', ['year' => $year]) }}" class="btn btn-outline-primary performance-annual-review-btn">Download PDF</a>
                         @else
-                            <a href="{{ route('performance/team/annual-reviews/download', ['id' => $review->id]) }}" class="btn btn-outline-primary">Download PDF</a>
+                            <a href="{{ route('performance/team/annual-reviews/download', ['id' => $review->id]) }}" class="btn btn-outline-primary performance-annual-review-btn">Download PDF</a>
                         @endif
                     </div>
                 </div>
@@ -360,4 +362,22 @@
             @endif
         </div>
     </div>
+@endsection
+
+@section('style')
+<style>
+    body.employee-dashboard-shell .performance-annual-review-page .performance-annual-review-header {
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+    body.employee-dashboard-shell .performance-annual-review-page .performance-annual-review-btn {
+        min-height: 40px;
+        border-radius: 12px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+</style>
 @endsection

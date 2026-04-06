@@ -179,7 +179,19 @@ class CompanySettingsResource extends Resource
                                             ->dehydrated()
                                             ->helperText('Browser tab icon across web and admin pages.'),
                                         TextInput::make('favicon_path')->maxLength(255),
-                                        TextInput::make('login_image_path')->maxLength(255),
+                                        FileUpload::make('login_image_upload')
+                                            ->label('Upload Login Hero Image')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('brand-settings-temp')
+                                            ->visibility('public')
+                                            ->preserveFilenames()
+                                            ->dehydrated()
+                                            ->helperText('Used as the left-side image on the employee sign-in page.'),
+                                        TextInput::make('login_image_path')
+                                            ->label('Login image path')
+                                            ->maxLength(255)
+                                            ->helperText('Auto-updated by upload. You can still set a custom path manually if needed.'),
                                         TextInput::make('brand_primary_color')->label('Primary Color')->maxLength(7),
                                         TextInput::make('brand_dark_color')->label('Dark Color')->maxLength(7),
                                         TextInput::make('brand_neutral_color')->label('Neutral Color')->maxLength(7),
@@ -282,6 +294,12 @@ class CompanySettingsResource extends Resource
                                             ->label('Reply-To Address')
                                             ->email()
                                             ->maxLength(255),
+                                        TextInput::make('people_ops_email')
+                                            ->label('People Ops Inbox')
+                                            ->email()
+                                            ->maxLength(255)
+                                            ->default('heros@purplecrayola.com')
+                                            ->helperText('Employee support requests from the dashboard are sent to this inbox.'),
                                     ]),
                                 Section::make('Offboarding Notifications')
                                     ->description('Use tokens: {employee_name}, {employee_id}, {from_status}, {to_status}, {offboarding_type}, {last_working_day}, {offboarding_reason}, {completed_by}, {completed_at}, {company_name}.')

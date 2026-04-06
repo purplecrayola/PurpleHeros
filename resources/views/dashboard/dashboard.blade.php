@@ -155,7 +155,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-muted text-center">No leave records yet.</td>
+                                                <td colspan="4" class="pc-empty-state">No leave records yet.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -190,7 +190,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-muted text-center">No attendance records yet.</td>
+                                                <td colspan="4" class="pc-empty-state">No attendance records yet.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -228,7 +228,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-muted text-center">No timesheet records yet.</td>
+                                                <td colspan="4" class="pc-empty-state">No timesheet records yet.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -263,7 +263,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-muted text-center">No payroll records yet.</td>
+                                                <td colspan="4" class="pc-empty-state">No payroll records yet.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

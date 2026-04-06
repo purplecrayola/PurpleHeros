@@ -26,7 +26,7 @@
             <li>Payslips are generated from payroll runs / salary records.</li>
             <li>Policy sets are managed in Payroll Policy Sets.</li>
         </ul>
-        <div class="mt-4 flex flex-wrap gap-3">
+        <div class="mt-4 pc-export-wrap">
             <a href="/admin/payroll-policy-sets" class="fi-btn fi-btn-size-md fi-color-primary fi-btn-color-primary fi-ac-action fi-ac-btn-action">Open Payroll Policy Sets</a>
             <a href="/admin/payroll-runs" class="fi-btn fi-btn-size-md fi-color-gray fi-btn-color-gray fi-ac-action fi-ac-btn-action">Open Payroll Runs</a>
             <a href="/admin/staff-salaries" class="fi-btn fi-btn-size-md fi-color-gray fi-btn-color-gray fi-ac-action fi-ac-btn-action">Open Staff Salaries</a>

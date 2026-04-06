@@ -279,7 +279,7 @@
                             <div class="profile-view">
                                 <div class="profile-img-wrap">
                                     <div class="profile-img">
-                                        <a href="#"><img class="user-profile" alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}"></a>
+                                        <a href="#"><img class="user-profile" alt="" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg') }}" alt="{{ $users->name }}"></a>
                                     </div>
                                 </div>
                                 <div class="profile-basic">
@@ -351,7 +351,7 @@
                                                     <div class="text">
                                                         <div class="avatar-box">
                                                             <div class="avatar avatar-xs">
-                                                                <img src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}">
+                                                                <img src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg') }}" alt="{{ $users->name }}">
                                                             </div>
                                                         </div>
                                                         <a>{{ $users->name }}</a>
@@ -1013,7 +1013,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="profile-img-wrap edit-img">
-                                        <img class="inline-block" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg', 'assets/images') }}" alt="{{ $users->name }}">
+                                        <img class="inline-block" src="{{ \App\Support\MediaStorageManager::publicUrl($users->avatar ?? null, 'assets/img/user.jpg') }}" alt="{{ $users->name }}">
                                     </div>
                                     <div class="profile-avatar-upload">
                                         <label class="mb-1 d-block">Profile Picture</label>

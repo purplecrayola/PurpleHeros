@@ -40,7 +40,8 @@
     </x-filament::section>
 
     <x-filament::section>
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="pc-filter-shell">
+            <div class="pc-filter-grid cols-3">
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-600">Report Date</label>
                 <x-filament::input.wrapper>
@@ -58,11 +59,12 @@
                     Clear Search
                 </x-filament::button>
             </div>
+            </div>
         </div>
     </x-filament::section>
 
     <x-filament::section heading="Employee Report">
-        <div class="mb-3 flex flex-wrap gap-2">
+        <div class="mb-3 pc-export-wrap">
             <x-filament::button size="sm" color="gray" wire:click="exportEmployees('csv')">Export CSV</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportEmployees('xlsx')">Export XLSX</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportEmployees('pdf')">Export PDF</x-filament::button>
@@ -88,7 +90,7 @@
                             <td class="px-3 py-2">{{ $row->salary ?: 'N/A' }}</td>
                         </tr>
                     @empty
-                        <tr><td class="px-3 py-3 text-slate-500" colspan="5">No employee rows found.</td></tr>
+                        <tr><td class="px-3 py-3 pc-empty-state" colspan="5">No employee rows found.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -96,7 +98,7 @@
     </x-filament::section>
 
     <x-filament::section heading="Leave Report">
-        <div class="mb-3 flex flex-wrap gap-2">
+        <div class="mb-3 pc-export-wrap">
             <x-filament::button size="sm" color="gray" wire:click="exportLeaves('csv')">Export CSV</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportLeaves('xlsx')">Export XLSX</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportLeaves('pdf')">Export PDF</x-filament::button>
@@ -122,7 +124,7 @@
                             <td class="px-3 py-2">{{ $row->leave_reason ?: 'N/A' }}</td>
                         </tr>
                     @empty
-                        <tr><td class="px-3 py-3 text-slate-500" colspan="5">No leave rows found.</td></tr>
+                        <tr><td class="px-3 py-3 pc-empty-state" colspan="5">No leave rows found.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -130,7 +132,7 @@
     </x-filament::section>
 
     <x-filament::section heading="Daily Attendance Report">
-        <div class="mb-3 flex flex-wrap gap-2">
+        <div class="mb-3 pc-export-wrap">
             <x-filament::button size="sm" color="gray" wire:click="exportAttendance('csv')">Export CSV</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportAttendance('xlsx')">Export XLSX</x-filament::button>
             <x-filament::button size="sm" color="gray" wire:click="exportAttendance('pdf')">Export PDF</x-filament::button>
@@ -158,7 +160,7 @@
                             <td class="px-3 py-2">{{ $row->check_out ?: 'N/A' }}</td>
                         </tr>
                     @empty
-                        <tr><td class="px-3 py-3 text-slate-500" colspan="6">No attendance rows found for selected date.</td></tr>
+                        <tr><td class="px-3 py-3 pc-empty-state" colspan="6">No attendance rows found for selected date.</td></tr>
                     @endforelse
                 </tbody>
             </table>

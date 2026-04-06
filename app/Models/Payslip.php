@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\MediaStorageManager;
+use App\Support\InAppNotifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,5 +50,20 @@ class Payslip extends Model
     public function getFileUrlAttribute(): string
     {
         return MediaStorageManager::publicUrl($this->file_path);
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (self $payslip): void {
+            $periodLabel = sprintf('%04d-%02d', (int) $payslip->period_year, (int) $payslip->period_month);
+
+            InAppNotifier::notifyUserId(
+                (string) $payslip->user_id,
+                'Payslip published',
+                "Your payslip for {$periodLabel} is now available.",
+                route('my/payslips'),
+                'success'
+            );
+        });
     }
 }

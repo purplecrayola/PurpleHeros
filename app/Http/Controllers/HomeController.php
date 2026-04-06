@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AttendanceRecord;
+use App\Models\CompanySettings;
 use App\Models\Employee;
 use App\Models\Holiday;
 use App\Models\LeavesAdmin;
@@ -10,12 +11,15 @@ use App\Models\OvertimeEntry;
 use App\Models\StaffSalary;
 use App\Models\TimesheetEntry;
 use App\Models\User;
+use App\Notifications\InAppNotification;
+use App\Support\MailSettingsManager;
 use App\Models\department;
 use App\Models\positionType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 
 class HomeController extends Controller
@@ -143,6 +147,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $now = Carbon::now();
         $todayDate = $now->format('D, M d, Y g:i A');
+        $todayLabel = $now->format('l, M j');
 
         $leaveCount = LeavesAdmin::where('user_id', $user->user_id)->count();
         $approvedAttendanceDays = AttendanceRecord::where('user_id', $user->user_id)
@@ -169,6 +174,10 @@ class HomeController extends Controller
         $latestOvertime = OvertimeEntry::where('user_id', $user->user_id)
             ->orderByDesc('ot_date')
             ->first();
+        $pendingLeave = LeavesAdmin::where('user_id', $user->user_id)
+            ->where('status', 'Pending')
+            ->orderBy('from_date')
+            ->first();
         $upcomingHoliday = Holiday::whereDate('date_holiday', '>=', $now->toDateString())
             ->orderBy('date_holiday')
             ->first();
@@ -176,8 +185,8 @@ class HomeController extends Controller
         $quickActions = [
             ['label' => 'View Profile', 'route' => route('profile_user'), 'icon' => 'la la-id-card'],
             ['label' => 'Request Leave', 'route' => route('form/leavesemployee/new'), 'icon' => 'la la-calendar'],
-            ['label' => 'Check Attendance', 'route' => route('attendance/employee/page'), 'icon' => 'la la-clock-o'],
-            ['label' => 'Review Timesheets', 'route' => route('employee/timesheets'), 'icon' => 'la la-file-text'],
+            ['label' => 'View Attendance', 'route' => route('attendance/employee/page'), 'icon' => 'la la-clock-o'],
+            ['label' => 'View Payslip', 'route' => route('my/payslips'), 'icon' => 'la la-credit-card'],
         ];
 
         $activityFeed = collect([
@@ -210,12 +219,66 @@ class HomeController extends Controller
             ['label' => 'Overtime hours', 'value' => number_format($overtimeHours, 1), 'helper' => 'Total tracked'],
         ];
 
+        $attendanceValue = $latestAttendance ? ucfirst((string) $latestAttendance->status) : 'No records';
+        $attendanceDetail = $latestAttendance && $latestAttendance->check_in
+            ? 'Checked in at ' . Carbon::parse($latestAttendance->check_in)->format('g:i A')
+            : 'No check-in time recorded';
+
+        $leaveValue = $pendingLeave ? 'Pending leave' : 'No pending leave';
+        $leaveDetail = $pendingLeave
+            ? Carbon::parse($pendingLeave->from_date)->format('d M Y') . ' to ' . Carbon::parse($pendingLeave->to_date)->format('d M Y')
+            : 'You are all caught up';
+
+        $timesheetValue = $timesheetHours > 0 ? 'On track' : 'No entries this week';
+        $timesheetDetail = $timesheetHours > 0
+            ? number_format($timesheetHours, 1) . ' hours logged this week'
+            : 'Submit this week\'s timesheet to stay compliant';
+
+        $statusSignals = [
+            ['label' => 'Attendance', 'value' => $attendanceValue, 'detail' => $attendanceDetail, 'icon' => 'la la-clock-o', 'tone' => 'positive'],
+            ['label' => 'Leave', 'value' => $leaveValue, 'detail' => $leaveDetail, 'icon' => 'la la-leaf', 'tone' => $pendingLeave ? 'pending' : 'info'],
+            ['label' => 'Timesheet', 'value' => $timesheetValue, 'detail' => $timesheetDetail, 'icon' => 'la la-file-text', 'tone' => $timesheetHours > 0 ? 'info' : 'pending'],
+        ];
+
+        $upcomingItems = collect([
+            $upcomingHoliday ? [
+                'title' => $upcomingHoliday->name_holiday,
+                'detail' => 'Company holiday',
+                'date' => Carbon::parse($upcomingHoliday->date_holiday)->format('D, M j'),
+                'time' => 'All day',
+                'icon' => 'la la-calendar',
+                'route' => route('employee/holidays'),
+                'tone' => 'purple',
+            ] : null,
+            $pendingLeave ? [
+                'title' => 'Leave: ' . $pendingLeave->leave_type,
+                'detail' => $pendingLeave->leave_reason ?: 'Awaiting approval',
+                'date' => Carbon::parse($pendingLeave->from_date)->format('D, M j'),
+                'time' => 'Pending',
+                'icon' => 'la la-plane',
+                'route' => route('form/leavesemployee/new'),
+                'tone' => 'mint',
+            ] : null,
+            $latestTimesheet ? [
+                'title' => 'Latest timesheet: ' . ($latestTimesheet->project_name ?: 'Work log'),
+                'detail' => 'Most recent submission',
+                'date' => Carbon::parse($latestTimesheet->work_date)->format('D, M j'),
+                'time' => number_format((float) $latestTimesheet->worked_hours, 1) . ' hrs',
+                'icon' => 'la la-file-text',
+                'route' => route('employee/timesheets'),
+                'tone' => 'purple',
+            ] : null,
+        ])->filter()->values();
+
         return view('dashboard.emdashboard', compact(
             'todayDate',
+            'todayLabel',
             'user',
             'metrics',
             'quickActions',
             'activityFeed',
+            'statusSignals',
+            'upcomingItems',
             'latestAttendance',
             'latestLeave',
             'upcomingHoliday'
@@ -226,6 +289,85 @@ class HomeController extends Controller
     {
         $pdf = PDF::loadView('payroll.salaryview');
         return $pdf->download('pdfview.pdf');
+    }
+
+    public function contactPeopleOps(Request $request)
+    {
+        $payload = $request->validate([
+            'subject' => ['required', 'string', 'max:120'],
+            'message' => ['required', 'string', 'max:4000'],
+            'context_url' => ['nullable', 'url', 'max:2048'],
+        ]);
+
+        $user = Auth::user();
+        $settings = CompanySettings::current();
+        MailSettingsManager::apply($settings);
+
+        $recipient = trim((string) (
+            $settings->people_ops_email
+            ?: $settings->mail_reply_to_address
+            ?: $settings->email
+            ?: 'heros@purplecrayola.com'
+        ));
+
+        if (! filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            $recipient = 'heros@purplecrayola.com';
+        }
+
+        $subject = '[People Ops] ' . $payload['subject'];
+        $contextUrl = trim((string) ($payload['context_url'] ?? ''));
+        $messageBody = trim((string) $payload['message']);
+
+        $body = implode(PHP_EOL, [
+            'People Ops request submitted from employee dashboard',
+            '',
+            'Employee: ' . ($user?->name ?: 'Unknown'),
+            'Employee ID: ' . ($user?->user_id ?: 'Unknown'),
+            'Employee Email: ' . ($user?->email ?: 'Unknown'),
+            'Submitted At: ' . now()->toDateTimeString(),
+            'Page Context: ' . ($contextUrl !== '' ? $contextUrl : 'N/A'),
+            '',
+            'Message:',
+            $messageBody,
+        ]);
+
+        try {
+            Mail::raw($body, function ($message) use ($recipient, $subject, $user): void {
+                $message->to($recipient)->subject($subject);
+
+                if ($user && filter_var((string) $user->email, FILTER_VALIDATE_EMAIL)) {
+                    $message->replyTo((string) $user->email, (string) $user->name);
+                }
+            });
+
+            if ($user) {
+                $user->notify(new InAppNotification(
+                    'People Ops request sent',
+                    'Your support request has been sent successfully.',
+                    route('profile_user'),
+                    'success'
+                ));
+            }
+
+            User::query()
+                ->whereIn('role_name', ['Super Admin', 'Admin', 'HR Manager'])
+                ->where('id', '!=', (int) ($user?->id ?? 0))
+                ->get()
+                ->each(function (User $admin) use ($user): void {
+                    $admin->notify(new InAppNotification(
+                        'New People Ops request',
+                        ($user?->name ?: 'An employee') . ' sent a new support request.',
+                        url('employee/profile/' . ($user?->user_id ?: '')),
+                        'info'
+                    ));
+                });
+        } catch (\Throwable $exception) {
+            return back()->withErrors([
+                'people_ops' => 'We could not send your request right now. Please try again shortly.',
+            ])->withInput();
+        }
+
+        return back()->with('success', 'Your message has been sent to People Ops.');
     }
 
     public function globalSearch(Request $request)

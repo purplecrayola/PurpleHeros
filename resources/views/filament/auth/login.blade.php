@@ -21,7 +21,7 @@
                     <img src="{{ $loginLogo }}" alt="{{ $brandName }}">
                 </div>
                 <div>
-                    <h2>Admin Sign In</h2>
+                    <h2>Admin Sign&nbsp;In</h2>
                     <p>Secure control center access for payroll, people operations, and system configuration.</p>
                 </div>
             </div>
@@ -46,4 +46,3 @@
         </section>
     </div>
 </x-filament-panels::page.simple>
-

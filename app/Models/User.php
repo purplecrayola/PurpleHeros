@@ -72,8 +72,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return MediaStorageManager::publicUrl(
             $this->avatar,
-            'assets/img/user.jpg',
-            'assets/images',
+            'assets/img/user.jpg'
         );
     }
 

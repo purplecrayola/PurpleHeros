@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('content')
-    @include('employees.partials.self-service-style')
-    <div class="page-wrapper self-service-modern">
+        <div class="page-wrapper">
         <div class="content container-fluid">
+            @include('employees.partials.employee-topbar', ['context' => 'Leave management workspace'])
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -14,7 +14,7 @@
                         <p class="section-intro">Track your leave balance and submit requests for approval.</p>
                     </div>
                     <div class="col-auto float-right ml-auto">
-                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_leave"><i class="fa fa-plus"></i> Add Leave</a>
+                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_leave"><i class="fa fa-plus"></i> Request Leave</a>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Leave</h5>
+                        <h5 class="modal-title">Request Leave</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -150,7 +150,7 @@
                                 <textarea rows="4" class="form-control" name="leave_reason"></textarea>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+                                <button class="btn btn-primary submit-btn">Request Leave</button>
                             </div>
                         </form>
                     </div>
@@ -201,7 +201,7 @@
                                 <textarea rows="4" class="form-control" id="e_leave_reason" name="leave_reason"></textarea>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Save</button>
+                                <button class="btn btn-primary submit-btn">Save Changes</button>
                             </div>
                         </form>
                     </div>

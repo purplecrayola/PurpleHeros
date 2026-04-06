@@ -1,6 +1,7 @@
 <x-filament-panels::page>
     <x-filament::section heading="Email Delivery">
-        <div class="grid gap-4 md:grid-cols-2">
+        <div class="pc-filter-shell">
+            <div class="grid gap-4 md:grid-cols-2">
             <div>
                 <label class="mb-1 block text-sm font-medium text-slate-600">Mailer</label>
                 <select wire:model="mail_mailer" class="fi-input block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
@@ -57,15 +58,17 @@
                     <x-filament::input type="email" wire:model="mail_reply_to_address" />
                 </x-filament::input.wrapper>
             </div>
+            </div>
         </div>
 
-        <div class="mt-4 flex justify-end">
+        <div class="mt-4 pc-action-row right">
             <x-filament::button wire:click="save">Save Email Settings</x-filament::button>
         </div>
     </x-filament::section>
 
     <x-filament::section heading="Send Test Email">
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="pc-filter-shell">
+            <div class="grid gap-4 md:grid-cols-3">
             <div class="md:col-span-2">
                 <x-filament::input.wrapper>
                     <x-filament::input type="email" wire:model="test_recipient" placeholder="recipient@example.com" />
@@ -73,6 +76,7 @@
             </div>
             <div>
                 <x-filament::button color="gray" wire:click="sendTest">Send Test Email</x-filament::button>
+            </div>
             </div>
         </div>
         <p class="mt-4 text-sm text-slate-500">SES requires verified identities and IAM permissions (`ses:SendEmail` / `ses:SendRawEmail`) in the configured region.</p>

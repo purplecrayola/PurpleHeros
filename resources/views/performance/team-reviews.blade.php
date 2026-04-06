@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper performance-team-reviews-page">
         <div class="content container-fluid">
-            <div class="page-header">
+            <div class="page-header performance-team-reviews-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Team Performance Reviews</h3>
@@ -19,7 +19,7 @@
 
             <div class="card mb-3">
                 <div class="card-body">
-                    <form action="{{ route('performance/team/reviews') }}" method="GET" class="row">
+                    <form action="{{ route('performance/team/reviews') }}" method="GET" class="row align-items-end performance-team-reviews-filter-row">
                         <div class="col-md-3">
                             <label>Year</label>
                             <select class="form-control" name="year">
@@ -36,8 +36,10 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3 align-self-end">
-                            <button type="submit" class="btn btn-success">Apply</button>
+                        <div class="col-md-3">
+                            <div class="performance-team-reviews-filter-actions">
+                                <button type="submit" class="btn btn-success performance-team-reviews-btn">Apply</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -103,4 +105,36 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('style')
+<style>
+    .performance-team-reviews-page .performance-team-reviews-header {
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+    .performance-team-reviews-page .performance-team-reviews-filter-row .form-control {
+        min-height: 40px;
+        height: 40px;
+    }
+    .performance-team-reviews-page .performance-team-reviews-filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .performance-team-reviews-page .performance-team-reviews-btn {
+        min-height: 40px;
+        border-radius: 12px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    @media (max-width: 767px) {
+        .performance-team-reviews-page .performance-team-reviews-btn {
+            width: 100%;
+        }
+    }
+</style>
 @endsection

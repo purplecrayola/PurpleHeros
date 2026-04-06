@@ -86,7 +86,7 @@
                                     <td class="purchase_date">{{$item->purchase_date}}</td>
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-xs"><img src="{{ \App\Support\MediaStorageManager::publicUrl($item->attachments ?? null, 'assets/img/profiles/avatar-01.jpg', 'assets/images') }}" alt=""></a>
+                                            <a href="profile.html" class="avatar avatar-xs"><img src="{{ \App\Support\MediaStorageManager::publicUrl($item->attachments ?? null, 'assets/img/profiles/avatar-01.jpg') }}" alt=""></a>
                                             <a href="profile.html">{{ $item->purchased_by }}</a>
                                             <td hidden class="purchased_by">{{ $item->purchased_by }}</td>
                                         </h2>

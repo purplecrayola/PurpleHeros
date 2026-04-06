@@ -122,7 +122,7 @@ class UserManagementController extends Controller
             ->get();
         $data_arr = [];
         foreach ($records as $key => $record) {
-            $avatarUrl = MediaStorageManager::publicUrl($record->avatar, 'assets/img/user.jpg', 'assets/images');
+            $avatarUrl = MediaStorageManager::publicUrl($record->avatar, 'assets/img/user.jpg');
             $record->name = '<h2 class="table-avatar"><a href="'.url('employee/profile/' . $record->user_id).'" class="name">'.'<img class="avatar" data-avatar='.$record->avatar.' src="'.$avatarUrl.'">' .$record->name.'</a></h2>';
             if ($record->role_name == 'Admin') { /** color role name */
                 $role_name = '<span class="badge bg-inverse-danger role_name">'.$record->role_name.'</span>';
