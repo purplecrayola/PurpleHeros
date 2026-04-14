@@ -69,6 +69,11 @@ jobs:
             SHARED_PATH="$APP_PATH/shared"
 
             mkdir -p "$SHARED_PATH/storage" "$SHARED_PATH/bootstrap-cache"
+            mkdir -p "$SHARED_PATH/storage/app" \
+                     "$SHARED_PATH/storage/framework/cache" \
+                     "$SHARED_PATH/storage/framework/sessions" \
+                     "$SHARED_PATH/storage/framework/views" \
+                     "$SHARED_PATH/storage/logs"
 
             if [ ! -f "$SHARED_PATH/.env" ]; then
               cp "$RELEASE_PATH/.env.example" "$SHARED_PATH/.env"
