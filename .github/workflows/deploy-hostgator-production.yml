@@ -25,11 +25,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.HG_SSH_KEY }}
 
-      - name: Add host to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${{ secrets.HG_PORT }}" -H "${{ secrets.HG_HOST }}" >> ~/.ssh/known_hosts
-
       - name: Compute release id
         id: meta
         run: |
@@ -43,7 +38,8 @@ jobs:
           HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
           RELEASE_ID: ${{ steps.meta.outputs.release_id }}
         run: |
-          ssh -p "$HG_PORT" "$HG_USER@$HG_HOST" "mkdir -p '$HG_APP_PATH/releases/$RELEASE_ID'"
+          SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $HG_PORT"
+          ssh $SSH_OPTS "$HG_USER@$HG_HOST" "mkdir -p '$HG_APP_PATH/releases/$RELEASE_ID'"
 
           rsync -az --delete \
             --exclude=".git" \
@@ -53,7 +49,7 @@ jobs:
             --exclude=".env" \
             --exclude="storage" \
             --exclude="bootstrap/cache/*" \
-            -e "ssh -p $HG_PORT" \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $HG_PORT" \
             ./ "$HG_USER@$HG_HOST:$HG_APP_PATH/releases/$RELEASE_ID/"
 
       - name: Activate release and run Laravel tasks
@@ -64,7 +60,7 @@ jobs:
           HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
           RELEASE_ID: ${{ steps.meta.outputs.release_id }}
         run: |
-          ssh -p "$HG_PORT" "$HG_USER@$HG_HOST" <<EOF
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p "$HG_PORT" "$HG_USER@$HG_HOST" <<EOF
             set -e
 
             APP_PATH="$HG_APP_PATH"
