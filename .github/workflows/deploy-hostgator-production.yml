@@ -84,12 +84,27 @@ jobs:
             ln -sfn "$SHARED_PATH/.env" "$RELEASE_PATH/.env"
 
             cd "$RELEASE_PATH"
-            composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+            COMPOSER_BIN="$(command -v composer || true)"
+            if [ -z "$COMPOSER_BIN" ] && [ -x "/opt/cpanel/composer/bin/composer" ]; then
+              COMPOSER_BIN="/opt/cpanel/composer/bin/composer"
+            fi
+            if [ -z "$COMPOSER_BIN" ] && [ -x "/usr/local/bin/composer" ]; then
+              COMPOSER_BIN="/usr/local/bin/composer"
+            fi
+            if [ -z "$COMPOSER_BIN" ]; then
+              echo "Composer not found. Install composer or add it to PATH on server."
+              exit 127
+            fi
+            "$COMPOSER_BIN" install --no-interaction --prefer-dist --no-dev --optimize-autoloader
 
             # Build frontend assets when Node project is present.
             if [ -f "package.json" ]; then
-              npm ci
-              npm run build
+              if command -v npm >/dev/null 2>&1; then
+                npm ci
+                npm run build
+              else
+                echo "npm not found; skipping frontend build."
+              fi
             fi
 
             php artisan migrate --force
