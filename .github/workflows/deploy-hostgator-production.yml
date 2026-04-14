@@ -115,7 +115,10 @@ jobs:
             php artisan migrate --force
             php artisan optimize:clear
             php artisan config:cache
-            php artisan route:cache
+            if ! php artisan route:cache; then
+              echo "route:cache failed; clearing route cache and continuing deployment."
+              php artisan route:clear || true
+            fi
             php artisan view:cache
 
             ln -sfn "$RELEASE_PATH" "$APP_PATH/current"
