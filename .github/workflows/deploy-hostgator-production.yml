@@ -38,7 +38,7 @@ jobs:
           HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
           RELEASE_ID: ${{ steps.meta.outputs.release_id }}
         run: |
-          SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $HG_PORT"
+          SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=20 -p $HG_PORT"
           ssh $SSH_OPTS "$HG_USER@$HG_HOST" "mkdir -p '$HG_APP_PATH/releases/$RELEASE_ID'"
 
           rsync -az --delete \
@@ -49,7 +49,7 @@ jobs:
             --exclude=".env" \
             --exclude="storage" \
             --exclude="bootstrap/cache/*" \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $HG_PORT" \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=20 -p $HG_PORT" \
             ./ "$HG_USER@$HG_HOST:$HG_APP_PATH/releases/$RELEASE_ID/"
 
       - name: Activate release and run Laravel tasks
@@ -60,7 +60,7 @@ jobs:
           HG_APP_PATH: ${{ secrets.HG_APP_PATH }}
           RELEASE_ID: ${{ steps.meta.outputs.release_id }}
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p "$HG_PORT" "$HG_USER@$HG_HOST" <<EOF
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=20 -p "$HG_PORT" "$HG_USER@$HG_HOST" <<EOF
             set -e
 
             APP_PATH="$HG_APP_PATH"
